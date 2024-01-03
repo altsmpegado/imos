@@ -11,6 +11,16 @@ function setupButton(buttonId, appPath) {
             if (!openApps[dockerAppName] || openApps[dockerAppName].closed) {
                 // Run the Docker app only if it's not already open
                 ipcRenderer.send('runDockerApp');
+                // Update the open state for the launched app
+                openApps[appPath] = {
+                    closed: false,
+                    process: childProcess,
+                };
+
+                // Listen for the 'close' event to update the open state when the app is closed
+                childProcess.on('close', () => {
+                    openApps[appPath].closed = true;
+                });
             }
         });
     }
@@ -47,4 +57,4 @@ function launchApp(appPath) {
 setupButton('button1', 'marketplace-app/main.js'); 
 setupButton('button2', 'enabler-app/main.js');
 setupButton('button3', 'settings-app/main.js');
-setupButton('dockerButton', '');
+setupButton('dockerButton', 'docker-app/main.js');
