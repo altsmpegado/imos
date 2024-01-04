@@ -1,27 +1,37 @@
-# use the version that corresponds to your electron version
+# https://trigodev.com/blog/develop-electron-in-docker
+# https://medium.com/geekculture/run-a-gui-software-inside-a-docker-container-dce61771f9
+# https://dev.to/darksmile92/run-gui-app-in-linux-docker-container-on-windows-host-4kde
+
 FROM node:20.10.0
 
-# install electron dependencies, xvfb, and xauth
+# Install electron dependencies, xvfb, xauth, and dbus
 RUN apt-get update && apt-get install -y \
-    git libx11-xcb1 libxcb-dri3-0 libxtst6 libnss3 libatk-bridge2.0-0 libgtk-3-0 libxss1 libasound2 libxshmfence1 libdrm2 libgbm1 xvfb xauth \
+    git libx11-xcb1 libxcb-dri3-0 libxtst6 libnss3 libatk-bridge2.0-0 libgtk-3-0 libxss1 libasound2 libxshmfence1 libdrm2 libgbm1 xvfb xauth dbus \
     --no-install-suggests --no-install-recommends \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# copy the source into /app
-WORKDIR /app
-COPY . .
-RUN chown -R node /app
+# Set up display and D-Bus
+ENV DISPLAY=:0
+ENV DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
+ENV DBUS_SESSION_BUS_ADDRESS=unix:path=/host/run/dbus/session_bus_socket
 
-# install node modules and perform an electron rebuild
-USER node
+# Create dummy D-Bus sockets
+RUN mkdir -p /host/run/dbus/ && \
+    touch /host/run/dbus/system_bus_socket && \
+    touch /host/run/dbus/session_bus_socket
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install app dependencies
 RUN npm install
-RUN npx electron-rebuild
 
-# Electron needs root for sandboxing
-# see https://github.com/electron/electron/issues/17972
-USER root
-RUN chown root /app/node_modules/electron/dist/chrome-sandbox
-RUN chmod 4755 /app/node_modules/electron/dist/chrome-sandbox
+# Bundle app source
+COPY . .
 
-# Start D-Bus and Xvfb in the background
-CMD service dbus start && Xvfb :1 -screen 0 1024x768x24 & export DISPLAY=:1 && sleep 2 && npm run start
+# Disable GPU acceleration and set additional options
+ENV ELECTRON_DISABLE_GPU=true
+CMD ["npm", "start", "--", "--disable-gpu"]

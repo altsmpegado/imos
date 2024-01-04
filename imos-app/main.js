@@ -53,7 +53,13 @@ const { spawn } = require('child_process');
 
 ipcMain.on('runDockerApp', () => {
     // Replace 'docker-app' with the name of your Docker image
-    const dockerProcess = spawn('docker', ['run', '--rm', '-p', '3000:3000', 'docker-app']);
+    const dockerProcess = spawn('docker', [
+        'run',
+        '--rm',
+        '-e', 'DISPLAY=host.docker.internal:0',
+        '-v', '/tmp/.X11-unix:/tmp/.X11-unix',
+        'docker-app'
+      ]);
     
     dockerProcess.stdout.on('data', (data) => {
         console.log(`Docker Output: ${data}`);

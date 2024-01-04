@@ -7,21 +7,7 @@ const openApps = {};
 function setupButton(buttonId, appPath) {
     if (buttonId != 'button1' && buttonId != 'button2' && buttonId != 'button3'){
         document.getElementById(buttonId).addEventListener('click', () => {
-            const dockerAppName = 'docker-app'; // Replace with the actual name of your Docker image
-            if (!openApps[dockerAppName] || openApps[dockerAppName].closed) {
-                // Run the Docker app only if it's not already open
-                ipcRenderer.send('runDockerApp');
-                // Update the open state for the launched app
-                openApps[appPath] = {
-                    closed: false,
-                    process: childProcess,
-                };
-
-                // Listen for the 'close' event to update the open state when the app is closed
-                childProcess.on('close', () => {
-                    openApps[appPath].closed = true;
-                });
-            }
+            ipcRenderer.send('runDockerApp');
         });
     }
     else {

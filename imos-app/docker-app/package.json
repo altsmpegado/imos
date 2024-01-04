@@ -6,7 +6,7 @@
   "scripts": {
       "start": "electron . --no-sandbox"
   },
-  "author": "",
+  "author": "altsmpegado",
   "license": "ISC",
   "devDependencies": {
       "electron": "^28.1.0",
