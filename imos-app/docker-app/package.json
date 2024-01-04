@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/main.js",
   "scripts": {
-      "start": "electron . --headless --no-sandbox"
+      "start": "electron . --no-sandbox"
   },
   "author": "",
   "license": "ISC",
