@@ -10,10 +10,10 @@ navigator.mediaDevices.getUserMedia({ video: true })
   });
 
 navigator.mediaDevices.enumerateDevices()
-    .then(devices => {
-    console.log('Available devices:', devices);
-    // Your logic to handle the list of available devices
-    })
-    .catch(error => {
-    console.error('Error enumerating devices:', error.message);
+.then(devices => {
+  console.log('Available devices:', devices);
+  // Your logic to handle the list of available devices
+})
+.catch(error => {
+  console.error('Error enumerating devices:', error.message);
 });

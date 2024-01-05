@@ -1,5 +1,7 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
+app.use(cors());
 const http = require('http').Server(app);
 
 app.get('/camera-frame', (req, res) => {
@@ -11,7 +13,7 @@ app.get('/camera-frame', (req, res) => {
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Camera Frame</title>
-      <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; img-src 'self' data:">
+      <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; object-src 'none'; style-src 'self'; img-src 'self' data:">
     </head>
     <body>
       <video id="camera" width="640" height="480" autoplay playsinline></video>
