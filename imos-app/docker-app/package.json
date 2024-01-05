@@ -3,14 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/main.js",
+  "dependencies": {
+    "electron": "^28.1.0"
+  },
   "scripts": {
       "start": "electron . --no-sandbox"
   },
   "author": "altsmpegado",
-  "license": "ISC",
-  "devDependencies": {
-      "electron": "^28.1.0",
-      "electron-rebuild": "^3.2.9",
-      "libxmljs": "^1.0.11"
-  }
+  "license": "ISC"
 }
