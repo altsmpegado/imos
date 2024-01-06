@@ -1,0 +1,16 @@
+Stop and remove containers using the image
+docker ps -a | grep "repository_name" | awk '{print $1}' | xargs docker stop
+docker ps -a | grep "repository_name" | awk '{print $1}' | xargs docker rm
+Delete the image
+docker rmi repository_name:tag
+
+Connect the webcam to Docker on Windows creating a new DockerVM
+https://medium.com/@jijupax/connect-the-webcam-to-docker-on-mac-or-windows-51d894c44468
+
+ffmpeg option using udp (super slow frame rates)
+https://github.com/i99dev/Docker-with-WebCam
+ffmpeg -f dshow -framerate 30 -i video="GC21 Video" -vcodec mpeg4 -q 12 -f mpegts udp://127.0.0.1:1235
+
+linux xserver docker
+sudo docker buildx build --rm --tag docker-app --file ./Dockerfile_linux_xserver .
+sudo docker run --rm -it --privileged --device=/dev/video0:/dev/video0 --env DISPLAY=$DISPLAY --privileged --volume /tmp/.X11-unix:/tmp/.X11-unix docker-app
