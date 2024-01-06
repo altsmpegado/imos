@@ -7,7 +7,7 @@
     "electron": "^28.1.0"
   },
   "scripts": {
-      "start": "electron . --no-sandbox"
+    "start": "electron . --no-sandbox"
   },
   "author": "altsmpegado",
   "license": "ISC"

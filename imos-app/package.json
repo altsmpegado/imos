@@ -77,5 +77,9 @@
   },
   "author": "altsmpegado",
   "license": "ISC",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [],
   "description": ""
 }
