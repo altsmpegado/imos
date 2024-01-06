@@ -1,0 +1,39 @@
+# https://www.baeldung.com/linux/docker-container-gui-applications
+
+FROM node:20.10.0
+
+# Install necessary dependencies for Electron, X11, and canberra-gtk-module
+RUN apt-get update && \
+    apt-get install -y libnss3 libdrm2 libgbm1 libatk-bridge2.0-0 libgtk-3-0 libx11-xcb1 libxcb-dri3-0 libxss1 libasound2 xvfb mesa-utils x11-apps libcanberra-gtk-module
+
+# Set up a non-root user for the Xserver
+ENV uid=1000 gid=1001
+RUN mkdir -p /home/docker_user \
+    && echo "docker_user:x:${uid}:${gid}:docker_user,,,:/home/docker_user:/bin/bash" >> /etc/passwd \
+    && echo "docker_user:x:${uid}:" >> /etc/group \
+    && mkdir -p /etc/sudoers.d \
+    && echo "docker_user ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/docker_user \
+    && chmod 0440 /etc/sudoers.d/docker_user \
+    && chown ${uid}:${gid} -R /home/docker_user
+
+# Set the display environment variable
+ENV DISPLAY=:99
+
+# Set the working directory for your app
+WORKDIR /app
+
+# Copy package.json and package-lock.json (if exists) for your app
+COPY package*.json ./
+
+# Install dependencies for your app
+RUN npm install
+
+# Copy the rest of your application code
+COPY . .
+
+# Switch to the non-root user
+USER docker_user
+ENV HOME /home/docker_user
+# Start Xvfb and set up the entry point to launch your Electron app
+CMD Xvfb :99 -screen 0 1024x768x16 -ac & \
+    LIBGL_ALWAYS_SOFTWARE=1 npm start
