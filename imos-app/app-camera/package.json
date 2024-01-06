@@ -1,13 +1,13 @@
 {
-  "name": "docker-app",
+  "name": "app-camera",
   "version": "1.0.0",
   "description": "",
-  "main": "src/main.js",
+  "main": "main.js",
   "dependencies": {
     "electron": "^28.1.0"
   },
   "scripts": {
-      "start": "electron . --no-sandbox"
+    "start": "electron . --no-sandbox"
   },
   "author": "altsmpegado",
   "license": "ISC"

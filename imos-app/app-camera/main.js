@@ -8,12 +8,11 @@ function createWindow() {
         height: 600,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false, // Enable context isolation
-            enableRemoteModule: true  // Enable remote module
         }
     });
 
     const hostMachineIP = 'gateway.docker.internal';
+    //const hostMachineIP = 'localhost';
     const port = 3000;
 
     mainWindow.loadURL(`http://${hostMachineIP}:${port}/camera-frame`);
