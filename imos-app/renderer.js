@@ -24,11 +24,7 @@ function setupButton(buttonId) {
 function launchApp(appPath) {
     const electronPath = 'C:/imos/imos-app/node_modules/.bin/electron.cmd';
     const childProcess = spawn(electronPath, [appPath]);
-
-    // Optional: Handle communication or synchronization between the parent and child processes if needed
-    // For example, you can use ipcRenderer to send messages between the processes
-    ipcRenderer.send('startAnotherApp', 'Data to send to the other app');
-
+    
     // Update the open state for the launched app
     openApps[appPath] = {
         closed: false,
