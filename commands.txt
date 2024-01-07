@@ -13,6 +13,7 @@ ffmpeg -f dshow -framerate 30 -i video="GC21 Video" -vcodec mpeg4 -q 12 -f mpegt
 
 linux xserver docker
 v4l2-ctl --list-devices
+https://www.baeldung.com/linux/docker-container-gui-applications
 sudo docker buildx build --rm --tag docker-app --file ./Dockerfile_linux_xserver .
 sudo docker run --rm -it --privileged --device=/dev/video0:/dev/video0 --env DISPLAY=$DISPLAY --privileged --volume /tmp/.X11-unix:/tmp/.X11-unix docker-app
 
