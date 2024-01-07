@@ -23,7 +23,7 @@ navigator.mediaDevices.enumerateDevices()
 // Acces to web ip camera
 document.addEventListener('DOMContentLoaded', () => {
   const img = document.createElement('img');
-  img.src = 'https://192.168.1.75:5000/video_feed';
+  img.src = 'http://192.168.1.75:5000/video_feed';
 
   document.body.appendChild(img);
 });

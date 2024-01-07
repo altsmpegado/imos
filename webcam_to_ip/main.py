@@ -30,5 +30,5 @@ def video_feed():
     return Response(generate_frames(), content_type='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
-    #app.run(host='0.0.0.0', debug=False)
-    app.run(host='0.0.0.0', debug=False, ssl_context=('cert.pem', 'key.pem'))
+    app.run(host='0.0.0.0', debug=False)
+    #app.run(host='0.0.0.0', debug=False, ssl_context=('cert.pem', 'key.pem'))
