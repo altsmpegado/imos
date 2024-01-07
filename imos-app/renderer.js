@@ -4,13 +4,15 @@ const { spawn } = require('child_process');
 
 const openApps = {};
 
-function setupButton(buttonId, appPath) {
-    if (buttonId != 'button1' && buttonId != 'button2' && buttonId != 'button3'){
+function setupButton(buttonId) {
+    if (buttonId.includes('docker')){
+        const appPath = buttonId.replace('button_', '');
         document.getElementById(buttonId).addEventListener('click', () => {
-            ipcRenderer.send('runDockerApp');
+            ipcRenderer.send('runDockerApp', appPath);
         });
     }
     else {
+        const appPath = buttonId.replace('button_', '') + '/main.js';
         document.getElementById(buttonId).addEventListener('click', () => {
             if (!openApps[appPath] || openApps[appPath].closed) {
                 launchApp(appPath);
@@ -40,7 +42,7 @@ function launchApp(appPath) {
 }
 
 // Set up buttons
-setupButton('button1', 'marketplace-app/main.js'); 
-setupButton('button2', 'enabler-app/main.js');
-setupButton('button3', 'settings-app/main.js');
-setupButton('dockerButton', 'docker-app/main.js');
+setupButton('button_marketplace-app'); 
+setupButton('button_enabler-app');
+setupButton('button_settings-app');
+setupButton('button_docker-app');

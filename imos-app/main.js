@@ -51,14 +51,16 @@ app.on('window-all-closed', () => {
 const { ipcMain } = require('electron');
 const { spawn } = require('child_process');
 
-ipcMain.on('runDockerApp', () => {
+ipcMain.on('runDockerApp', (event, app) => {
     // Replace 'docker-app' with the name of your Docker image
     const dockerProcess = spawn('docker', [
         'run',
         '--rm',
+        '--name',
+        app,
         '-e', 'DISPLAY=host.docker.internal:0',
         '-v', '/tmp/.X11-unix:/tmp/.X11-unix',
-        'docker-app'
+        app
       ]);
     
     dockerProcess.stdout.on('data', (data) => {
