@@ -6,7 +6,8 @@
   "version": "1.0.0",
   "main": "main.js",
   "dependencies": {
-    "firebase": "^10.7.1"
+    "firebase": "^10.7.1",
+    "firebase-tools": "^13.0.3"
   },
   "scripts": {
     "start": "electron .",
