@@ -22,13 +22,24 @@ function createWindow() {
         details.responseHeaders['Content-Security-Policy'] = [
             "default-src 'self'",
             "script-src 'self'",
-            "style-src 'self'",
-            // Add more directives as needed based on your application's requirements
+            "style-src 'self'"
         ];
         callback({ cancel: false, responseHeaders: details.responseHeaders });
     });
 
     mainWindow.loadFile('index.html');
+
+    // Access Firebase services in the main process
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+        // User is signed in
+        const uid = user.uid;
+        console.log(`User ID: ${uid}`);
+        } else {
+        // No user is signed in
+        console.log('No user signed in');
+        }
+    });
 }
 
 app.whenReady().then(() => {
