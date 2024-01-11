@@ -6,16 +6,14 @@ const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-
+require('dotenv').config();
 // Include the user model for saving to MongoDB VIA mongoose
 const User = require("./models/user");
 
 // MongoDB connection
 const MongoStore = require('connect-mongo');
 const mongoose = require('mongoose');
-const mongoString = 'mongodb+srv://altsmpegado:31rRoBfJYTCKVZ0t@imos-cluster.lle7hy4.mongodb.net/server';
-
-require('dotenv').config();
+const mongoString = process.env.MONGODB_URI;
 
 mongoose.connect(mongoString);
 const db = mongoose.connection;
