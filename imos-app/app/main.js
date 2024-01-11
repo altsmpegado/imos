@@ -7,6 +7,8 @@ require('dotenv').config();
 
 let mainWindow;
 let authWindow;
+let regWindow;
+let logWindow;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -32,10 +34,36 @@ function createWindow() {
     });
 
     mainWindow.loadFile('views/index.html');
+
+    // Handle window closed
+    mainWindow.on('closed', () => {
+      mainWindow = null;
+    });
 }
 
 function createAuthWindow() {
-    authWindow = new BrowserWindow({
+    authWindowWindow = new BrowserWindow({
+      width: 400,
+      height: 400,
+      autoHideMenuBar: true,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+        enableRemoteModule: true, // Set to true if you use remote module
+        worldSafeExecuteJavaScript: true, // Set to true to enable safe execution of JavaScript
+      },
+    });
+
+    authWindow.loadFile('views/auth.html');
+
+    // Handle window closed
+    authWindow.on('closed', () => {
+      authWindow = null;
+    });
+}
+
+function createLoginWindow() {
+    logWindow = new BrowserWindow({
       width: 400,
       height: 400,
       autoHideMenuBar: true,
@@ -48,24 +76,46 @@ function createAuthWindow() {
     });
   
     // Handle window closed
-    authWindow.on('closed', () => {
-      authWindow = null;
+    logWindow.on('closed', () => {
+        logWindow = null;
     });
 
-    authWindow.loadFile('views/register.html');
+    logWindow.loadFile('views/login.html');
+}
+
+function createRegisterWindow() {
+    regWindow = new BrowserWindow({
+      width: 400,
+      height: 400,
+      autoHideMenuBar: true,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+        enableRemoteModule: true, // Set to true if you use remote module
+        worldSafeExecuteJavaScript: true, // Set to true to enable safe execution of JavaScript
+      },
+    });
+  
+    // Handle window closed
+    regWindow.on('closed', () => {
+        regWindow = null;
+    });
+
+    regWindow.loadFile('views/register.html');
+}
+
+
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+      createAuthWindow();
+      //createWindow();
   }
+});
 
 app.whenReady().then(() => {
-    createAuthWindow();
+  //createAuthWindow();
     
-    //createWindow();
-
-    app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) {
-            createAuthWindow();
-            createWindow();
-        }
-    });
+  createWindow();
 });
 
 app.on('window-all-closed', () => {
@@ -79,7 +129,21 @@ ipcMain.on('runDockerApp', (event, app) => {
     createDockerProcess(app);
 });
 
-// Handle IPC events
+// Handle Auth events
+ipcMain.on('openLoginWindow', (event) => {
+    createLoginWindow();
+    if (authWindow) {
+      authWindow.close();
+    }
+});
+
+ipcMain.on('openRegisterWindow', (event) => {
+    createRegisterWindow();
+    if (authWindow) {
+        authWindow.close();
+    }
+});
+
 ipcMain.on('register', (event, userData) => {
     if (authWindow) {
       authWindow.close();
@@ -100,8 +164,34 @@ ipcMain.on('register', (event, userData) => {
         console.log(response.body);
     });
 
+    if (!authWindowWindow) {
+        createAuthWindow();
+    }
+
+  });
+
+  ipcMain.on('login', (event, userData) => {
+    if (authWindow) {
+      authWindow.close();
+    }
+    
+    var options = {
+        'method': 'POST',
+        'url': 'http://localhost:8000/login',
+        form: {
+            'password': userData.password,
+            'username': userData.username
+        }
+    };
+    
+    request(options, function (error, response) {
+        if (error) throw new Error(error);
+        console.log(response.body);
+    });
+
     // Show the main window
     if (!mainWindow) {
       createWindow();
     }
+
   });
