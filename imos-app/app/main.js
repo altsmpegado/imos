@@ -42,27 +42,30 @@ function createWindow() {
 }
 
 function createAuthWindow() {
-    authWindowWindow = new BrowserWindow({
+  return new Promise((resolve, reject) => {
+    authWindow = new BrowserWindow({
       width: 400,
       height: 400,
       autoHideMenuBar: true,
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
-        enableRemoteModule: true, // Set to true if you use remote module
-        worldSafeExecuteJavaScript: true, // Set to true to enable safe execution of JavaScript
+        enableRemoteModule: true,
+        worldSafeExecuteJavaScript: true,
       },
     });
 
     authWindow.loadFile('views/auth.html');
 
-    // Handle window closed
     authWindow.on('closed', () => {
       authWindow = null;
     });
+
+  });
 }
 
 function createLoginWindow() {
+  return new Promise((resolve, reject) => {
     logWindow = new BrowserWindow({
       width: 400,
       height: 400,
@@ -81,9 +84,11 @@ function createLoginWindow() {
     });
 
     logWindow.loadFile('views/login.html');
+  });
 }
 
 function createRegisterWindow() {
+  return new Promise((resolve, reject) => {
     regWindow = new BrowserWindow({
       width: 400,
       height: 400,
@@ -102,9 +107,10 @@ function createRegisterWindow() {
     });
 
     regWindow.loadFile('views/register.html');
+  });
 }
 
-
+//macOS
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
       createAuthWindow();
@@ -113,9 +119,12 @@ app.on('activate', () => {
 });
 
 app.whenReady().then(() => {
-  //createAuthWindow();
+  createAuthWindow()
+  .catch(error => {
+    console.error('Error creating Auth window:', error);
+  });
     
-  createWindow();
+  //createWindow();
 });
 
 app.on('window-all-closed', () => {
@@ -164,7 +173,7 @@ ipcMain.on('register', (event, userData) => {
         console.log(response.body);
     });
 
-    if (!authWindowWindow) {
+    if (!authWindow) {
         createAuthWindow();
     }
 
