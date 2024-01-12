@@ -4,17 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Electron App Launcher</title>
+    <title>IMOS</title>
+    <link rel="stylesheet" href="../styles/styles.css">
 </head>
 <body>
-    <div class="circle-container">
-        <button class="app-icon" id="button_marketplace-app">Marketplace</button>
-        <button class="app-icon" id="button_enabler-app">Enabler</button>
-        <button class="app-icon" id="button_settings-app">Settings</button>
-        <button class="app-icon" id="button_docker-app">Run Docker App</button>
-        <br>
-        <button type="submit" id="button_logout">Logout</button>
-    </div>
+    <ul class='app-container'>
+        <button class="button-component"  type="app" id="button_marketplace-app">
+            <span class='circle-info'>1</span></button>
+        <button class="button-component"  type="app" id="button_enabler-app">
+            <span class='circle-info'>2</span></button>
+        <button class="button-component"  type="app" id="button_settings-app">
+            <span class='circle-info'>3</span></button>
+        <button class="button-component"  type="app" id="button_docker-app">
+            <span class='circle-info'>4</span></button>
+        <!-- more buttons until full -->
+    </ul>
+    
+    <button class="button-component"  type="submit" id="button_logout">Logout</button>
     <script type="text/javascript" src="../app/renderer.js"></script>
 </body>
 </html>

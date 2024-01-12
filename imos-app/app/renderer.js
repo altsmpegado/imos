@@ -46,3 +46,19 @@ setupButton('button_docker-app');
 document.getElementById('button_logout').addEventListener('click', () => {
     ipcRenderer.send('logout');
 });
+
+// https://codepen.io/noirsociety/pen/xxaWBzg
+// App Visuals
+const container = document.querySelector('.app-container');
+const circles = document.querySelectorAll('.button-component[type=app]');
+const radius = container.offsetWidth/2;
+const rotation = 360/circles.length;
+
+function circular() {
+  circles.forEach((circle,i) => {
+    const value = `rotate(${i*rotation}deg) translate(${radius}px) rotate(-${i*rotation}deg)`;
+    circle.style.transform = value;
+  });
+}
+
+window.addEventListener('load', circular, false);
