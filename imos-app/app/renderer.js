@@ -42,3 +42,7 @@ setupButton('button_marketplace-app');
 setupButton('button_enabler-app');
 setupButton('button_settings-app');
 setupButton('button_docker-app');
+
+document.getElementById('button_logout').addEventListener('click', () => {
+    ipcRenderer.send('logout');
+});

@@ -9,7 +9,6 @@
     <h1>IMOS Auth</h1>
     <button id="loginButton">Login</button>
     <button id="createAccountButton">Create Account</button>
-    <input type="checkbox" id="rememberCheckbox"> <label for="rememberCheckbox">Remind this user</label>
 
     <script>
         const { ipcRenderer } = require('electron');
@@ -22,17 +21,6 @@
             ipcRenderer.send('openRegisterWindow');
         });
 
-        document.getElementById('rememberCheckbox').addEventListener('change', () => {
-            const isChecked = document.getElementById('rememberCheckbox').checked;
-            //ipcRenderer.send('saveLoginSettings', { username: 'user', password: 'pass' }); // Replace with actual values
-        });
-
-        // On window load, check if saved login settings exist
-        //ipcRenderer.send('getSavedLoginSettings');
-        /*ipcRenderer.on('savedLoginSettings', (event, { username, password }) => {
-            // Populate the login form with saved values if available
-            document.getElementById('rememberCheckbox').checked = true;
-        });*/
     </script>
 </body>
 </html>

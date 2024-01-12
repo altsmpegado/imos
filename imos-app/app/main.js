@@ -2,6 +2,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { createDockerProcess } = require('../docker/docker');
 const request = require('request');
+const fs = require('fs');
 
 require('dotenv').config();
 
@@ -9,6 +10,7 @@ let mainWindow;
 let authWindow;
 let regWindow;
 let logWindow;
+var remcheck = false;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -24,14 +26,14 @@ function createWindow() {
     });
 
     // Set a secure Content Security Policy
-    mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+    /*mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
         details.responseHeaders['Content-Security-Policy'] = [
             "default-src 'self'",
             "script-src 'self'",
             "style-src 'self'"
         ];
         callback({ cancel: false, responseHeaders: details.responseHeaders });
-    });
+    });*/
 
     mainWindow.loadFile('views/index.html');
 
@@ -119,12 +121,35 @@ app.on('activate', () => {
 });
 
 app.whenReady().then(() => {
-  createAuthWindow()
-  .catch(error => {
-    console.error('Error creating Auth window:', error);
-  });
+  const data = fs.readFileSync('userData/loginSettings.json', 'utf8');
+  var { username, password } = JSON.parse(data);
+
+  if(username == '' && password == ''){
+    createAuthWindow()
+    .catch(error => {
+      console.error('Error creating Auth window:', error);
+    });
+  }
+  else{
+    var options = {
+      'method': 'POST',
+      'url': 'http://localhost:8000/login',
+      form: {
+          'password': password,
+          'username': username
+      }
+    };
+  
+    request(options, function (error, response) {
+        if (error) throw new Error(error);
+        if(response.body.includes("/login-success")){
+          if (!mainWindow) {
+            createWindow();
+          }
+        }
+    });
+  }
     
-  //createWindow();
 });
 
 app.on('window-all-closed', () => {
@@ -171,36 +196,71 @@ ipcMain.on('register', (event, userData) => {
     request(options, function (error, response) {
         if (error) throw new Error(error);
         console.log(response.body);
-    });
+        if(response.body.includes("Successful")){
+          if (regWindow) {
+            regWindow.close();
+          }
 
-    if (!authWindow) {
-        createAuthWindow();
-    }
-
-  });
-
-  ipcMain.on('login', (event, userData) => {
-    if (authWindow) {
-      authWindow.close();
-    }
-    
-    var options = {
-        'method': 'POST',
-        'url': 'http://localhost:8000/login',
-        form: {
-            'password': userData.password,
-            'username': userData.username
+          if (!authWindow) {
+              createAuthWindow();
+          }
         }
-    };
-    
-    request(options, function (error, response) {
-        if (error) throw new Error(error);
-        console.log(response.body);
     });
 
-    // Show the main window
-    if (!mainWindow) {
-      createWindow();
-    }
-
   });
+
+ipcMain.on('login', (event, userData) => {
+  if (authWindow) {
+    authWindow.close();
+  }
+  
+  var options = {
+      'method': 'POST',
+      'url': 'http://localhost:8000/login',
+      form: {
+          'password': userData.password,
+          'username': userData.username
+      }
+  };
+  
+  var username = userData.username;
+  var password = userData.password;
+
+  request(options, function (error, response) {
+      if (error) throw new Error(error);
+      if(response.body.includes("/login-success")){
+        if(remcheck)
+          // Save login settings to a file
+          fs.writeFileSync('userData/loginSettings.json', JSON.stringify({ username, password }));
+        else {
+          username = '';
+          password = '';
+          fs.writeFileSync('userData/loginSettings.json', JSON.stringify({ username, password }));
+        }
+        if (logWindow) {
+          logWindow.close();
+        }
+    
+        // Show the main window
+        if (!mainWindow) {
+          createWindow();
+        }
+      }
+  });
+
+});
+
+ipcMain.on('saveLoginSettings', (event) => {
+  if(!remcheck)
+    remcheck = true;
+  else
+    remcheck = false;
+});
+
+ipcMain.on('logout', (event) => {
+  mainWindow.close();
+  createAuthWindow();
+  var username = '';
+  var password = '';
+  fs.writeFileSync('userData/loginSettings.json', JSON.stringify({ username, password }));
+});

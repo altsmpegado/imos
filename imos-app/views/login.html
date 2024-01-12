@@ -14,7 +14,9 @@
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
         <br>
-        <button type="submit">Register</button>
+        <button type="submit">Login</button>
+        <br>
+        <input type="checkbox" id="rememberCheckbox"> <label for="rememberCheckbox">Remind this user</label>
     </form>
 
     <script>
@@ -29,6 +31,12 @@
             // Send the registration data to the main process
             ipcRenderer.send('login', { username, password });
         });
+
+        document.getElementById('rememberCheckbox').addEventListener('change', () => {
+            //const isChecked = document.getElementById('rememberCheckbox').checked;
+            ipcRenderer.send('saveLoginSettings');
+        });
+        
     </script>
 </body>
 </html>
