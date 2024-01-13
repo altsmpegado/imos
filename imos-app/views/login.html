@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>IMOS Login</title>
+    <link rel="stylesheet" href="../styles/styles.css">
 </head>
 <body>
-    <h1>Login</h1>
+    <h1><span class='title-info'>IMOS Login</span></h1>
     <form id="loginForm">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+        <input class="text-box-component" placeholder="Insert username" id="username" required>
         <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
         <br>
-        <button type="submit">Login</button>
+        <input class="text-box-component" placeholder="Insert password" id="password" required>
         <br>
-        <input type="checkbox" id="rememberCheckbox"> <label for="rememberCheckbox">Remind this user</label>
+        <br>
+        <button class="button-component"  type="submit">Login</button> 
+        <input type="checkbox" id="rememberCheckbox"><label for="rememberCheckbox"><span class='input-info'>Remind this user</span></label>
     </form>
-
+    <button class="button-component"  type="submit" id="back">Back</button>
     <script>
         const { ipcRenderer } = require('electron');
 
@@ -35,6 +35,11 @@
         document.getElementById('rememberCheckbox').addEventListener('change', () => {
             //const isChecked = document.getElementById('rememberCheckbox').checked;
             ipcRenderer.send('saveLoginSettings');
+        });
+
+        document.getElementById('back').addEventListener('click', () => {
+            //const isChecked = document.getElementById('rememberCheckbox').checked;
+            ipcRenderer.send('back');
         });
         
     </script>

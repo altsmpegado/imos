@@ -3,6 +3,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const { createDockerProcess } = require('../docker/docker');
 const request = require('request');
 const fs = require('fs');
+const { log } = require('console');
 
 require('dotenv').config();
 
@@ -263,4 +264,12 @@ ipcMain.on('logout', (event) => {
   var username = '';
   var password = '';
   fs.writeFileSync('userData/loginSettings.json', JSON.stringify({ username, password }));
+});
+
+ipcMain.on('back', (event) => {
+  if(logWindow)
+    logWindow.close();
+  if(regWindow)
+    regWindow.close();
+  createAuthWindow();
 });

@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IMOS Auth</title>
+    <title>IMOS Authentication</title>
+    <link rel="stylesheet" href="../styles/styles.css">
 </head>
 <body>
-    <h1>IMOS Auth</h1>
-    <button id="loginButton">Login</button>
-    <button id="createAccountButton">Create Account</button>
+    <h1><span class='title-info'>IMOS Authentiation</span></h1>
+    <button class="button-component"  type="submit" id="loginButton">Login</button>
+    <button class="button-component"  type="submit" id="createAccountButton">Create Account</button>
 
     <script>
         const { ipcRenderer } = require('electron');

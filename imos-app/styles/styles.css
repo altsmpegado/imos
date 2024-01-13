@@ -2,28 +2,20 @@
     --background: #24292e;
     --circle: #535a61;
     --font-size: 12px;
-    --font-size-sm: 11px;
-    --font-size-md: 14px;
-    --font-size-lg: 28px;
-    --font-size-xl: 32px;
-    --font-size-xxl: 42px;
-    --font-size-xs: 9px;
     --font-family-sans-serif: system-ui, sans-serif, Apple Color Emoji, Segoe UI, Segoe UI Emoji, Segoe UI Symbol;
     --secondary-button-border-color: #717b85;
     --secondary-button-background: #2f363d;
     --button-background: #0366d6;
     --button-text-color: #fff;
     --button-hover-background: #0372ef;
+    --box-background-color: #1d2125;
+    --contrast-border: 1px solid #879099;
+    --border-radius: 6px;
+    --text-field-height: 25px;
     --spacing: 10px;
-    --spacing-double: calc(var(--spacing) * 2);
-    --spacing-triple: calc(var(--spacing) * 3);
-    --spacing-quad: calc(var(--spacing) * 4);
-    --spacing-quint: calc(var(--spacing) * 5);
-    --spacing-half: calc(var(--spacing) / 2);
-    --spacing-third: calc(var(--spacing) / 3);
+    --spacing-half: 5px;
     --button-height: 25px;
     --button-border-radius: 6px;
-    
 }
 
 * {
@@ -37,12 +29,13 @@ body {
     height: 100vh;
     display: grid;
     place-items: center;
+    align-items: center;
 }
 
 .app-container {
     position: relative;
-    width: 20rem;
-    height: 20rem;
+    width: 25rem;
+    height: 25rem;
     list-style-type: none;
     border: 0.5px solid var(--circle);
     border-radius: 50%;
@@ -51,8 +44,25 @@ body {
     transform: rotate(-90deg);
 }
 
+.container-info {
+    font: 2.5rem helvetica,sans-serif;
+    color: white;
+    background-color: transparent;
+}
+
+.title-info {
+    font: 2rem helvetica,sans-serif;
+    color: white;
+    background-color: transparent;
+}
+
 .circle-info {
-    transform: rotate(90deg);
+    font: 0.75rem helvetica,sans-serif;
+    color: white;
+    background-color: transparent;
+}
+
+.input-info {
     font: 0.75rem helvetica,sans-serif;
     color: white;
     background-color: transparent;
@@ -74,8 +84,8 @@ body {
 
 .button-component[type=app] {
     position: absolute;
-    width: 3rem;
-    height: 3rem;
+    width: 3.5rem;
+    height: 3.5rem;
     background-color: var(--button-background);
     border-radius: 50%;
     display: grid;
@@ -90,4 +100,19 @@ body {
 
 .button-component:hover {
     background-color: var(--button-hover-background);
+}
+
+.text-box-component {
+    border: var(--contrast-border);
+    border-radius: var(--border-radius);
+    background: var(--box-background-color);
+    color: currentColor;
+    font-size: var(--font-size);
+    font-family: var(--font-family-sans-serif);
+    height: var(--text-field-height);
+    padding: 0 var(--spacing-half);
+}
+
+.text-box-component:focus {
+    border: #007bff;
 }

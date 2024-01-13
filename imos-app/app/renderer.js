@@ -52,13 +52,32 @@ document.getElementById('button_logout').addEventListener('click', () => {
 const container = document.querySelector('.app-container');
 const circles = document.querySelectorAll('.button-component[type=app]');
 const radius = container.offsetWidth/2;
-const rotation = 360/circles.length;
+//const rotation = 360/circles.length;
+let rotation = 0;
+let mrotation = 360;
 
 function circular() {
   circles.forEach((circle,i) => {
-    const value = `rotate(${i*rotation}deg) translate(${radius}px) rotate(-${i*rotation}deg)`;
+    if (i != 0){
+        if (i % 2){
+            rotation += 360/12;
+        }
+        else {
+            mrotation -= 360/12;
+        }
+    }
+    const value = `rotate(${i % 2 ? rotation : mrotation}deg) translate(${radius}px) rotate(-${i % 2 ? rotation : mrotation}deg)`;
+    
     circle.style.transform = value;
   });
 }
+
+function circular() {
+    circles.forEach((circle,i) => {
+      const value = `rotate(${rotation}deg) translate(${radius}px) rotate(-${rotation}deg)`;
+      rotation += 360/12;
+      circle.style.transform = value;
+    });
+  }
 
 window.addEventListener('load', circular, false);
