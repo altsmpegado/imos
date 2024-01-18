@@ -1,82 +1,105 @@
 // https://medium.com/swlh/set-up-an-express-js-app-with-passport-js-and-mongodb-for-password-authentication-6ea05d95335c
 // https://javascript.plainenglish.io/session-authentication-with-node-js-express-passport-and-mongodb-ffd1eea4521c
+// https://github.com/bradtraversy/mongo_file_uploads/tree/master
 
-// Include express and passport packages.
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const multer = require('multer');
+const { GridFSBucket } = require('mongodb');
+const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo');
 require('dotenv').config();
-// Include the user model for saving to MongoDB VIA mongoose
+
+// Include the user model for saving to MongoDB via mongoose
 const User = require("./models/user");
 
 // MongoDB connection
-const MongoStore = require('connect-mongo');
-const mongoose = require('mongoose');
-const mongoString = process.env.MONGODB_URI;
-
-mongoose.connect(mongoString);
+mongoose.connect(process.env.MONGODB_URI);
 const db = mongoose.connection;
 
 const app = express();
 
+// Set up session middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(session({
   secret: process.env.SESSION_SECRET || 'defaultSecret',
   resave: false,
   saveUninitialized: true,
-  store: new MongoStore({ mongoUrl: db.client.s.url })
+  store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI })
 }));
 
-// Passport
-const strategy = new LocalStrategy(User.authenticate())
+// Passport setup
+const strategy = new LocalStrategy(User.authenticate());
 passport.use(strategy);
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 app.use(passport.initialize());
 app.use(passport.session());
 
-/*
-  Beyond this point is all system specific routes.
-  All routes are here for simplicity of understanding the tutorial
-  /register -- Look closer at the package https://www.npmjs.com/package/passport-local-mongoose
-  for understanding why we don't try to encrypt the password within our application
-*/
-app.post('/register', function (req, res) {
-  User.register(
-    new User({ 
-      email: req.body.email, 
-      username: req.body.username 
-    }), req.body.password, function (err, msg) {
-      if (err) {
-        res.send(err);
-      } else {
-        res.send({ message: "Successful" });
+// Check for MongoDB connection errors
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', () => {
+  // Connection successful, create the GridFSBucket
+  const bucket = new GridFSBucket(db);
+
+  // Set up multer for file uploads
+  const storage = multer.memoryStorage();
+  const upload = multer({ storage: storage });
+
+  // Define your file upload route
+  app.post('/upload', upload.single('file'), (req, res) => {
+    const file = req.file;
+    const filename = file.originalname;
+
+    const uploadStream = bucket.openUploadStream(filename);
+    uploadStream.end(file.buffer);
+
+    uploadStream.on('finish', () => {
+      res.status(200).send('File uploaded successfully!');
+    });
+
+    uploadStream.on('error', (error) => {
+      res.status(500).send('Error uploading file');
+    });
+  });
+
+  // User registration route
+  app.post('/register', (req, res) => {
+    User.register(
+      new User({ 
+        email: req.body.email, 
+        username: req.body.username 
+      }), req.body.password, (err, user) => {
+        if (err) {
+          res.status(500).send(err.message);
+        } else {
+          res.status(201).send({ message: 'Registration successful', user: user });
+        }
       }
-    }
-  )
-})
+    );
+  });
 
-/*
-  Login routes -- This is where we will use the 'local'
-  passport authenciation strategy. If success, send to
-  /login-success, if failure, send to /login-failure
-*/
-app.post('/login', passport.authenticate('local', { 
-  failureRedirect: '/login-failure', 
-  successRedirect: '/login-success'
-}), (err, req, res, next) => {
-  if (err) next(err);
+  // User login route
+  app.post('/login', passport.authenticate('local', { 
+    failureRedirect: '/login-failure', 
+    successRedirect: '/login-success'
+  }));
+
+  // Login failure route
+  app.get('/login-failure', (req, res) => {
+    res.status(401).send('Login attempt failed.');
+  });
+
+  // Login success route
+  app.get('/login-success', (req, res) => {
+    res.status(200).send('Login attempt was successful.');
+  });
+
+  // Start the server
+  const port = process.env.PORT || 8000;
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
 });
-
-app.get('/login-failure', (req, res, next) => {
-  console.log(req.session);
-  res.send('Login Attempt Failed.');
-});
-
-app.get('/login-success', (req, res, next) => {
-  console.log(req.session);
-  res.send('Login Attempt was successful.');
-});
-
-app.listen(8000, () => { console.log('Server started.') });
