@@ -65,6 +65,35 @@ db.once('open', () => {
     });
   });
 
+  app.get('/download/:id', async (req, res) => {
+    const fileId = req.params.id;
+  
+    try {
+      // Fetch the file info based on the object ID
+      const fileInfo = await bucket.find({ _id: new mongoose.Types.ObjectId(fileId) }).toArray();
+  
+      if (fileInfo.length > 0) {
+        const filename = fileInfo[0].filename;
+  
+        // Set the response headers with the filename for saving
+        res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+  
+        // Create a download stream for the file
+        const downloadStream = bucket.openDownloadStream(new mongoose.Types.ObjectId(fileId));
+  
+        // Pipe the file to the response
+        downloadStream.pipe(res);
+      } else {
+        // File not found for the specified object ID
+        res.status(404).send('File not found');
+      }
+    } catch (error) {
+      // Handle any errors that occurred during the file fetching
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+  
   // User registration route
   app.post('/register', (req, res) => {
     User.register(
