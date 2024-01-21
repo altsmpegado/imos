@@ -26,3 +26,6 @@ Section
     ExecWait 'docker build -t docker-app "$INSTDIR"'
 
 SectionEnd
+
+# Fix non safe execution of the installer.
+# License agreement, terms and conditions, including restrictions on sharing or reselling the installer.

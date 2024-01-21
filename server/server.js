@@ -14,6 +14,7 @@ require('dotenv').config();
 
 // Include the user model for saving to MongoDB via mongoose
 const User = require("./models/user");
+const App = require("./models/app");
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI);
@@ -48,21 +49,37 @@ db.once('open', () => {
   const storage = multer.memoryStorage();
   const upload = multer({ storage: storage });
 
-  // Define your file upload route
-  app.post('/upload', upload.single('file'), (req, res) => {
-    const file = req.file;
-    const filename = file.originalname;
-
-    const uploadStream = bucket.openUploadStream(filename);
-    uploadStream.end(file.buffer);
-
-    uploadStream.on('finish', () => {
-      res.status(200).send('File uploaded successfully!');
-    });
-
-    uploadStream.on('error', (error) => {
-      res.status(500).send('Error uploading file');
-    });
+  app.post('/upload', upload.single('file'), async (req, res) => {
+    try {
+      const file = req.file;
+      const filename = file.originalname;
+  
+      const uploadStream = bucket.openUploadStream(filename);
+      uploadStream.end(file.buffer);
+  
+      uploadStream.on('finish', async () => {
+        // Get the ObjectId of the uploaded file
+        const fileId = uploadStream.id;
+  
+        // Save app information in the database
+        const new_app = new App({
+          name: req.body.name,
+          version: req.body.version,
+          info: req.body.info,
+          files: fileId,
+        });
+  
+        await new_app.save();
+  
+        res.status(200).send('File uploaded successfully!');
+      });
+  
+      uploadStream.on('error', (error) => {
+        res.status(500).send('Error uploading file');
+      });
+    } catch (error) {
+      res.status(500).send('Server error');
+    }
   });
 
   app.get('/download/:id', async (req, res) => {
