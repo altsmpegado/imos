@@ -1,5 +1,10 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { download } = require('electron-dl');
+const request = require('request');
+const fs = require('fs');
+
+let appWindow;
+const openApps = {};
 
 function createWindow() {
   const window = new BrowserWindow({
@@ -14,7 +19,36 @@ function createWindow() {
     autoHideMenuBar: true,
   });
 
-  window.loadFile('index.html');
+  window.loadFile('views/index.html');
+}
+
+function createAppWindow(appjson) {
+  return new Promise((resolve, reject) => {
+    appWindow = new BrowserWindow({
+      width: 400,
+      height: 400,
+      autoHideMenuBar: true,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+        enableRemoteModule: true, // Set to true if you use remote module
+        worldSafeExecuteJavaScript: true, // Set to true to enable safe execution of JavaScript
+      },
+    });
+  
+    // Handle window closed
+    appWindow.on('closed', () => {
+      appWindow = null;
+      openApps[appjson.name].closed = true;
+    });
+
+    appWindow.loadFile('views/app.html');
+    appWindow.webContents.on('did-finish-load', () => {
+      const data = fs.readFileSync('userData/loginSettings.json', 'utf8');
+      var { username } = JSON.parse(data);  
+      appWindow.webContents.send('appInfo', appjson, username);
+    });
+  });
 }
 
 app.whenReady().then(createWindow);
@@ -46,3 +80,31 @@ ipcMain.on('downloadFile', (event, { id }) => {
       console.error(err);
     });
 });
+
+ipcMain.on('acquireApp', (event, user, name ) => {
+  var options = {
+    'method': 'POST',
+    'url': `http://localhost:8000/apps/${user}`,
+    form: {
+        'appName': name
+    }
+  };
+
+  request(options, function (error, response) {
+      if (error) throw new Error(error);
+      event.reply('appAcquired');
+      if(response.status == 200){
+        console.log("New App Acquired");
+      }
+  });
+});
+
+ipcMain.on('openAppWindow', (event, appjson) => {
+  if (!openApps[appjson.name] || openApps[appjson.name].closed){
+    createAppWindow(appjson);
+    openApps[appjson.name] = {
+      closed: false    
+    };
+  }
+});
+

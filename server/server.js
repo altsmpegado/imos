@@ -51,6 +51,12 @@ db.once('open', () => {
 
   app.post('/upload', upload.single('file'), async (req, res) => {
     try {
+      // Check if the app with the given name already exists
+      const existingApp = await App.findOne({ name: req.body.name });
+      if (existingApp) {
+        return res.status(400).send('App with this name already exists.');
+      }
+
       const file = req.file;
       const filename = file.originalname;
   
@@ -111,17 +117,81 @@ db.once('open', () => {
     }
   });
   
+  app.get('/apps', async (req, res) => {
+    try {
+      const apps = await App.find();
+      res.json(apps);
+    } catch (error) {
+      console.error('Error fetching apps:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
+  app.get('/apps/:user', async (req, res) => {
+    try {
+      const username = req.params.user;
+  
+      // Find the user by username
+      const user = await User.findOne({ username });
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Return the owned apps list for the user
+      res.status(200).json({ ownedApps: user.ownedApps || [] });
+    } catch (error) {
+      console.error('Error fetching user owned apps:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  });
+
+  app.post('/apps/:user', async (req, res) => {
+    try {
+      // Find the user by username
+      const user = req.params.user;
+      //console.log(req.body);
+      const { appName } = req.body;
+      const existingUser = await User.findOne({ username: user });
+      
+      if (existingUser) {
+        // Check if the app is not already in the owned apps list
+        if (!existingUser.ownedApps.includes(appName)) {
+          // Append the new app to the user's owned apps
+          existingUser.ownedApps.push(appName);
+
+          // Save the updated user document
+          await existingUser.save();
+
+          // Send a success response
+          res.status(200).json({ message: 'App added to owned apps successfully.' });
+        } else {
+          // If the app is already in the owned apps list, send a conflict response
+          res.status(409).json({ message: 'App already exists in owned apps.' });
+        }
+      } else {
+        // If the user is not found, send a not found response
+        res.status(404).json({ message: 'User not found.' });
+      }
+    } catch (error) {
+      // Handle any server error
+      console.error('Error adding app to owned apps:', error);
+      res.status(500).json({ message: 'Server error.' });
+    }
+  });
+
   // User registration route
   app.post('/register', (req, res) => {
     User.register(
       new User({ 
         email: req.body.email, 
-        username: req.body.username 
+        username: req.body.username,
+        ownedApps:  req.body.ownedApps
       }), req.body.password, (err, user) => {
         if (err) {
           res.status(500).send(err.message);
         } else {
-          res.status(201).send({ message: 'Registration successful', user: user });
+          res.status(201).send({ message: 'Registration Successful', user: user });
         }
       }
     );

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' http://localhost:8000; script-src 'self'"
+    />
+    <title id="appTitle">App Information</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+  </head>
+  <body>
+    <div id="appInfo"></div>
+    <button id="downloadButton" class="hidden">Download</button>
+    <button id="acquireButton" class="hidden">Acquire</button>
+    <script type="text/javascript" src="../app_renderer.js"></script>
+  </body>
+</html>

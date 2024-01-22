@@ -147,6 +147,7 @@ app.whenReady().then(() => {
           if (!mainWindow) {
             createWindow();
           }
+          fs.writeFileSync('userData/session.json', JSON.stringify({ username }));
         }
     });
   }
@@ -190,7 +191,8 @@ ipcMain.on('register', (event, userData) => {
         form: {
             'password': userData.password,
             'username': userData.username,
-            'email': userData.email
+            'email': userData.email,
+            'ownedApps': []
         }
     };
     
@@ -241,7 +243,9 @@ ipcMain.on('login', (event, userData) => {
         if (logWindow) {
           logWindow.close();
         }
-    
+        
+        fs.writeFileSync('userData/session.json', JSON.stringify({ username }));
+
         // Show the main window
         if (!mainWindow) {
           createWindow();
@@ -264,6 +268,7 @@ ipcMain.on('logout', (event) => {
   var username = '';
   var password = '';
   fs.writeFileSync('userData/loginSettings.json', JSON.stringify({ username, password }));
+  fs.writeFileSync('userData/session.json', JSON.stringify({ username }));
 });
 
 ipcMain.on('back', (event) => {
