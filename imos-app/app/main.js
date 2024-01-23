@@ -232,6 +232,7 @@ ipcMain.on('login', (event, userData) => {
   request(options, function (error, response) {
       if (error) throw new Error(error);
       if(response.body.includes("/login-success")){
+        fs.writeFileSync('userData/session.json', JSON.stringify({ username }));
         if(remcheck)
           // Save login settings to a file
           fs.writeFileSync('userData/loginSettings.json', JSON.stringify({ username, password }));
@@ -244,8 +245,6 @@ ipcMain.on('login', (event, userData) => {
           logWindow.close();
         }
         
-        fs.writeFileSync('userData/session.json', JSON.stringify({ username }));
-
         // Show the main window
         if (!mainWindow) {
           createWindow();
