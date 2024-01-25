@@ -5,7 +5,7 @@ const { spawn } = require('child_process');
 const openApps = {};
 
 function setupButton(buttonId, appPath) {
-    if (buttonId.includes('docker')){
+    if (buttonId.includes('imos')){
         //const appPath = buttonId.replace('button_', '');
         document.getElementById(buttonId).addEventListener('click', () => {
             ipcRenderer.send('runDockerApp', appPath);
@@ -37,14 +37,14 @@ function launchApp(appPath) {
     });
 }
 
-const installedApps = ['marketplace-app', 'enabler-app', 'settings-app', 'docker-app'];
+const installedApps = ['marketplace-app', 'enabler-app', 'settings-app', 'imos-safety-app'];
 const dynamicButtonsContainer = document.getElementById('dynamicButtonsContainer');
 
 // Dynamically generate buttons for installed apps
 installedApps.forEach((appName, index) => {
     const buttonId = `button_${appName}`;
-    const appPath = appName.includes('docker') ? appName : `${appName}/main.js`;
-
+    const appPath = appName.includes('imos') ? appName : `${appName}/main.js`;
+    console.log(appPath);
     // Create a new button
     const newButton = document.createElement('button');
     newButton.setAttribute('class', 'button-component');
