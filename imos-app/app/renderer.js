@@ -4,15 +4,15 @@ const { spawn } = require('child_process');
 
 const openApps = {};
 
-function setupButton(buttonId) {
+function setupButton(buttonId, appPath) {
     if (buttonId.includes('docker')){
-        const appPath = buttonId.replace('button_', '');
+        //const appPath = buttonId.replace('button_', '');
         document.getElementById(buttonId).addEventListener('click', () => {
             ipcRenderer.send('runDockerApp', appPath);
         });
     }
     else {
-        const appPath = buttonId.replace('button_', '') + '/main.js';
+        //const appPath = buttonId.replace('button_', '') + '/main.js';
         document.getElementById(buttonId).addEventListener('click', () => {
             if (!openApps[appPath] || openApps[appPath].closed) {
                 launchApp(appPath);
@@ -37,11 +37,33 @@ function launchApp(appPath) {
     });
 }
 
+const installedApps = ['marketplace-app', 'enabler-app', 'settings-app', 'docker-app'];
+const dynamicButtonsContainer = document.getElementById('dynamicButtonsContainer');
+
+// Dynamically generate buttons for installed apps
+installedApps.forEach((appName, index) => {
+    const buttonId = `button_${appName}`;
+    const appPath = appName.includes('docker') ? appName : `${appName}/main.js`;
+
+    // Create a new button
+    const newButton = document.createElement('button');
+    newButton.setAttribute('class', 'button-component');
+    newButton.setAttribute('type', 'app');
+    newButton.setAttribute('id', buttonId);
+    newButton.innerHTML = `<span class='circle-info'>${index + 1}</span>`;
+
+    // Append the button to the dynamicButtonsContainer
+    dynamicButtonsContainer.appendChild(newButton);
+
+    // Set up the button click event
+    setupButton(buttonId, appPath);
+});
+
 // Set up buttons
-setupButton('button_marketplace-app'); 
-setupButton('button_enabler-app');
-setupButton('button_settings-app');
-setupButton('button_docker-app');
+// setupButton('button_marketplace-app'); 
+// setupButton('button_enabler-app');
+// setupButton('button_settings-app');
+// setupButton('button_docker-app');
 
 document.getElementById('button_logout').addEventListener('click', () => {
     ipcRenderer.send('logout');
