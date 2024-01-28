@@ -189,6 +189,7 @@ ipcMain.on('register', (event, userData) => {
         'method': 'POST',
         'url': 'http://localhost:8000/register',
         form: {
+            'type': userData.type,
             'password': userData.password,
             'username': userData.username,
             'email': userData.email,

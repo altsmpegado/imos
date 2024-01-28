@@ -23,7 +23,7 @@ Section
     Push "$INSTDIR\docker-app"
 
     ; Execute Docker build command
-    ExecWait 'docker build -t docker-app "$INSTDIR"'
+    ExecWait 'docker build -t imos-app "$INSTDIR"'
 
 SectionEnd
 

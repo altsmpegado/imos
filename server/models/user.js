@@ -3,6 +3,11 @@ const passportLocalMongoose = require('passport-local-mongoose');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
+  type: {
+    type: String,
+    required: true,
+    unique: false
+  },
   username: {
     type: String,
     required: true,
@@ -15,7 +20,7 @@ const UserSchema = new Schema({
   },
   ownedApps: [{
     type: String,
-    unique: true
+    unique: false
   }]
 });
 

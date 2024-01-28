@@ -184,6 +184,7 @@ db.once('open', () => {
   app.post('/register', (req, res) => {
     User.register(
       new User({ 
+        type: req.body.type,
         email: req.body.email, 
         username: req.body.username,
         ownedApps:  req.body.ownedApps
