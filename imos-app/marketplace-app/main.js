@@ -4,6 +4,7 @@ const request = require('request');
 const fs = require('fs');
 
 let appWindow;
+let devForm;
 const openApps = {};
 
 function createWindow() {
@@ -49,6 +50,27 @@ function createAppWindow(appjson) {
       appWindow.webContents.send('appInfo', appjson, username);
     });
   });
+}
+
+function createDevForm() {
+  devForm = new BrowserWindow({
+    width: 400,
+    height: 400,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false, // Set to false to allow the use of preload scripts
+      enableRemoteModule: true, // Set to true if you use remote module
+      worldSafeExecuteJavaScript: true, // Set to true to enable safe execution of JavaScript
+  },
+    autoHideMenuBar: true,
+  });
+
+  devForm.on('closed', () => {
+    devForm = null;
+    openApps['devform'].closed = true;
+  });
+
+  //window.loadFile('views/index.html');
 }
 
 app.whenReady().then(createWindow);
@@ -103,6 +125,15 @@ ipcMain.on('openAppWindow', (event, appjson) => {
   if (!openApps[appjson.name] || openApps[appjson.name].closed){
     createAppWindow(appjson);
     openApps[appjson.name] = {
+      closed: false    
+    };
+  }
+});
+
+ipcMain.on('openDevForm', (event) => {
+  if (!openApps['devform'] || openApps['devform'].closed){
+    createDevForm();
+    openApps['devform'] = {
       closed: false    
     };
   }
