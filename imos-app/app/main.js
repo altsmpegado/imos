@@ -152,7 +152,6 @@ app.whenReady().then(() => {
             .then((response) => response.json())
             
             .then((data) => {
-              console.log(data.user);
               const type = data.user.type;
               fs.writeFileSync('userData/session.json', JSON.stringify({ username, type }));
             })
@@ -244,14 +243,22 @@ ipcMain.on('login', (event, userData) => {
   request(options, function (error, response) {
       if (error) throw new Error(error);
       if(response.body.includes("/login-success")){
-        fs.writeFileSync('userData/session.json', JSON.stringify({ username }));
+
+        fetch(`http://localhost:8000/user/${username}`)
+          .then((response) => response.json())
+          .then((data) => {
+            const type = data.user.type;
+            fs.writeFileSync('userData/session.json', JSON.stringify({ username, type }));
+          })
+          .catch((error) => {
+            console.error('Error fetching app information:', error);
+          });
+
         if(remcheck)
           // Save login settings to a file
           fs.writeFileSync('userData/loginSettings.json', JSON.stringify({ username, password }));
         else {
-          username = '';
-          password = '';
-          fs.writeFileSync('userData/loginSettings.json', JSON.stringify({ username, password }));
+          fs.writeFileSync('userData/loginSettings.json', JSON.stringify({ username:'', password:'' }));
         }
         if (logWindow) {
           logWindow.close();
@@ -276,10 +283,8 @@ ipcMain.on('saveLoginSettings', (event) => {
 ipcMain.on('logout', (event) => {
   mainWindow.close();
   createAuthWindow();
-  var username = '';
-  var password = '';
-  fs.writeFileSync('userData/loginSettings.json', JSON.stringify({ username, password }));
-  fs.writeFileSync('userData/session.json', JSON.stringify({ username }));
+  fs.writeFileSync('userData/loginSettings.json', JSON.stringify({ username:'', password:'' }));
+  fs.writeFileSync('userData/session.json', JSON.stringify({ username:'', type:'' }));
 });
 
 ipcMain.on('back', (event) => {
