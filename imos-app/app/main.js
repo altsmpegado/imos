@@ -147,7 +147,18 @@ app.whenReady().then(() => {
           if (!mainWindow) {
             createWindow();
           }
-          fs.writeFileSync('userData/session.json', JSON.stringify({ username }));
+
+          fetch(`http://localhost:8000/user/${username}`)
+            .then((response) => response.json())
+            
+            .then((data) => {
+              console.log(data.user);
+              const type = data.user.type;
+              fs.writeFileSync('userData/session.json', JSON.stringify({ username, type }));
+            })
+            .catch((error) => {
+              console.error('Error fetching app information:', error);
+            });
         }
     });
   }
