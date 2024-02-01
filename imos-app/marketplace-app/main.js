@@ -55,7 +55,7 @@ function createAppWindow(appjson) {
 function createDevForm() {
   devForm = new BrowserWindow({
     width: 400,
-    height: 400,
+    height: 600,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false, // Set to false to allow the use of preload scripts
@@ -70,7 +70,7 @@ function createDevForm() {
     openApps['devform'].closed = true;
   });
 
-  //window.loadFile('views/index.html');
+  devForm.loadFile('views/form.html');
 }
 
 app.whenReady().then(createWindow);

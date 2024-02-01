@@ -1,27 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' http://localhost:8000; script-src 'self'"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Software Submission Form</title>
 </head>
 <body>
-    <h1<span class='title-info'>Software Submission Form</span></h1>
-    <!--Documentation button-->
-    <form id="submissionForm">
-        <input placeholder="Application Name" id="name" required>
+    <h2>Software Submission Form</h2>
+    <form id="submissionForm" enctype="multipart/form-data">
+        <label for="name">Application Name</label>
+        <br>
+        <input type="text" placeholder="Insert app name" id="name" required>
         <br>
         <br>
-        <input placeholder="Description" id="description" required>
+        <label for="name">Dev Company</label>
+        <br>
+        <input type="text" placeholder="Insert company name" id="company" required>
         <br>
         <br>
-        <input placeholder="Version" id="ver" required>
+        <label for="ver">Version</label>
         <br>
-        <!--Submission Info: in here you should describe any implementation or integration details for revision-->
-        <!--Version update info-->
-        <!--Files submission in zip format-->
-        <!--Documentation button-->
+        <input type="text" placeholder="Insert app version" id="ver" required>
+        <br>
+        <br>
+        <label for="about">About</label>
+        <br>
+        <input type="text" placeholder="About section of the app" id="about" required>
+        <br>
+        <br>
+        <label for="update">Update</label>
+        <br>
+        <input type="text" placeholder="About the update" id="update">
+        <br>
+        <br>
+        <label for="info">Info</label>
+        <br>
+        <input type="text" placeholder="Submission info describing any extra details or issues dev related" id="info">
+        <br>
+        <br>
+        <label for="exeFile">Upload exe File</label>
+        <br>
+        <input type="file" id="exeFile" name="exeFile" accept=".exe" required>
+        <br>
+        <br>
         <button type="submit">Submit for Review</button>
     </form>
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        document.getElementById('submissionForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const appname = document.getElementById('name').value;
+            const company = document.getElementById('company').value;
+            const version = document.getElementById('ver').value;
+            const about = document.getElementById('about').value;
+            const update = document.getElementById('update').value;
+            const info = document.getElementById('info').value;
+            const files = document.getElementById('exeFile').value;
+
+            // Send the registration data to the main process
+            ipcRenderer.send('submit', { type, username, email, password });
+        });
+
+    </script>
 </body>
 </html>

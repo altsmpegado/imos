@@ -70,6 +70,7 @@ db.once('open', () => {
         // Save app information in the database
         const new_app = new App({
           name: req.body.name,
+          company: req.body.company,
           version: req.body.version,
           info: req.body.info,
           files: fileId,

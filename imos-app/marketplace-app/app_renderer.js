@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const appInfoDiv = document.getElementById('appInfo');
     appInfoDiv.innerHTML = `
       <h2>${appjson.name}</h2>
+      <p>Provider: ${appjson.company}</p>
       <p>Version: ${appjson.version}</p>
       <p>Info: ${appjson.info}</p>
     `;

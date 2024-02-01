@@ -177,51 +177,50 @@ ipcMain.on('runDockerApp', (event, app) => {
 
 // Handle Auth events
 ipcMain.on('openLoginWindow', (event) => {
-    createLoginWindow();
-    if (authWindow) {
-      authWindow.close();
-    }
+  createLoginWindow();
+  if (authWindow) {
+    authWindow.close();
+  }
 });
 
 ipcMain.on('openRegisterWindow', (event) => {
-    createRegisterWindow();
-    if (authWindow) {
-        authWindow.close();
-    }
+  createRegisterWindow();
+  if (authWindow) {
+      authWindow.close();
+  }
 });
 
 ipcMain.on('register', (event, userData) => {
-    if (authWindow) {
-      authWindow.close();
-    }
-    
-    var options = {
-        'method': 'POST',
-        'url': 'http://localhost:8000/register',
-        form: {
-            'type': userData.type,
-            'password': userData.password,
-            'username': userData.username,
-            'email': userData.email,
-            'ownedApps': []
+  if (authWindow) {
+    authWindow.close();
+  }
+  
+  var options = {
+      'method': 'POST',
+      'url': 'http://localhost:8000/register',
+      form: {
+          'type': userData.type,
+          'password': userData.password,
+          'username': userData.username,
+          'email': userData.email,
+          'ownedApps': []
+      }
+  };
+  
+  request(options, function (error, response) {
+      if (error) throw new Error(error);
+      console.log(response.body);
+      if(response.body.includes("Successful")){
+        if (regWindow) {
+          regWindow.close();
         }
-    };
-    
-    request(options, function (error, response) {
-        if (error) throw new Error(error);
-        console.log(response.body);
-        if(response.body.includes("Successful")){
-          if (regWindow) {
-            regWindow.close();
-          }
 
-          if (!authWindow) {
-              createAuthWindow();
-          }
+        if (!authWindow) {
+            createAuthWindow();
         }
-    });
-
+      }
   });
+});
 
 ipcMain.on('login', (event, userData) => {
   if (authWindow) {

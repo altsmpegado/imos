@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Error fetching app information:', error);
     });
 
-  if (type == 'dev'){
+  if (type == 'developer'){
     const moreFuncDiv = document.getElementById('moreFunc');
     const devButton = document.createElement('button');
     devButton.textContent = 'Submit App';
