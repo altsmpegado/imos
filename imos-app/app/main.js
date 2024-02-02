@@ -208,7 +208,7 @@ ipcMain.on('register', (event, userData) => {
   
   request(options, function (error, response) {
       if (error) throw new Error(error);
-      console.log(response.body);
+      //console.log(response.body);
       if(response.body.includes("Successful")){
         if (regWindow) {
           regWindow.close();

@@ -311,4 +311,42 @@ db.once('open', () => {
     }
   });
 
+  app.get('/subs/:user', async (req, res) => {
+    try {
+      const username = req.params.user;
+  
+      // Find the user by username
+      const user = await User.findOne({ username });
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Return the owned apps list for the user
+      res.status(200).json({ subApps: user.subApps || [] });
+    } catch (error) {
+      console.error('Error fetching user submited apps:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  });
+
+  app.get('/sub/:id', async (req, res) => {
+    try {
+      const id = req.params.id;
+  
+      // Find the user by username
+      const sub = await Submit.findOne({ _id: id });
+  
+      if (!sub) {
+        return res.status(404).json({ message: 'Submission not found' });
+      }
+  
+      // Return the owned apps list for the user
+      res.status(200).json({ sub });
+    } catch (error) {
+      console.error('Error fetching submission:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  });
+
 });

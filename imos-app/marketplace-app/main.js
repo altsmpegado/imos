@@ -5,6 +5,7 @@ const fs = require('fs');
 
 let appWindow;
 let devForm;
+let subsWindow;
 const openApps = {};
 
 function createWindow() {
@@ -45,7 +46,7 @@ function createAppWindow(appjson) {
 
     appWindow.loadFile('views/app.html');
     appWindow.webContents.on('did-finish-load', () => {
-      const data = fs.readFileSync('userData/loginSettings.json', 'utf8');
+      const data = fs.readFileSync('userData/session.json', 'utf8');
       var { username } = JSON.parse(data);  
       appWindow.webContents.send('appInfo', appjson, username);
     });
@@ -71,6 +72,35 @@ function createDevForm() {
   });
 
   devForm.loadFile('views/form.html');
+}
+
+function createSubsWindow(appjson) {
+  return new Promise((resolve, reject) => {
+    subsWindow = new BrowserWindow({
+      width: 400,
+      height: 400,
+      autoHideMenuBar: true,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+        enableRemoteModule: true, // Set to true if you use remote module
+        worldSafeExecuteJavaScript: true, // Set to true to enable safe execution of JavaScript
+      },
+    });
+  
+    // Handle window closed
+    subsWindow.on('closed', () => {
+      subsWindow = null;
+      openApps['subs'].closed = true;
+    });
+
+    subsWindow.loadFile('views/subs.html');
+    subsWindow.webContents.on('did-finish-load', () => {
+      const data = fs.readFileSync('userData/session.json', 'utf8');
+      var { username } = JSON.parse(data);  
+      subsWindow.webContents.send('subsInfo', username);
+    });
+  });
 }
 
 app.whenReady().then(createWindow);
@@ -157,5 +187,14 @@ ipcMain.on('submited', (event, user, id) => {
   });
   if (devForm) {
     devForm.close();
+  }
+});
+
+ipcMain.on('openSubmissions', (event) => {
+  if (!openApps['subs'] || openApps['subs'].closed){
+    createSubsWindow();
+    openApps['subs'] = {
+      closed: false    
+    };
   }
 });

@@ -32,8 +32,15 @@ document.addEventListener('DOMContentLoaded', () => {
     devButton.addEventListener('click', () => {
       ipcRenderer.send('openDevForm');
     });
-    
     moreFuncDiv.appendChild(devButton);
+    
+    const subStateButton = document.createElement('button');
+    subStateButton.textContent = 'Submissions';
+    subStateButton.addEventListener('click', () => {
+      ipcRenderer.send('openSubmissions');
+    });
+    
+    moreFuncDiv.appendChild(subStateButton);
   }
   
 });
