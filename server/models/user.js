@@ -21,6 +21,10 @@ const UserSchema = new Schema({
   ownedApps: [{
     type: String,
     unique: false
+  }],
+  subApps: [{
+    type: String,
+    unique: false
   }]
 });
 

@@ -202,8 +202,7 @@ ipcMain.on('register', (event, userData) => {
           'type': userData.type,
           'password': userData.password,
           'username': userData.username,
-          'email': userData.email,
-          'ownedApps': []
+          'email': userData.email
       }
   };
   

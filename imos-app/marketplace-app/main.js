@@ -139,7 +139,22 @@ ipcMain.on('openDevForm', (event) => {
   }
 });
 
-ipcMain.on('submited', (event) => {
+ipcMain.on('submited', (event, user, id) => {
+  var options = {
+    'method': 'POST',
+    'url': `http://localhost:8000/subs/${user}`,
+    form: {
+        'subId': id
+    }
+  };
+
+  request(options, function (error, response) {
+      if (error) throw new Error(error);
+      event.reply('appSubmited');
+      if(response.status == 200){
+        console.log("New App Submited");
+      }
+  });
   if (devForm) {
     devForm.close();
   }

@@ -40,9 +40,14 @@ document.getElementById('submissionForm').addEventListener('submit', async (even
         
         request(options, function (error, response) {
             if (error) throw new Error(error);
-            console.log(response.body);
-            if(response.body.includes("submited")){
-                ipcRenderer.send('submited');
+
+            const responseBody = JSON.parse(response.body);
+            const data = fs.readFileSync('userData/session.json', 'utf8');
+            var { username } = JSON.parse(data);
+            //console.log(responseBody);
+            if(responseBody.string.includes("submited")){
+                console.log(responseBody.objectid);
+                ipcRenderer.send('submited', username, responseBody.objectid);
             }
         });
     }

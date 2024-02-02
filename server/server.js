@@ -207,8 +207,7 @@ db.once('open', () => {
       new User({ 
         type: req.body.type,
         email: req.body.email, 
-        username: req.body.username,
-        ownedApps:  req.body.ownedApps
+        username: req.body.username
       }), req.body.password, (err, user) => {
         if (err) {
           res.status(500).send(err.message);
@@ -266,8 +265,8 @@ db.once('open', () => {
         });
   
         await new_submission.save();
-  
-        res.status(200).send('File submited successfully!');
+        
+        res.status(200).json({ string: 'File submited successfully!' , objectid: new_submission.id });
       });
   
       uploadStream.on('error', (error) => {
@@ -275,6 +274,40 @@ db.once('open', () => {
       });
     } catch (error) {
       res.status(500).send('Server error');
+    }
+  });
+
+  app.post('/subs/:user', async (req, res) => {
+    try {
+      // Find the user by username
+      const user = req.params.user;
+      //console.log(req.body);
+      const { subId } = req.body;
+      const existingUser = await User.findOne({ username: user });
+      
+      if (existingUser) {
+        // Check if the app is not already in the owned apps list
+        if (!existingUser.subApps.includes(subId)) {
+          // Append the new app to the user's owned apps
+          existingUser.subApps.push(subId);
+
+          // Save the updated user document
+          await existingUser.save();
+
+          // Send a success response
+          res.status(200).json({ message: 'App added to submission apps successfully.' });
+        } else {
+          // If the app is already in the owned apps list, send a conflict response
+          res.status(409).json({ message: 'App already exists in submission apps.' });
+        }
+      } else {
+        // If the user is not found, send a not found response
+        res.status(404).json({ message: 'User not found.' });
+      }
+    } catch (error) {
+      // Handle any server error
+      console.error('Error submiting app to sub apps:', error);
+      res.status(500).json({ message: 'Server error.' });
     }
   });
 
