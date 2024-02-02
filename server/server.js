@@ -15,6 +15,7 @@ require('dotenv').config();
 // Include the user model for saving to MongoDB via mongoose
 const User = require("./models/user");
 const App = require("./models/app");
+const Submit = require("./models/sub");
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI);
@@ -239,4 +240,42 @@ db.once('open', () => {
   app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
   });
+
+  app.post('/submit', upload.single('file'), async (req, res) => {
+    try {
+      const file = req.file;
+      const filename = file.originalname;
+  
+      const uploadStream = bucket.openUploadStream(filename);
+      uploadStream.end(file.buffer);
+  
+      uploadStream.on('finish', async () => {
+        // Get the ObjectId of the uploaded file
+        const fileId = uploadStream.id;
+  
+        // Save app information in the database
+        const new_submission = new Submit({
+          appname: req.body.appname,
+          company: req.body.company,
+          version: req.body.version,
+          about: req.body.about,
+          update : req.body.update,
+          info: req.body.info,
+          fileId: fileId,
+          state: req.body.state
+        });
+  
+        await new_submission.save();
+  
+        res.status(200).send('File submited successfully!');
+      });
+  
+      uploadStream.on('error', (error) => {
+        res.status(500).send('Error submiting file');
+      });
+    } catch (error) {
+      res.status(500).send('Server error');
+    }
+  });
+
 });

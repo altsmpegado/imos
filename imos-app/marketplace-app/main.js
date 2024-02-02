@@ -139,3 +139,38 @@ ipcMain.on('openDevForm', (event) => {
   }
 });
 
+ipcMain.on('submit', (event, data) => {
+  console.log(data);
+  console.log('OLA');
+  var options = {
+      'method': 'POST',
+      'url': 'http://localhost:8000/submit',
+      form: {
+          'appname': data.appname,
+          'company': data.company,
+          'version': data.version,
+          'about': data.about,
+          'update': data.update,
+          'info': data.info,
+          'file': {
+            value: data.file.value, // This should be a readable stream
+            options: {
+                filename: data.file.options.filename,
+                contentType: null,
+            },
+          },
+          'state': false
+      }
+  };
+  
+  request(options, function (error, response) {
+      if (error) throw new Error(error);
+      console.log(response.body);
+      if(response.body.includes("submited")){
+        if (devForm) {
+          devForm.close();
+        }
+      }
+  });
+  
+});

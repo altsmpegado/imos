@@ -49,24 +49,6 @@
         <br>
         <button type="submit">Submit for Review</button>
     </form>
-    <script>
-        const { ipcRenderer } = require('electron');
-
-        document.getElementById('submissionForm').addEventListener('submit', (event) => {
-            event.preventDefault();
-
-            const appname = document.getElementById('name').value;
-            const company = document.getElementById('company').value;
-            const version = document.getElementById('ver').value;
-            const about = document.getElementById('about').value;
-            const update = document.getElementById('update').value;
-            const info = document.getElementById('info').value;
-            const files = document.getElementById('exeFile').value;
-
-            // Send the registration data to the main process
-            ipcRenderer.send('submit', { type, username, email, password });
-        });
-
-    </script>
+    <script type="text/javascript" src="../form_renderer.js"></script>
 </body>
 </html>
