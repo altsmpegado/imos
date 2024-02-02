@@ -1,4 +1,5 @@
 const { ipcRenderer } = require('electron');
+var request = require('request');
 const fs = require('fs');
 
 document.getElementById('submissionForm').addEventListener('submit', async (event) => {
@@ -16,25 +17,34 @@ document.getElementById('submissionForm').addEventListener('submit', async (even
         const file = fileInput.files[0];
         const fileStream = fs.createReadStream(file.path);
 
-        // Send the registration data and file content to the main process
-        ipcRenderer.send('submit', {
-            appname,
-            company,
-            version,
-            about,
-            update,
-            info,
-            file: {
-                value: fileStream,
-                options: {
-                    filename: file.name,
-                    contentType: null,
+        var options = {
+            'method': 'POST',
+            'url': 'http://localhost:8000/submit',
+            formData: {
+                'appname': appname,
+                'company': company,
+                'version': version,
+                'about': about,
+                'update': update,
+                'info': info,
+                'file': {
+                    value: fileStream,
+                    options: {
+                        filename: file.name,
+                        contentType: null,
+                    },
                 },
-            },
+                'state': 'false'
+            }
+        };
+        
+        request(options, function (error, response) {
+            if (error) throw new Error(error);
+            console.log(response.body);
+            if(response.body.includes("submited")){
+                ipcRenderer.send('submited');
+            }
         });
-    } else {
-        // Handle the case when no file is selected
-        console.error('No file selected');
     }
 });
 
