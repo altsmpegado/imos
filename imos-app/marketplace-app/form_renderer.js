@@ -53,3 +53,6 @@ document.getElementById('submissionForm').addEventListener('submit', async (even
     }
 });
 
+document.getElementById('button_doc').addEventListener('click', () => {
+    ipcRenderer.send('openSubDoc');
+});

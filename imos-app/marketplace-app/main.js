@@ -6,6 +6,7 @@ const fs = require('fs');
 let appWindow;
 let devForm;
 let subsWindow;
+let subdocWindow;
 const openApps = {};
 
 function createWindow() {
@@ -74,7 +75,7 @@ function createDevForm() {
   devForm.loadFile('views/form.html');
 }
 
-function createSubsWindow(appjson) {
+function createSubsWindow() {
   return new Promise((resolve, reject) => {
     subsWindow = new BrowserWindow({
       width: 400,
@@ -101,6 +102,27 @@ function createSubsWindow(appjson) {
       subsWindow.webContents.send('subsInfo', username);
     });
   });
+}
+
+function createSubDocWindow() {
+  subdocWindow = new BrowserWindow({
+    width: 400,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false, // Set to false to allow the use of preload scripts
+      enableRemoteModule: true, // Set to true if you use remote module
+      worldSafeExecuteJavaScript: true, // Set to true to enable safe execution of JavaScript
+  },
+    autoHideMenuBar: true,
+  });
+
+  subdocWindow.on('subdoc', () => {
+    subdocWindow = null;
+    openApps['subdoc'].closed = true;
+  });
+
+  //devForm.loadFile('views/doc.html');
 }
 
 app.whenReady().then(createWindow);
@@ -194,6 +216,15 @@ ipcMain.on('openSubmissions', (event) => {
   if (!openApps['subs'] || openApps['subs'].closed){
     createSubsWindow();
     openApps['subs'] = {
+      closed: false    
+    };
+  }
+});
+
+ipcMain.on('openSubDoc', (event) => {
+  if (!openApps['subdoc'] || openApps['subdoc'].closed){
+    createSubDocWindow();
+    openApps['subdoc'] = {
       closed: false    
     };
   }
