@@ -15,5 +15,14 @@ spec:
       containers:
       - name: docker-app
         image: docker-app:latest
-        ports:
-        - containerPort: 8080
+        env:
+        - name: DISPLAY
+          value: "host.docker.internal:0"
+        volumeMounts:
+        - name: x11-socket
+          mountPath: /tmp/.X11-unix
+    volumes:
+    - name: x11-socket
+      hostPath:
+        path: /tmp/.X11-unix
+
