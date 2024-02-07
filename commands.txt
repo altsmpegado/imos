@@ -21,3 +21,5 @@ docker-app commands
 docker build -t docker-app .
 docker run -it --rm -e DISPLAY=host.docker.internal:0 docker-app
 
+Minikube's Docker daemon
+minikube -p minikube docker-env --shell powershell | Invoke-Expression
