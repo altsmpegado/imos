@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const data = await fetch(`http://localhost:8000/subs/${user}`).then(response => response.json());
       const subAppsData = await Promise.all(data.subApps.map(async (id) => {
         const subApp = await fetch(`http://localhost:8000/sub/${id}`).then(response => response.json());
-        return subApp.sub; // Assuming 'sub' is the object within subApp containing the details
+        return subApp.sub;
       }));
 
       subAppsData.forEach((subApp) => {

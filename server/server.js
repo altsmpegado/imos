@@ -12,7 +12,7 @@ const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
 require('dotenv').config();
 
-// Include the user model for saving to MongoDB via mongoose
+// Include the models for saving to MongoDB via mongoose
 const User = require("./models/user");
 const App = require("./models/app");
 const Submit = require("./models/sub");

@@ -84,8 +84,8 @@ function createSubsWindow() {
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
-        enableRemoteModule: true, // Set to true if you use remote module
-        worldSafeExecuteJavaScript: true, // Set to true to enable safe execution of JavaScript
+        enableRemoteModule: true,
+        worldSafeExecuteJavaScript: true,
       },
     });
   
@@ -110,9 +110,9 @@ function createSubDocWindow() {
     height: 600,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false, // Set to false to allow the use of preload scripts
-      enableRemoteModule: true, // Set to true if you use remote module
-      worldSafeExecuteJavaScript: true, // Set to true to enable safe execution of JavaScript
+      contextIsolation: false,
+      enableRemoteModule: true,
+      worldSafeExecuteJavaScript: true,
   },
     autoHideMenuBar: true,
   });

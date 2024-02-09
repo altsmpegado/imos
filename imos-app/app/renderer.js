@@ -67,7 +67,6 @@ function circular() {
     });
 }
 
-// Example usage
 getInstalledApps().then((builtImages) => {
     console.log('Built Images:', builtImages);
     installedApps = defaultApps.concat(builtImages);
@@ -93,8 +92,6 @@ getInstalledApps().then((builtImages) => {
         // Set up the button click event
         setupButton(buttonId, appPath);
     });
-
-    // Ensure the circular distribution is applied after dynamic buttons are created
     circular();
 });
 

@@ -20,25 +20,14 @@ function createWindow() {
         autoHideMenuBar: true,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false, // Set to false to allow the use of preload scripts
-            enableRemoteModule: true, // Set to true if you use remote module
-            worldSafeExecuteJavaScript: true, // Set to true to enable safe execution of JavaScript
+            contextIsolation: false,
+            enableRemoteModule: true,
+            worldSafeExecuteJavaScript: true,
         },
     });
 
-    // Set a secure Content Security Policy
-    /*mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-        details.responseHeaders['Content-Security-Policy'] = [
-            "default-src 'self'",
-            "script-src 'self'",
-            "style-src 'self'"
-        ];
-        callback({ cancel: false, responseHeaders: details.responseHeaders });
-    });*/
-
     mainWindow.loadFile('views/index.html');
 
-    // Handle window closed
     mainWindow.on('closed', () => {
       mainWindow = null;
     });
@@ -76,8 +65,8 @@ function createLoginWindow() {
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
-        enableRemoteModule: true, // Set to true if you use remote module
-        worldSafeExecuteJavaScript: true, // Set to true to enable safe execution of JavaScript
+        enableRemoteModule: true,
+        worldSafeExecuteJavaScript: true,
       },
     });
   
@@ -99,8 +88,8 @@ function createRegisterWindow() {
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
-        enableRemoteModule: true, // Set to true if you use remote module
-        worldSafeExecuteJavaScript: true, // Set to true to enable safe execution of JavaScript
+        enableRemoteModule: true,
+        worldSafeExecuteJavaScript: true,
       },
     });
   
@@ -117,7 +106,6 @@ function createRegisterWindow() {
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
       createAuthWindow();
-      //createWindow();
   }
 });
 
@@ -170,12 +158,10 @@ app.on('window-all-closed', () => {
     }
 });
 
-// Handle Docker button click
 ipcMain.on('runDockerApp', (event, app) => {
     createDockerProcess(app);
 });
 
-// Handle Auth events
 ipcMain.on('openLoginWindow', (event) => {
   createLoginWindow();
   if (authWindow) {
@@ -253,7 +239,6 @@ ipcMain.on('login', (event, userData) => {
           });
 
         if(remcheck)
-          // Save login settings to a file
           fs.writeFileSync('userData/loginSettings.json', JSON.stringify({ username, password }));
         else {
           fs.writeFileSync('userData/loginSettings.json', JSON.stringify({ username:'', password:'' }));
@@ -262,7 +247,6 @@ ipcMain.on('login', (event, userData) => {
           logWindow.close();
         }
         
-        // Show the main window
         if (!mainWindow) {
           createWindow();
         }

@@ -3,7 +3,6 @@ const { ipcMain } = require('electron');
 const { spawn } = require('child_process');
 
 function createDockerProcess(appName) {
-    // Replace 'docker-app' with the name of your Docker image
     const dockerProcess = spawn('docker', [
         'run',
         '--rm',
