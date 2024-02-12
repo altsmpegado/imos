@@ -1,7 +1,3 @@
-// https://medium.com/swlh/set-up-an-express-js-app-with-passport-js-and-mongodb-for-password-authentication-6ea05d95335c
-// https://javascript.plainenglish.io/session-authentication-with-node-js-express-passport-and-mongodb-ffd1eea4521c
-// https://github.com/bradtraversy/mongo_file_uploads/tree/master
-
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
