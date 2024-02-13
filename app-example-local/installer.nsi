@@ -1,8 +1,8 @@
-Outfile "DockerInstaller.exe"
-InstallDir $PROGRAMFILES\IMOS\Apps\DockerApp
+Outfile "ExampleInstaller.exe"
+InstallDir $PROGRAMFILES\IMOS\Apps\ExampleApp
 
 # Specify the icon file
-Icon ".\docker-app\3689119.ico"
+Icon ".\docker-app-local\3689119.ico"
 
 # Request user agreement
 Page license
@@ -17,13 +17,13 @@ Section
     CreateDirectory $INSTDIR
 
     ; Copy Docker container files to the installation directory
-    File /r /x *.dockerignore /x node_modules "docker-app\*.*"
+    File /r /x *.dockerignore /x node_modules "docker-app-local\*.*"
 
-    ; Change working directory to the Docker directory
-    Push "$INSTDIR\docker-app"
+    ; Run the kubectl apply command to deploy the Kubernetes resources
+    ExecWait 'kubectl apply -f deployment.yaml'
 
-    ; Execute Docker build command
-    ExecWait 'docker build -t imos-app "$INSTDIR"'
+    ; Expose the deployment as a service
+    ExecWait 'kubectl expose deployment imos-local-deployment --type=NodePort --port=80'
 
 SectionEnd
 
