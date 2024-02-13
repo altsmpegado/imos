@@ -1,6 +1,7 @@
 const { ipcRenderer } = require('electron');
 const { spawn } = require('child_process');
 const Docker = require('dockerode');
+const { KubeConfig, AppsV1Api } = require('@kubernetes/client-node');
 
 const openApps = {};
 
@@ -40,16 +41,29 @@ async function getInstalledApps() {
     const docker = new Docker();
 
     try {
-        const images = await docker.listImages();
-        const builtImages = images
+        // Fetch Docker images
+        const dockerImages = await docker.listImages();
+        const builtImages = dockerImages
             .filter((image) => image.RepoTags)
             .filter((image) => image.RepoTags.some((tag) => tag.includes('imos')))
             .map((image) => image.RepoTags.map((tag) => tag.split(':')[0]))
             .flat();
 
-        return builtImages;
+        // Fetch Kubernetes deployments
+        const kubeconfig = new KubeConfig();
+        kubeconfig.loadFromDefault();
+        const k8sApi = kubeconfig.makeApiClient(AppsV1Api);
+        const response = await k8sApi.listNamespacedDeployment('default');
+        const deployedApps = response.body.items
+            .filter((deployment) => deployment.metadata.name.includes('imos'))
+            .map((deployment) => deployment.metadata.name);
+
+        // Merge Docker images and Kubernetes deployments into one list
+        const installedApps = [...builtImages, ...deployedApps];
+
+        return installedApps;
     } catch (error) {
-        console.error('Error fetching Docker images:', error);
+        console.error('Error fetching Docker images and Kubernetes deployments:', error);
         return [];
     }
 }

@@ -25,5 +25,5 @@ Minikube's Docker daemon
 minikube -p minikube docker-env --shell powershell | Invoke-Expression
 Check service url
 minikube service imos-local-deployment --url
-Expose deplotyment to create service
-minikube service imos-local-deployment --url
+Expose deployment to create service
+kubectl expose deployment imos-local-deployment --type=NodePort --port=80
