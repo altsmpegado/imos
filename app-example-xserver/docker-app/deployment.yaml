@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: docker-app
+  name: docker-app-deployment
 spec:
   replicas: 1
   selector:
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: docker-app
-        image: docker-app:latest
+        image: altsmpegado/docker-app:latest
         env:
         - name: DISPLAY
           value: "host.docker.internal:0"
