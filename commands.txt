@@ -20,6 +20,8 @@ sudo docker run --rm -it --privileged --device=/dev/video0:/dev/video0 --env DIS
 docker-app commands
 docker build -t docker-app .
 docker run -it --rm -e DISPLAY=host.docker.internal:0 docker-app
+Docker issue with default workspace
+docker context use default
 
 Minikube's Docker daemon
 minikube -p minikube docker-env --shell powershell | Invoke-Expression

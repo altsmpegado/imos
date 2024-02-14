@@ -13,7 +13,7 @@
     "request": "^2.88.2"
   },
   "scripts": {
-    "start": "electron .",
+    "start": "minikube status | findstr /C:\"Running\" > nul && electron . || minikube start && electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "altsmpegado",
