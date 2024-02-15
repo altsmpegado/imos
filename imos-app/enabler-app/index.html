@@ -14,6 +14,15 @@
   </head>
   <body>
     <h1>IMOSKube</h1>
-    <p id="info"></p>
+    <div class="deployment-info">
+      <label for="deployment-name">Deployment Name:</label>
+      <input type="text" id="deployment-name" placeholder="Enter deployment name">
+      <button onclick="startDeployment()">Start Deployment</button>
+      <button onclick="stopDeployment()">Stop Deployment</button>
+    </div>
+  
+    <div id="status-message"></div>
+  
+    <script src="renderer.js"></script>
   </body>
 </html>
