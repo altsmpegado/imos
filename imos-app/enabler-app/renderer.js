@@ -7,7 +7,28 @@ function startDeployment() {
     return;
   }
 
-  ipcRenderer.send('start-deployment', deploymentName);
+  if(deploymentName.includes("deployment")){
+
+    const deploymentFileInput = document.createElement('input');
+    deploymentFileInput.type = 'file';
+    deploymentFileInput.accept = '.yaml'; // Allow only YAML files
+
+    // Listen for change event when user selects a file
+    deploymentFileInput.addEventListener('change', () => {
+      const file = deploymentFileInput.files[0];
+      if (file) {
+        //console.log(file.path);
+        ipcRenderer.send('start-deployment', { name: file.name, path: file.path });
+      }
+    });
+  }
+
+  else{
+    ipcRenderer.send('start-deployment', { name: deploymentName, path: "" });
+  }
+
+  // Trigger click event to open file dialog
+  deploymentFileInput.click();
 }
 
 function stopDeployment() {
@@ -19,37 +40,14 @@ function stopDeployment() {
 
   ipcRenderer.send('stop-deployment', deploymentName);
 }
-
-function startContainer(containerName) {
-    exec(`docker start ${containerName}`, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error starting container: ${error.message}`);
-        return;
-      }
-      if (stderr) {
-        console.error(`Error starting container: ${stderr}`);
-        return;
-      }
-      console.log(`Container started: ${containerName}`);
-    });
-  }
-  
-  function stopContainer(containerName) {
-    exec(`docker stop ${containerName}`, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error stopping container: ${error.message}`);
-        return;
-      }
-      if (stderr) {
-        console.error(`Error stopping container: ${stderr}`);
-        return;
-      }
-      console.log(`Container stopped: ${containerName}`);
-    });
-  }
   
 function displayMessage(message, type) {
   const statusMessage = document.getElementById('status-message');
   statusMessage.innerHTML = message;
   statusMessage.className = type;
 }
+
+// Listen for response from main process
+ipcRenderer.on('deployment-status', (event, message) => {
+  displayMessage(message, 'info');
+});
