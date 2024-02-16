@@ -8,10 +8,10 @@ function startDeployment() {
   }
 
   if(deploymentName.includes("deployment")){
-
+    // Instead of picking deployment file we can just assume the path
     const deploymentFileInput = document.createElement('input');
     deploymentFileInput.type = 'file';
-    deploymentFileInput.accept = '.yaml'; // Allow only YAML files
+    deploymentFileInput.accept = '.yaml';
 
     // Listen for change event when user selects a file
     deploymentFileInput.addEventListener('change', () => {
