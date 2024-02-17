@@ -12,7 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // Create download button for each app
       apps.forEach((app) => {
-        console.log(app);
+        const appjson = JSON.stringify(app);
+        console.log(appjson);
         const cardHtml = `
         <div class="col-xl-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s" style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInUp;">
             <div class="themes-box">

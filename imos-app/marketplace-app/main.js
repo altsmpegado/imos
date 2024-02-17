@@ -165,15 +165,16 @@ ipcMain.on('acquireApp', (event, user, name ) => {
   };
 
   request(options, function (error, response) {
-      if (error) throw new Error(error);
-      event.reply('appAcquired');
-      if(response.status == 200){
-        console.log("New App Acquired");
-      }
+    if (error) throw new Error(error);
+    event.reply('appAcquired');
+    if(response.status == 200){
+      console.log("New App Acquired");
+    }
   });
 });
 
-ipcMain.on('openAppWindow', (event, appjson) => {
+ipcMain.on('openAppWindow', (event, app) => {
+  const appjson = JSON.parse(app);
   if (!openApps[appjson.name] || openApps[appjson.name].closed){
     createAppWindow(appjson);
     openApps[appjson.name] = {
