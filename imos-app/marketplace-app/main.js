@@ -174,6 +174,7 @@ ipcMain.on('acquireApp', (event, user, name ) => {
 });
 
 ipcMain.on('openAppWindow', (event, app) => {
+  console.log(app);
   const appjson = JSON.parse(app);
   if (!openApps[appjson.name] || openApps[appjson.name].closed){
     createAppWindow(appjson);
