@@ -28,8 +28,8 @@ function createWindow() {
 function createAppWindow(appjson) {
   return new Promise((resolve, reject) => {
     appWindow = new BrowserWindow({
-      width: 400,
-      height: 400,
+      width: 1000,
+      height: 600,
       autoHideMenuBar: true,
       webPreferences: {
         nodeIntegration: true,
