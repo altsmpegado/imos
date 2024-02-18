@@ -22,6 +22,184 @@ document.addEventListener('DOMContentLoaded', () => {
     const appInfoDiv = document.getElementById('appInfo');
     appInfoDiv.innerHTML = `
     <div class="row">
+        <div class="col-xl-4 col-lg-6">
+            <div class="product-information-content  wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
+                <div class="pi-content">
+                    <img src="assets/images/pd-icon-1.png" alt="">
+
+                    <h4>${appjson.name}</h4>
+                    <a href="author-product.html" class="linko">${appjson.company} Portfolio</a>
+                    <div class="icon-box">
+                        <a class="sit-preview item" href="assets/images/unique-theme/unique-1.png">
+                            <img alt="Linnor - Digital Agency Wordpress Theme" class="envato-preview" data-item-currency="$" src="assets/images/new-item/new-1.png" data-preview-url="assets/images/unique-theme/unique-1.png" data-item-name="Smart CRON Tools" data-item-cost="69" data-item-category="WordPress" data-item-author="DivDojo">
+                        </a>
+                        <a class="sit-preview item" href="assets/images/unique-theme/unique-2.png">
+                            <img alt="Linnor - Digital Agency Wordpress Theme" class="envato-preview" data-item-currency="$" src="assets/images/new-item/new-2.png" data-preview-url="assets/images/unique-theme/unique-2.png" data-item-name="Smart CRON Tools" data-item-cost="69" data-item-category="WordPress" data-item-author="DivDojo">
+                        </a>
+                        <a class="sit-preview item" href="assets/images/unique-theme/unique-3.png">
+                            <img alt="Linnor - Digital Agency Wordpress Theme" class="envato-preview" data-item-currency="$" src="assets/images/new-item/new-3.png" data-preview-url="assets/images/unique-theme/unique-3.png" data-item-name="Smart CRON Tools" data-item-cost="69" data-item-category="WordPress" data-item-author="DivDojo">
+                        </a>
+
+                    </div>
+                </div>
+                <div class="price-rating">
+                    <h3 class="priced">$59.00</h3>
+                    <div class="rating">
+                        <span>
+                            02 Review </span>
+                        <span class="i-box">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </span>
+
+                    </div>
+                </div>
+                <div class="button-boxo">
+                    <span class="info">
+                        <i class="fas fa-cart-plus"></i> 498 Sale
+                    </span>
+                    <span class="info">
+                        <i class="fas fa-star"></i> 231 Rating
+                    </span>
+                </div>
+                <div class="button-2">
+                    <button class="main-btn one">
+                        Add To Cart
+                    </button>
+                    <button id="downloadButton" class="main-btn one hidden">Download</button>
+                    <button id="acquireButton" class="main-btn one hidden">Acquire</button>
+                </div>
+            </div>
+            <div class="product-information  wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
+                <div class="left-box">
+                    <p class="text">Last update :</p>
+                    <p class="text">Version :</p>
+                </div>
+                <div class="right-box">
+                    <a href="#0" class="link"> 28 December 2021 </a>
+                    <a href="#0" class="link version"> 2.01 </a>
+                </div>
+            </div>
+            <div class="product-information  wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
+                <div class="left-box">
+                    <p class="text">Released :</p>
+                    <p class="text">Frame work :</p>
+                </div>
+                <div class="right-box">
+                    <a href="#0" class="link"> 28 December 2021 </a>
+                    <a href="#0" class="link"> Underscore </a>
+                </div>
+            </div>
+            <div class="product-information  wow fadeInUp" style="visibility: visible; animation-name: none;">
+                <div class="left-box">
+                    <p class="text">Support :</p>
+                    <p class="text">Documented :</p>
+                </div>
+                <div class="right-box">
+                    <a href="#0" class="link"> 12 Hours in a Day </a>
+                    <a href="#0" class="link"> Themes &amp; Plugins </a>
+                </div>
+            </div>
+            <div class="product-information  wow fadeInUp" style="visibility: visible; animation-name: none;">
+                <div class="left-box">
+                    <p class="text">Compatible Browsers</p>
+                </div>
+                <div class="right-box">
+                    <a href="#0" class="link"> Chrome </a>
+                    <a href="#0" class="link"> Edge </a>
+                    <a href="#0" class="link"> Firefox </a>
+                    <a href="#0" class="link"> IE10 </a>
+                    <a href="#0" class="link"> IE11 </a>
+                    <a href="#0" class="link"> Opera </a>
+                    <a href="#0" class="link"> Safari </a>
+                </div>
+            </div>
+            <div class="product-information  wow fadeInUp" style="visibility: visible; animation-name: none;">
+                <div class="left-box">
+                    <p class="text">Compatible With</p>
+                </div>
+                <div class="right-box">
+                    <a href="#0" class="link">bbPress 2.5.x</a>
+                    <a href="#0" class="link">BuddyPress 4.1.x Easy</a>
+                    <a href="#0" class="link">Digital Downloads</a>
+                    <a href="#0" class="link">Events Calendar</a>
+                    <a href="#0" class="link">Events Calendar Pro</a>
+                    <a href="#0" class="link">Gravity Forms</a>
+                    <a href="#0" class="link">WooCommerce 3.6.x</a>
+                    <a href="#0" class="link">WPML</a>
+                </div>
+            </div>
+            <div class="product-information  wow fadeInUp" style="visibility: visible; animation-name: none;">
+                <div class="left-box">
+                    <p class="text">Software Version</p>
+                </div>
+                <div class="right-box">
+                    <a href="#0" class="link">WordPress 4.5</a>
+                    <a href="#0" class="link">WordPress 4.5.1</a>
+                    <a href="#0" class="link">WordPress 4.5.2</a>
+                    <a href="#0" class="link">WordPress 4.5.x</a>
+                    <a href="#0" class="link">WordPress 4.6</a>
+                    <a href="#0" class="link">WordPress 4.6.1</a>
+                    <a href="#0" class="link">WordPress 4.7.x</a>
+                </div>
+            </div>
+
+            <div class="product-information  wow fadeInUp" style="visibility: visible; animation-name: none;">
+                <div class="left-box">
+                    <p class="text">Files Included</p>
+                </div>
+                <div class="right-box">
+                    <a href="#0" class="link">CSS Files,</a>
+                    <a href="#0" class="link">JS Files,</a>
+                    <a href="#0" class="link">Layered PSD,</a>
+                    <a href="#0" class="link">HTML File,</a>
+                    <a href="#0" class="link">PHP Files</a>
+                </div>
+            </div>
+            <div class="product-information  wow fadeInUp" style="visibility: visible; animation-name: none;">
+                <div class="left-box">
+                    <p class="text">Columns Layout</p>
+                    <p class="text">Layout</p>
+                </div>
+                <div class="right-box">
+                    <a href="#0" class="link">4+,</a>
+                    <a href="#0" class="link">Responsive</a>
+                </div>
+            </div>
+            <div class="product-information  wow fadeInUp" style="visibility: visible; animation-name: none;">
+                <div class="left-box">
+                    <p class="text">License</p>
+                </div>
+                <div class="right-box">
+                    <a href="#0" class="link">Extended License,</a>
+                    <a href="#0" class="link">Regular License,</a>
+                </div>
+            </div>
+            <div class="product-information  wow fadeInUp" style="visibility: visible; animation-name: none;">
+                <div class="left-box">
+                    <p class="text">Tag :</p>
+                </div>
+                <div class="right-box">
+                    <a href="#0" class="link">business,</a>
+                    <a href="#0" class="link">Car,</a>
+                    <a href="#0" class="link">Insurance,</a>
+                    <a href="#0" class="link">corporate,</a>
+                    <a href="#0" class="link">websites,</a>
+                    <a href="#0" class="link">finance,</a>
+                    <a href="#0" class="link">health,</a>
+                    <a href="#0" class="link">insurance,</a>
+                    <a href="#0" class="link">insurance,</a>
+                    <a href="#0" class="link">insurance,</a>
+                    <a href="#0" class="link">insurance agency,</a>
+                    <a href="#0" class="link">insurance company,</a>
+                    <a href="#0" class="link">insurance theme,</a>
+                    <a href="#0" class="link">life insurance</a>
+                </div>
+            </div>
+        </div>
         <div class="col-xl-8">
             <div class="detsils-box">
                 <div class="box-one">
@@ -58,8 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <a class="nav-link active" id="pills-description-tab" data-toggle="pill" href="#pills-description" role="tab" aria-controls="pills-description" aria-selected="true">Description</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="pills-additional-information-tab" data-toggle="pill" href="#pills-additional-imformation" role="tab" aria-controls="pills-additional-imformation" aria-selected="false">Additional
-                                Imformation</a>
+                            <a class="nav-link" id="pills-additional-imformation-tab" data-toggle="pill" href="#pills-additional-imformation" role="tab" aria-controls="pills-additional-imformation" aria-selected="false">Additional Imformation</a>
                         </li>
                         <li class="nav-item" role="presentation">
                             <a class="nav-link" id="pills-review-tab" data-toggle="pill" href="#pills-review" role="tab" aria-controls="pills-review" aria-selected="false">Review(05)</a>
@@ -341,189 +518,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-4 col-lg-6">
-            <div class="product-information-content  wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
-                <div class="pi-content">
-                    <img src="assets/images/pd-icon-1.png" alt="">
-
-                    <h4>${appjson.name}</h4>
-                    <a href="author-product.html" class="linko">${appjson.company} Portfolio</a>
-                    <div class="icon-box">
-                        <a class="sit-preview item" href="assets/images/unique-theme/unique-1.png">
-                            <img alt="Linnor - Digital Agency Wordpress Theme" class="envato-preview" data-item-currency="$" src="assets/images/new-item/new-1.png" data-preview-url="assets/images/unique-theme/unique-1.png" data-item-name="Smart CRON Tools" data-item-cost="69" data-item-category="WordPress" data-item-author="DivDojo">
-                        </a>
-                        <a class="sit-preview item" href="assets/images/unique-theme/unique-2.png">
-                            <img alt="Linnor - Digital Agency Wordpress Theme" class="envato-preview" data-item-currency="$" src="assets/images/new-item/new-2.png" data-preview-url="assets/images/unique-theme/unique-2.png" data-item-name="Smart CRON Tools" data-item-cost="69" data-item-category="WordPress" data-item-author="DivDojo">
-                        </a>
-                        <a class="sit-preview item" href="assets/images/unique-theme/unique-3.png">
-                            <img alt="Linnor - Digital Agency Wordpress Theme" class="envato-preview" data-item-currency="$" src="assets/images/new-item/new-3.png" data-preview-url="assets/images/unique-theme/unique-3.png" data-item-name="Smart CRON Tools" data-item-cost="69" data-item-category="WordPress" data-item-author="DivDojo">
-                        </a>
-
-                    </div>
-                </div>
-                <div class="price-rating">
-                    <h3 class="priced">$59.00</h3>
-                    <div class="rating">
-                        <span>
-                            02 Review </span>
-                        <span class="i-box">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                        </span>
-
-                    </div>
-                </div>
-                <div class="button-boxo">
-                    <span class="info">
-                        <i class="fas fa-cart-plus"></i> 498 Sale
-                    </span>
-                    <span class="info">
-                        <i class="fas fa-star"></i> 231 Rating
-                    </span>
-                </div>
-                <div class="button-2">
-                    <a href="cart.html">
-                        <button class="main-btn one">
-                            Add To Cart
-                        </button>
-                    </a>
-                    <a href="checkout.html">
-                        <button class="main-btn">
-                            Buy Now
-                        </button>
-                    </a>
-                </div>
-            </div>
-            <div class="product-information  wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
-                <div class="left-box">
-                    <p class="text">Last update :</p>
-                    <p class="text">Version :</p>
-                </div>
-                <div class="right-box">
-                    <a href="#0" class="link"> 28 December 2021 </a>
-                    <a href="#0" class="link version"> 2.01 </a>
-                </div>
-            </div>
-            <div class="product-information  wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
-                <div class="left-box">
-                    <p class="text">Released :</p>
-                    <p class="text">Frame work :</p>
-                </div>
-                <div class="right-box">
-                    <a href="#0" class="link"> 28 December 2021 </a>
-                    <a href="#0" class="link"> Underscore </a>
-                </div>
-            </div>
-            <div class="product-information  wow fadeInUp" style="visibility: hidden; animation-name: none;">
-                <div class="left-box">
-                    <p class="text">Support :</p>
-                    <p class="text">Documented :</p>
-                </div>
-                <div class="right-box">
-                    <a href="#0" class="link"> 12 Hours in a Day </a>
-                    <a href="#0" class="link"> Themes &amp; Plugins </a>
-                </div>
-            </div>
-            <div class="product-information  wow fadeInUp" style="visibility: hidden; animation-name: none;">
-                <div class="left-box">
-                    <p class="text">Compatible Browsers</p>
-                </div>
-                <div class="right-box">
-                    <a href="#0" class="link"> Chrome </a>
-                    <a href="#0" class="link"> Edge </a>
-                    <a href="#0" class="link"> Firefox </a>
-                    <a href="#0" class="link"> IE10 </a>
-                    <a href="#0" class="link"> IE11 </a>
-                    <a href="#0" class="link"> Opera </a>
-                    <a href="#0" class="link"> Safari </a>
-                </div>
-            </div>
-            <div class="product-information  wow fadeInUp" style="visibility: hidden; animation-name: none;">
-                <div class="left-box">
-                    <p class="text">Compatible With</p>
-                </div>
-                <div class="right-box">
-                    <a href="#0" class="link">bbPress 2.5.x</a>
-                    <a href="#0" class="link">BuddyPress 4.1.x Easy</a>
-                    <a href="#0" class="link">Digital Downloads</a>
-                    <a href="#0" class="link">Events Calendar</a>
-                    <a href="#0" class="link">Events Calendar Pro</a>
-                    <a href="#0" class="link">Gravity Forms</a>
-                    <a href="#0" class="link">WooCommerce 3.6.x</a>
-                    <a href="#0" class="link">WPML</a>
-                </div>
-            </div>
-            <div class="product-information  wow fadeInUp" style="visibility: hidden; animation-name: none;">
-                <div class="left-box">
-                    <p class="text">Software Version</p>
-                </div>
-                <div class="right-box">
-                    <a href="#0" class="link">WordPress 4.5</a>
-                    <a href="#0" class="link">WordPress 4.5.1</a>
-                    <a href="#0" class="link">WordPress 4.5.2</a>
-                    <a href="#0" class="link">WordPress 4.5.x</a>
-                    <a href="#0" class="link">WordPress 4.6</a>
-                    <a href="#0" class="link">WordPress 4.6.1</a>
-                    <a href="#0" class="link">WordPress 4.7.x</a>
-                </div>
-            </div>
-
-            <div class="product-information  wow fadeInUp" style="visibility: hidden; animation-name: none;">
-                <div class="left-box">
-                    <p class="text">Files Included</p>
-                </div>
-                <div class="right-box">
-                    <a href="#0" class="link">CSS Files,</a>
-                    <a href="#0" class="link">JS Files,</a>
-                    <a href="#0" class="link">Layered PSD,</a>
-                    <a href="#0" class="link">HTML File,</a>
-                    <a href="#0" class="link">PHP Files</a>
-                </div>
-            </div>
-            <div class="product-information  wow fadeInUp" style="visibility: hidden; animation-name: none;">
-                <div class="left-box">
-                    <p class="text">Columns Layout</p>
-                    <p class="text">Layout</p>
-                </div>
-                <div class="right-box">
-                    <a href="#0" class="link">4+,</a>
-                    <a href="#0" class="link">Responsive</a>
-                </div>
-            </div>
-            <div class="product-information  wow fadeInUp" style="visibility: hidden; animation-name: none;">
-                <div class="left-box">
-                    <p class="text">License</p>
-                </div>
-                <div class="right-box">
-                    <a href="#0" class="link">Extended License,</a>
-                    <a href="#0" class="link">Regular License,</a>
-                </div>
-            </div>
-            <div class="product-information  wow fadeInUp" style="visibility: hidden; animation-name: none;">
-                <div class="left-box">
-                    <p class="text">Tag :</p>
-                </div>
-                <div class="right-box">
-                    <a href="#0" class="link">business,</a>
-                    <a href="#0" class="link">Car,</a>
-                    <a href="#0" class="link">Insurance,</a>
-                    <a href="#0" class="link">corporate,</a>
-                    <a href="#0" class="link">websites,</a>
-                    <a href="#0" class="link">finance,</a>
-                    <a href="#0" class="link">health,</a>
-                    <a href="#0" class="link">insurance,</a>
-                    <a href="#0" class="link">insurance,</a>
-                    <a href="#0" class="link">insurance,</a>
-                    <a href="#0" class="link">insurance agency,</a>
-                    <a href="#0" class="link">insurance company,</a>
-                    <a href="#0" class="link">insurance theme,</a>
-                    <a href="#0" class="link">life insurance</a>
                 </div>
             </div>
         </div>
