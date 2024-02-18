@@ -71,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const moreFuncDiv = document.getElementById('moreFunc');
     const devButton = document.createElement('button');
     devButton.textContent = 'Submit App';
+    devButton.classList.add('main-btn'); 
     devButton.addEventListener('click', () => {
       ipcRenderer.send('openDevForm');
     });
@@ -78,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const subStateButton = document.createElement('button');
     subStateButton.textContent = 'Submissions';
+    subStateButton.classList.add('main-btn'); 
     subStateButton.addEventListener('click', () => {
       ipcRenderer.send('openSubmissions');
     });
