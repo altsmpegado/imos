@@ -943,7 +943,7 @@ h6 {
   font-weight: 700;
   margin: 0px;
   color: #051c35;
-  font-family: "Josefin Sans", sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 ul,
@@ -6854,11 +6854,11 @@ div#preloader .loader-cubes .loader-cube .loader-cube3::before {
   padding-top: 20px;
 }
 
-.product-details .detsils-box .box-two .tab-content .tab-pane .additional-imformation-box {
+.product-details .detsils-box .box-two .tab-content .tab-pane .additional-information-box {
   padding-top: 12px;
 }
 
-.product-details .detsils-box .box-two .tab-content .tab-pane .additional-imformation-box .info-box {
+.product-details .detsils-box .box-two .tab-content .tab-pane .additional-information-box .info-box {
   background: #fff;
   padding: 16px 0px 0px;
   display: -webkit-box;
@@ -6868,23 +6868,23 @@ div#preloader .loader-cubes .loader-cube .loader-cube3::before {
       flex-wrap: wrap;
 }
 
-.product-details .detsils-box .box-two .tab-content .tab-pane .additional-imformation-box .info-box .left-box {
+.product-details .detsils-box .box-two .tab-content .tab-pane .additional-information-box .info-box .left-box {
   width: 134px;
   padding-right: 20px;
 }
 
-.product-details .detsils-box .box-two .tab-content .tab-pane .additional-imformation-box .info-box .left-box p.text {
+.product-details .detsils-box .box-two .tab-content .tab-pane .additional-information-box .info-box .left-box p.text {
   font-size: 16px;
   line-height: 1.62;
   color: #051c35;
   font-weight: 500;
 }
 
-.product-details .detsils-box .box-two .tab-content .tab-pane .additional-imformation-box .info-box .right-box {
+.product-details .detsils-box .box-two .tab-content .tab-pane .additional-information-box .info-box .right-box {
   width: calc(100% - 134px);
 }
 
-.product-details .detsils-box .box-two .tab-content .tab-pane .additional-imformation-box .info-box .right-box a.link {
+.product-details .detsils-box .box-two .tab-content .tab-pane .additional-information-box .info-box .right-box a.link {
   color: #6f7987;
 }
 

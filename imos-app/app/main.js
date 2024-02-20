@@ -15,8 +15,8 @@ var remcheck = false;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
-        width: 1000,
-        height: 600,
+        width: 1200,
+        height: 800,
         autoHideMenuBar: true,
         webPreferences: {
             nodeIntegration: true,

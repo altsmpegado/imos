@@ -233,13 +233,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="box-two">
                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link active" id="pills-description-tab" data-toggle="pill" href="#pills-description" role="tab" aria-controls="pills-description" aria-selected="true">Description</a>
+                            <button class="nav-link active" id="pills-description-tab" data-bs-toggle="pill" data-bs-target="#pills-description" type="button" role="tab" aria-controls="pills-description" aria-selected="true">Description</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="pills-additional-imformation-tab" data-toggle="pill" href="#pills-additional-imformation" role="tab" aria-controls="pills-additional-imformation" aria-selected="false">Additional Imformation</a>
+                            <button class="nav-link" id="pills-additional-information-tab" data-bs-toggle="pill" data-bs-target="#pills-additional-information" type="button" role="tab" aria-controls="pills-additional-information" aria-selected="false">Additional Information</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="pills-review-tab" data-toggle="pill" href="#pills-review" role="tab" aria-controls="pills-review" aria-selected="false">Review(05)</a>
+                            <button class="nav-link" id="pills-review-tab" data-bs-toggle="pill" data-bs-target="#pills-review" type="button" role="tab" aria-controls="pills-review" aria-selected="false">Reviews</button>
                         </li>
                     </ul>
                     <div class="tab-content" id="pills-tabContent">
@@ -323,8 +323,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="pills-additional-imformation" role="tabpanel" aria-labelledby="pills-additional-imformation-tab">
-                            <div class="additional-imformation-box">
+                        <div class="tab-pane fade" id="pills-additional-information" role="tabpanel" aria-labelledby="pills-additional-information-tab">
+                            <div class="additional-information-box">
                                 <div class="info-box">
                                     <div class="left-box">
                                         <p class="text">Gutenberg Optimized </p>

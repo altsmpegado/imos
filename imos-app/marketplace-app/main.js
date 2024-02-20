@@ -11,8 +11,8 @@ const openApps = {};
 
 function createWindow() {
   const window = new BrowserWindow({
-    width: 1000,
-    height: 600,
+    width: 1200,
+    height: 800,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false, // Set to false to allow the use of preload scripts
@@ -28,8 +28,8 @@ function createWindow() {
 function createAppWindow(appjson) {
   return new Promise((resolve, reject) => {
     appWindow = new BrowserWindow({
-      width: 1000,
-      height: 600,
+      width: 1200,
+      height: 800,
       autoHideMenuBar: true,
       webPreferences: {
         nodeIntegration: true,
