@@ -1,79 +1,295 @@
 <!DOCTYPE html>
-<html>
+<html dir="ltr" class="sl-theme-dark" style="--screen-height: 900px;">
   <head>
-    <!--====== Required meta tags ======-->
     <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!--====== Title ======-->
     <title> IMOSMarket </title>
-    <!--====== Bootstrap css ======-->
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <!--=== Owl-Carousel ===-->
-    <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
-    <!--====== Magnific ======-->
-    <link rel="stylesheet" href="assets/css/magnific-popup.css">
-    <!--===nice-select===-->
-    <link rel="stylesheet" href="assets/css/nice-select.css">
-    <!--====== Animate CSS ======-->
-    <link rel="stylesheet" href="assets/css/animate.min.css">
-    <!--====== Font Awesome ======-->
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-    <!--====== Main Css ======-->
-    <link rel="stylesheet" href="assets/css/style.css">
-    <!--====== Responsive Css ======-->
-    <link rel="stylesheet" href="assets/css/responsive.css">
+    <base href="/">
+    <meta name="description" content="Get software applications, services and deployments powered by Docker and Kubernetes">
+    <meta name="keywords" content="IMOS,IMOSMarket,applications,apps,IMOS apps, Docker, Kubernetes">
+
+    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0">
+    <script async="" src="https://www.clarity.ms/s/0.7.20/clarity.js"></script>
+    <script async="" src="https://www.clarity.ms/tag/inyago70pn"></script>
+    <link rel="stylesheet" media="(prefers-color-scheme:light)" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.12.0/cdn/themes/light.css" onerror="this.onerror=null;this.href='shoelace-light-2.12.0.css'">
+    <link rel="stylesheet" media="(prefers-color-scheme:dark)" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.12.0/cdn/themes/dark.css" onload="document.documentElement.classList.add('sl-theme-dark');" onerror="this.onerror=null;this.href='shoelace-dark-2.12.0.css'">
+    <link rel="stylesheet" href="https://apps.microsoft.com/assets/js/index-b5fbfb8f.css">
+    <style>
+      .main-container{
+        display: flex;
+        flex-direction: row;
+      }
+
+      .sidebar{
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        left: 0;
+        top: 0;
+        background-color: white;
+        width: 80px;
+        height: 100%;
+        text-align: center;
+      }
+
+      .panel{
+        width: calc(100% - 80px);
+        padding-left: 80px;
+      }
+
+      .btn-bot{
+        margin-top: auto;
+      }
+
+      .sidebtn{
+        text-align: center;
+      }
+      
+      .products-container.wide {
+        --card-height: 75px;
+        --card-width: calc((100% - 0.75rem * ( 4 - 1)) / 4 );
+      }
+
+      .products-container.direction-column {
+        flex-direction: column;
+      }
+
+      .products-container.wrap {
+        flex-wrap: wrap;
+      }
+
+      .products-container {
+        display: flex;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+        gap: 30px;
+        max-height: 300px;
+        align-items: center;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding: 8px;
+        margin: calc(-1 * var(8px));
+      }
+
+      .product-card {
+        width: var(--card-width);
+        flex-shrink: 0;
+        z-index: 1;
+      }
+
+      .product-wide {
+        --card-border: 1px;
+        --real-card-width: calc(var(--card-width) - (2 * var(--card-border)) - (2 * var(--card-padding)));
+        --real-card-height: var(--card-height);
+        gap: var(--sl-spacing-x-small);
+      }
+
+      .product {
+        --common-background-color: green;
+        --card-padding: 1rem;
+        box-shadow: 0 1px 2px rgb(0 0 0 / 24%);
+        transition: all 150ms ease-out;
+        height: 75px;
+        min-width: calc(calc((100% - 0.75rem * ( 4 - 1)) / 4 ) - (2 * 1px ) - (2 * 1rem ));
+        user-select: none;
+        padding: 1rem;
+        border: 1px solid hsl(240, 5.9%, 11%);
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 2px rgb(0 0 0 / 24%);
+        background-color: green;
+        display: flex;
+        text-decoration: none;
+        overflow: hidden;
+        mix-blend-mode: multiply;
+      }
+
+      .info-container {
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .product-wide .title {
+        font-size: var(--sl-font-size-medium);
+      }
+
+      .product .title {
+        font-weight: var(--sl-title-font-weight);
+        font-size: var(--sl-font-size-small);
+        color: var(--sl-color-neutral-800);
+        white-space: nowrap;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        margin: 0;
+      }
+
+      .text-two-line-overflow {
+        display: inline-block;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        white-space: normal !important;
+      }
+
+      .product .subtitle, .additional-categories {
+        font-size: var(--sl-font-size-x-small);
+        color: var(--theme-subtitle-color);
+        display: flex;
+        align-items: center;
+      }
+
+      .product .rating-element, .product .rating-count {
+        color: var(--sl-color-neutral-600);
+        font-size: var(--sl-font-size-x-small);
+        flex-shrink: 0;
+      }
+
+      .text-ellipsis {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .price-container {
+        display: flex;
+        color: var(--theme-primary-element-color);
+        background: #EFF6FC;
+        border-radius: 4px;
+        padding: 2px 8px 3px 8px;
+        font-size: 12px;
+        line-height: 16px;
+      }
+
+      .app-icon {
+        border-radius: 5px;
+      }
+
+    </style>
+
   </head>
   <body>
-    <!--====== Preloader End ======-->
-    <section class="unique themes product market">
-      <div class="container" id="moreFunc" style="display: flex; justify-content: center;"></div>
-      <div class="container">
-        <div class="widget widget-search  wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
-            <form class="search-form">
-              <div class="form-group">
-                <input type="text" placeholder="Search Here" class="form-control">
-                <button class="main-btn icon"><i class="fal fa-search"></i></button>
-              </div>
-            </form>
+    <div class="main-container">
+      <div class="sidebar">
+        <div class="btn-top">
+          <button class="sidebtn">
+            home
+          </button>
+          <button class="sidebtn">
+            apps
+          </button>
+        </div>
+        <div class="btn-bot">
+          <button class="sidebtn">
+            library
+          </button>
+          <button class="sidebtn">
+            help
+          </button>
         </div>
       </div>
-      <div class="container">
-        <div class="row" id="appList"></div>
-      </div>
-      <div class="row">
-          <div class="col-lg-12  wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
-              <nav>
-                  <ul class="pagination product justify-content-center align-items-center">
-                      <li class="page-item disabled">
-                          <a class="page-link prev" href="#0" tabindex="-1" aria-disabled="true">
-                              <i class="fas fa-angle-double-left"></i> </a>
-                      </li>
-                      <li class="page-item"><a class="page-link" href="#0">1</a></li>
-                      <li class="page-item active" aria-current="page">
-                          <a class="page-link" href="#0">2<span class="sr-only">(current)</span></a>
-                      </li>
-                      <li class="page-item"><a class="page-link" href="#0">3</a></li>
-                      <li class="page-item"><a class="page-link" href="#0">...</a></li>
-                      <li class="page-item"><a class="page-link" href="#0">10</a></li>
-                      <li class="page-item">
-                          <a class="page-link next" href="#0"><i class="fas fa-angle-double-right"></i></a>
-                      </li>
-                  </ul>
-              </nav>
+      <div class="panel">
+        <div class="slider">
+        </div>
+        <div class="products-container wide wrap direction-column">
+          <div class="product-card">
+            <a href="#" class="product product-wide ">
+              <img class="app-icon" src="C:\imos\imos-app\marketplace-app\views\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
+              <div class="info-container">
+                <p class="title text-two-line-overflow">WhatsApp</p>
+                <div class="subtitle">
+                  <div class="rating-element">
+                    <span class="label">4.2</span>
+                    <span class="label">icon star</span>
+                  </div>
+                  <div class="text-ellipsis">Social</div>
+                </div>
+              </div>
+              <div class="price-container"></div>
+            </a>
           </div>
+          <div class="product-card">
+            <a href="#" class="product product-wide ">
+              <div class="info-container">
+                <p class="title text-two-line-overflow">WhatsApp</p>
+                <div class="subtitle">
+                  <div class="rating-element">
+                    <span class="label">4.2</span>
+                    <span class="label">icon star</span>
+                  </div>
+                  <div class="text-ellipsis">Social</div>
+                </div>
+              </div>
+              <div class="price-container"></div>
+            </a>
+          </div>
+          <div class="product-card">
+            <a href="#" class="product product-wide ">
+              <div class="info-container">
+                <p class="title text-two-line-overflow">WhatsApp</p>
+                <div class="subtitle">
+                  <div class="rating-element">
+                    <span class="label">4.2</span>
+                    <span class="label">icon star</span>
+                  </div>
+                  <div class="text-ellipsis">Social</div>
+                </div>
+              </div>
+              <div class="price-container"></div>
+            </a>
+          </div>
+          <div class="product-card">
+            <a href="#" class="product product-wide ">
+              <div class="info-container">
+                <p class="title text-two-line-overflow">WhatsApp</p>
+                <div class="subtitle">
+                  <div class="rating-element">
+                    <span class="label">4.2</span>
+                    <span class="label">icon star</span>
+                  </div>
+                  <div class="text-ellipsis">Social</div>
+                </div>
+              </div>
+              <div class="price-container"></div>
+            </a>
+          </div>
+          <div class="product-card">
+            <a href="#" class="product product-wide ">
+              <div class="info-container">
+                <p class="title text-two-line-overflow">WhatsApp</p>
+                <div class="subtitle">
+                  <div class="rating-element">
+                    <span class="label">4.2</span>
+                    <span class="label">icon star</span>
+                  </div>
+                  <div class="text-ellipsis">Social</div>
+                </div>
+              </div>
+              <div class="price-container"></div>
+            </a>
+          </div>
+          <div class="product-card">
+            <a href="#" class="product product-wide ">
+              <div class="info-container">
+                <p class="title text-two-line-overflow">WhatsApp</p>
+                <div class="subtitle">
+                  <div class="rating-element">
+                    <span class="label">4.2</span>
+                    <span class="label">icon star</span>
+                  </div>
+                  <div class="text-ellipsis">Social</div>
+                </div>
+              </div>
+              <div class="price-container"></div>
+            </a>
+          </div>
+        </div>
       </div>
-    </section>
-    <!--====== Back to top start ======-->
-    <div class="back-to-top" style="display: none;">
-        <a href="#0"> <i class="fas fa-arrow-up"></i> </a>
     </div>
-    <!--====== Back to top end ======-->
-    <!--====== Jquery ======-->
-    <script src="assets/js/jquery-3.6.0.min.js"></script>
-    <!--====== Main JS ======-->
-    <!--script src="assets/js/main.js"></script-->
+
     <!--====== Renderer JS ======-->
     <script type="text/javascript" src="../renderer.js"></script>
   </body>
