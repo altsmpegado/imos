@@ -32,7 +32,7 @@
       }
 
       .panel{
-        width: calc(100% - 80px);
+        width: calc((100% - 0.75rem * ( 4 - 1)) / 4 );
         padding-left: 80px;
       }
 
@@ -77,15 +77,13 @@
       }
 
       .product-wide {
-        --card-border: 1px;
-        --real-card-width: calc(var(--card-width) - (2 * var(--card-border)) - (2 * var(--card-padding)));
+        --real-card-width: calc(var(--card-width) - (2 * 1px) - (2 * 1rem));
         --real-card-height: var(--card-height);
-        gap: var(--sl-spacing-x-small);
+        gap: 0.5rem;
       }
 
       .product {
         --common-background-color: green;
-        --card-padding: 1rem;
         box-shadow: 0 1px 2px rgb(0 0 0 / 24%);
         transition: all 150ms ease-out;
         height: 75px;
@@ -111,13 +109,13 @@
       }
 
       .product-wide .title {
-        font-size: var(--sl-font-size-medium);
+        font-size: 1rem;
       }
 
       .product .title {
-        font-weight: var(--sl-title-font-weight);
-        font-size: var(--sl-font-size-small);
-        color: var(--sl-color-neutral-800);
+        font-weight: 6;
+        font-size: 0.875rem;
+        color: hsl(240 7.3% 84%);
         white-space: nowrap;
         overflow-x: hidden;
         text-overflow: ellipsis;
@@ -136,15 +134,15 @@
       }
 
       .product .subtitle, .additional-categories {
-        font-size: var(--sl-font-size-x-small);
-        color: var(--theme-subtitle-color);
+        font-size: 0.75rem;
+        color: #D1D1D1;
         display: flex;
         align-items: center;
       }
 
       .product .rating-element, .product .rating-count {
-        color: var(--sl-color-neutral-600);
-        font-size: var(--sl-font-size-x-small);
+        color: hsl(240 5.3% 58%);
+        font-size: 0.75rem;
         flex-shrink: 0;
       }
 
@@ -156,7 +154,7 @@
 
       .price-container {
         display: flex;
-        color: var(--theme-primary-element-color);
+        color: #005FB8;
         background: #EFF6FC;
         border-radius: 4px;
         padding: 2px 8px 3px 8px;
