@@ -48,6 +48,7 @@
         align-items: center;
         border-radius: 5px;
         margin-bottom: 10px;
+        margin-top: 10px;
       }
 
       .sidebtn:hover {
@@ -183,7 +184,7 @@
   <body>
     <div class="main-container">
       <div class="sidebar">
-        <div class="btn-top">
+        <div class="btn-top" id="btn-top">
           <button class="sidebtn selected"><i class="material-symbols-outlined">home</i></button>
           <button class="sidebtn"><i class="material-symbols-outlined">apps</i></button>
           <button class="sidebtn"><i class="material-symbols-outlined">bookmarks</i></button>
@@ -194,120 +195,11 @@
       </div>      
       <div class="panel">
         <div class="slider"></div>
-        <div class="products-container direction-column">
-          <div class="product-card">
-            <a href="#" class="product">
-              <img class="app-icon" src="C:\imos\imos-app\marketplace-app\views\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
-              <div class="info-container">
-                <p class="title">WhatsApp</p>
-                <div class="subtitle">
-                  <div class="rating-element">
-                    <span class="label">4.2</span>
-                    <span class="label">&#9733;</span>
-                  </div>
-                  <div class="text-ellipsis">| Social</div>
-                </div>
-              </div>
-              <div class="price-container">
-                <button class="more-button">More</button>
-              </div>
-            </a>
-          </div>
-          <div class="product-card">
-            <a href="#" class="product">
-              <img class="app-icon" src="C:\imos\imos-app\marketplace-app\views\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
-              <div class="info-container">
-                <p class="title">WhatsApp</p>
-                <div class="subtitle">
-                  <div class="rating-element">
-                    <span class="label">4.2</span>
-                    <span class="label">&#9733;</span>
-                  </div>
-                  <div class="text-ellipsis">| Social</div>
-                </div>
-              </div>
-              <div class="price-container">
-                <button class="more-button">More</button>
-              </div>
-            </a>
-          </div>
-          <div class="product-card">
-            <a href="#" class="product">
-              <img class="app-icon" src="C:\imos\imos-app\marketplace-app\views\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
-              <div class="info-container">
-                <p class="title">WhatsApp</p>
-                <div class="subtitle">
-                  <div class="rating-element">
-                    <span class="label">4.2</span>
-                    <span class="label">&#9733;</span>
-                  </div>
-                  <div class="text-ellipsis">| Social</div>
-                </div>
-              </div>
-              <div class="price-container">
-                <button class="more-button">More</button>
-              </div>
-            </a>
-          </div>
-          <div class="product-card">
-            <a href="#" class="product">
-              <img class="app-icon" src="C:\imos\imos-app\marketplace-app\views\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
-              <div class="info-container">
-                <p class="title">WhatsApp</p>
-                <div class="subtitle">
-                  <div class="rating-element">
-                    <span class="label">4.2</span>
-                    <span class="label">&#9733;</span>
-                  </div>
-                  <div class="text-ellipsis">| Social</div>
-                </div>
-              </div>
-              <div class="price-container">
-                <button class="more-button">More</button>
-              </div>
-            </a>
-          </div>
-          <div class="product-card">
-            <a href="#" class="product">
-              <img class="app-icon" src="C:\imos\imos-app\marketplace-app\views\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
-              <div class="info-container">
-                <p class="title">WhatsApp</p>
-                <div class="subtitle">
-                  <div class="rating-element">
-                    <span class="label">4.2</span>
-                    <span class="label">&#9733;</span>
-                  </div>
-                  <div class="text-ellipsis">| Social</div>
-                </div>
-              </div>
-              <div class="price-container">
-                <button class="more-button">More</button>
-              </div>
-            </a>
-          </div>
-          <div class="product-card">
-            <a href="#" class="product">
-              <img class="app-icon" src="C:\imos\imos-app\marketplace-app\views\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
-              <div class="info-container">
-                <p class="title">WhatsApp</p>
-                <div class="subtitle">
-                  <div class="rating-element">
-                    <span class="label">4.2</span>
-                    <span class="label">&#9733;</span>
-                  </div>
-                  <div class="text-ellipsis">| Social</div>
-                </div>
-              </div>
-              <div class="price-container">
-                <button class="more-button">More</button>
-              </div>
-            </a>
-          </div>
-        </div>
+        <div class="products-container direction-column" id="apps-container"></div>
       </div>
     </div>
 
     <!--====== Renderer JS ======-->
-    <script type="text/javascript" src="../renderer.js"></script>
+    <script type="text/javascript" src="C:\imos\imos-app\marketplace-app\renderer.js"></script>
   </body>
 </html>
