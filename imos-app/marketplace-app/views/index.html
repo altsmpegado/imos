@@ -122,6 +122,7 @@
       }
 
       .slider-pagination {
+        position: absolute;
         display: flex;
         justify-content: center;
         padding-top: 30px;
@@ -327,6 +328,8 @@
             </div>
           </div>
           <div class="slider-pagination"></div>
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
         </div>
         <div class="products-container direction-column" id="apps-container"></div>
       </div>
@@ -340,7 +343,6 @@
         slidesPerView: 'auto',
         spaceBetween: 10,
         loop: true,
-        loopedSlides: 7,
         pagination: {
           el: '.slider-pagination',
           clickable: true,
