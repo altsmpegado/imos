@@ -127,6 +127,10 @@
       }
 
       @media (max-width: 1000px) {
+        .main-container {
+          overflow: visible;
+        }
+
         .app-container {
           position: relative;
           width: calc(100% - 20px);
@@ -134,8 +138,11 @@
         }
 
         .info-container {
-          margin-left: 10px;
+          margin-left: 0px;
           margin-top: 0px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
         }
 
         .app-container.hidden + .sticky-header {
