@@ -126,6 +126,42 @@
         margin-top: 10px;
       }
 
+      .app-icon {
+        position: absolute;
+        border-radius: 10px;
+        top: 80px;
+        width: 135px; height: 135px;
+      }
+
+      .apptitle {
+        font-weight: 5;
+        position: absolute;
+        font-size: 1.7rem;
+        color: #ffffff;
+        margin: 0;
+        top: 240px;
+      }
+
+      .companytitle {
+        font-weight: 100;
+        position: absolute;
+        font-size: 0.9rem;
+        color: #d8aded;
+        margin: 0;
+        top: 280px;
+      }
+
+      .getapp-btn {
+        color: #000000;
+        background-color: #d8aded;
+        position: absolute;
+        top: 340px;
+        border-radius: 5px;
+        width: 155px;
+        height: 35px;
+        border: none;
+      }
+
       @media (max-width: 1000px) {
         .main-container {
           overflow: visible;
@@ -174,7 +210,13 @@
   </head>
   <body>
     <div class="main-container">
-      <div class="app-container"></div>
+      <div class="app-container">
+        <img class="app-icon" src="C:\\imos\\imos-app\\marketplace-app\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
+        <p class="apptitle">WhatsApp</p>
+        <p class="companytitle">Company Inc.</p>
+        <button id="downloadButton" class="getapp-btn hidden">Download</button>
+        <button id="acquireButton" class="getapp-btn hidden">Acquire</button>
+      </div>
       <div class="sticky-header"></div>
       <div class="info-container">
         <div class="screenshots"></div>
