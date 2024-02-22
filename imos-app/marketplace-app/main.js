@@ -3,6 +3,8 @@ const { download } = require('electron-dl');
 const request = require('request');
 const fs = require('fs');
 
+app.commandLine.appendSwitch('no-sandbox');
+
 let appWindow;
 let devForm;
 let subsWindow;

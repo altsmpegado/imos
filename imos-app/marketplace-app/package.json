@@ -6,7 +6,8 @@
   "version": "1.0.0",
   "main": "main.js",
   "dependencies": {
-    "electron-dl": "^3.5.1"
+    "electron-dl": "^3.5.1",
+    "request": "^2.88.2"
   },
   "scripts": {
     "start": "electron .",

@@ -8,6 +8,8 @@
     <meta name="keywords" content="IMOS,IMOSMarket,applications,apps,IMOS apps, Docker, Kubernetes">
     <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="imos/imos-app/marketplace-app/views/style.css">
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -25,15 +27,15 @@
       .sidebar{
         display: flex;
         flex-direction: column;
-        position: fixed;
+        position: sticky;
         left: 0;
         top: 0;
-        height: 100%;
+        height: 100vh;
         width: 70px;
         background-color: #333;
         text-align: center;
         align-items: center;
-        gap:5px;
+        gap: 5px;
       }
 
       .sidebtn {
@@ -64,14 +66,65 @@
 
       .panel{
         width: 100%;
-        padding-left: 70px;
+        overflow: hidden;
       }
 
       .slider {
-        padding-left: 70px;
         height: 435px;
-        background-color: #444;
         margin-bottom: 20px;
+        padding: 0 calc(100% - 730px) 50px 30px;
+      }
+
+      .slider-item {
+        width: 275px !important;
+        transition: width 350ms ease-out;
+      }
+
+      .swiper-slide-active {
+        width: 700px !important;
+      }
+
+      .slider-img {
+        position: absolute;
+        height: 100%;
+
+        & img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 15px;
+        }
+      }
+
+      .slider-content-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        width: 100%;
+      }
+
+      .slider-content-wrapper::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.3);
+        border-radius: 15px;
+      }
+
+      .slider-content {
+        padding: 0 15px 0 30px;
+        width: 100%;
+        position: relative;
+        z-index: 1;
+      }
+
+      .slider-pagination {
+        display: flex;
+        justify-content: center;
+        padding-top: 30px;
       }
 
       .products-container {
@@ -193,11 +246,111 @@
         </div>
       </div>      
       <div class="panel">
-        <div class="slider"></div>
+        <div class="slider swiper" data-slider>
+          <div class="swiper-wrapper">
+            <div class="swiper-slide slider-item">
+              <div class="slider-img">
+                <img src="https://images-eds-ssl.xboxlive.com/image?url=7flt5HU26ZSS3Tgted_TMty0wzqMQYpm03yD7eAPRtQBYO5dMlD18uZxNDuKXvpq6iphc3HyAhFAXHvhGifrr4HpGGTzZG6tnFM7cGGwBV3WChX2r6TDeuWGAQsHtem58SrYZ7qEDZ8IeJOFw22mrr_c.0BwVTiDIiGc9KqpmLp2DEDTNL9tcYyeqjvPk7Hxpg6eqpV8YckIQS299RhAl8k7s3pYSpFsHpHcQrj4FRc-&h=720" alt="">
+              </div>
+              <div class="slider-content-wrapper">
+                <div class="slider-content">
+                  <h3>Anime Month</h3>
+                  <p>save up 80%</p>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide slider-item">
+              <div class="slider-img">
+                <img src="https://images-eds-ssl.xboxlive.com/image?url=7flt5HU26ZSS3Tgted_TMty0wzqMQYpm03yD7eAPRtQBYO5dMlD18uZxNDuKXvpq6iphc3HyAhFAXHvhGifrr4HpGGTzZG6tnFM7cGGwBV3WChX2r6TDeuWGAQsHtem58SrYZ7qEDZ8IeJOFw22mrr_c.0BwVTiDIiGc9KqpmLp2DEDTNL9tcYyeqjvPk7Hxpg6eqpV8YckIQS299RhAl8k7s3pYSpFsHpHcQrj4FRc-&h=720" alt="">
+              </div>
+              <div class="slider-content-wrapper">
+                <div class="slider-content">
+                  <h3>Anime Month</h3>
+                  <p>save up 80%</p>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide slider-item">
+              <div class="slider-img">
+                <img src="https://images-eds-ssl.xboxlive.com/image?url=7flt5HU26ZSS3Tgted_TMty0wzqMQYpm03yD7eAPRtQBYO5dMlD18uZxNDuKXvpq6iphc3HyAhFAXHvhGifrr4HpGGTzZG6tnFM7cGGwBV3WChX2r6TDeuWGAQsHtem58SrYZ7qEDZ8IeJOFw22mrr_c.0BwVTiDIiGc9KqpmLp2DEDTNL9tcYyeqjvPk7Hxpg6eqpV8YckIQS299RhAl8k7s3pYSpFsHpHcQrj4FRc-&h=720" alt="">
+              </div>
+              <div class="slider-content-wrapper">
+                <div class="slider-content">
+                  <h3>Anime Month</h3>
+                  <p>save up 80%</p>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide slider-item">
+              <div class="slider-img">
+                <img src="https://images-eds-ssl.xboxlive.com/image?url=7flt5HU26ZSS3Tgted_TMty0wzqMQYpm03yD7eAPRtQBYO5dMlD18uZxNDuKXvpq6iphc3HyAhFAXHvhGifrr4HpGGTzZG6tnFM7cGGwBV3WChX2r6TDeuWGAQsHtem58SrYZ7qEDZ8IeJOFw22mrr_c.0BwVTiDIiGc9KqpmLp2DEDTNL9tcYyeqjvPk7Hxpg6eqpV8YckIQS299RhAl8k7s3pYSpFsHpHcQrj4FRc-&h=720" alt="">
+              </div>
+              <div class="slider-content-wrapper">
+                <div class="slider-content">
+                  <h3>Anime Month</h3>
+                  <p>save up 80%</p>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide slider-item">
+              <div class="slider-img">
+                <img src="https://images-eds-ssl.xboxlive.com/image?url=7flt5HU26ZSS3Tgted_TMty0wzqMQYpm03yD7eAPRtQBYO5dMlD18uZxNDuKXvpq6iphc3HyAhFAXHvhGifrr4HpGGTzZG6tnFM7cGGwBV3WChX2r6TDeuWGAQsHtem58SrYZ7qEDZ8IeJOFw22mrr_c.0BwVTiDIiGc9KqpmLp2DEDTNL9tcYyeqjvPk7Hxpg6eqpV8YckIQS299RhAl8k7s3pYSpFsHpHcQrj4FRc-&h=720" alt="">
+              </div>
+              <div class="slider-content-wrapper">
+                <div class="slider-content">
+                  <h3>Anime Month</h3>
+                  <p>save up 80%</p>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide slider-item">
+              <div class="slider-img">
+                <img src="https://images-eds-ssl.xboxlive.com/image?url=7flt5HU26ZSS3Tgted_TMty0wzqMQYpm03yD7eAPRtQBYO5dMlD18uZxNDuKXvpq6iphc3HyAhFAXHvhGifrr4HpGGTzZG6tnFM7cGGwBV3WChX2r6TDeuWGAQsHtem58SrYZ7qEDZ8IeJOFw22mrr_c.0BwVTiDIiGc9KqpmLp2DEDTNL9tcYyeqjvPk7Hxpg6eqpV8YckIQS299RhAl8k7s3pYSpFsHpHcQrj4FRc-&h=720" alt="">
+              </div>
+              <div class="slider-content-wrapper">
+                <div class="slider-content">
+                  <h3>Anime Month</h3>
+                  <p>save up 80%</p>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide slider-item">
+              <div class="slider-img">
+                <img src="https://images-eds-ssl.xboxlive.com/image?url=7flt5HU26ZSS3Tgted_TMty0wzqMQYpm03yD7eAPRtQBYO5dMlD18uZxNDuKXvpq6iphc3HyAhFAXHvhGifrr4HpGGTzZG6tnFM7cGGwBV3WChX2r6TDeuWGAQsHtem58SrYZ7qEDZ8IeJOFw22mrr_c.0BwVTiDIiGc9KqpmLp2DEDTNL9tcYyeqjvPk7Hxpg6eqpV8YckIQS299RhAl8k7s3pYSpFsHpHcQrj4FRc-&h=720" alt="">
+              </div>
+              <div class="slider-content-wrapper">
+                <div class="slider-content">
+                  <h3>Anime Month</h3>
+                  <p>save up 80%</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="slider-pagination"></div>
+        </div>
         <div class="products-container direction-column" id="apps-container"></div>
       </div>
     </div>
 
+    <!--====== Load Swiper.js Library ======-->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+
+    <script>
+      const swiper = new Swiper('[data-slider]', {
+        slidesPerView: 'auto',
+        spaceBetween: 10,
+        loop: true,
+        loopedSlides: 7,
+        pagination: {
+          el: '.slider-pagination',
+          clickable: true,
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+      });
+    </script>
     <!--====== Renderer JS ======-->
     <script type="text/javascript" src="C:\imos\imos-app\marketplace-app\renderer.js"></script>
   </body>
