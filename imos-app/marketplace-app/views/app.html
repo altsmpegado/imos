@@ -1,46 +1,87 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <!--====== Required meta tags ======-->
     <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!--====== Title ======-->
-    <title id="appTitle"></title>
-    <!--====== Bootstrap css ======-->
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <!--=== Owl-Carousel ===-->
-    <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
-    <!--====== Magnific ======-->
-    <link rel="stylesheet" href="assets/css/magnific-popup.css">
-    <!--===nice-select===-->
-    <link rel="stylesheet" href="assets/css/nice-select.css">
-    <!--====== Animate CSS ======-->
-    <link rel="stylesheet" href="assets/css/animate.min.css">
-    <!--====== Font Awesome ======-->
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-    <!--====== Main Css ======-->
-    <link rel="stylesheet" href="assets/css/style.css">
-    <!--====== Responsive Css ======-->
-    <link rel="stylesheet" href="assets/css/responsive.css">
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <base href="/app">
+    <!--Change meta tags and and description with app-->
+    <meta name="description" content="Get software applications, services and deployments powered by Docker and Kubernetes">
+    <meta name="keywords" content="IMOS,IMOSapp,applications,apps,IMOS apps, Docker, Kubernetes">
+
+    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #1e1e1e;
+        color: #ffffff;
+        margin: 0;
+        padding: 0;
+      }
+
+      .main-container {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .app {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: calc(100% - 20px);
+        width: 400px;
+        background-color: #333;
+        text-align: center;
+        align-items: center;
+        border-radius: 1%;
+        margin-top: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+
+      .screenshots {
+        display: flex;
+        flex-direction: column;
+        height: 410px;
+        width: 100%;
+        background-color: #333;
+        border-radius: 1%;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        margin-left: 420px;
+        margin-right: 10px;
+      }
+
+      .description {
+        display: flex;
+        flex-direction: column;
+        height: 410px;
+        width: 100%;
+        background-color: #333;
+        border-radius: 1%;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        margin-left: 420px;
+        margin-right: 10px;
+      }
+
+
+    </style>
   </head>
   <body>
-    <section class="product-details">
-      <div class="container" id="appInfo"></div>
-    </section>
-    <!--====== Jquery ======-->
-    <script src="assets/js/jquery-3.6.0.min.js"></script>
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <!--script src="assets/js/owl.carousel.min.js"></script>
-    <script src="assets/js/jquery.nice-select.min.js"></script>
-    <script src="assets/js/envato-preview.js"></script>
-    <script src="assets/js/jquery.magnific-popup.min.js"></script>
-    <script src="assets/js/wow.min.js"></script-->
-    <!--====== Main JS ======-->
-    <!--script src="assets/js/main.js"></script-->
-    <!--====== Renderer JS ======-->
-    <script type="text/javascript" src="../app_renderer.js"></script>
+    <div class="main-container">
+      <div class="app">
+      </div>      
+      <div class="screenshots">
+      </div>
+      <div class="description">
+      </div>
+      <div class="reviews">
+      </div>
+      <div class="additional">
+      </div>
+    </div>
+    <!--script type="text/javascript" src="../app_renderer.js"></script-->
   </body>
 </html>
