@@ -57,7 +57,6 @@
         border-radius: 10px;
         margin-top: 10px;
         margin-left: 10px;
-        margin-right: 10px;
       }
 
       .info-container {
@@ -68,12 +67,13 @@
 
       .sticky-header {
         display: none;
+        text-align: left;
         position: sticky;
         left: 0;
         top: 0;
-        background-color: #3ec21d49;
+        background-color: #424645eb;
         color: #ffffff;
-        height: 70px;
+        height: 75px;
         width: calc(100% - 60px);
         border-radius: 10px;
         top: 20px;
@@ -86,7 +86,7 @@
         display: flex;
         flex-direction: column;
         height: 410px;
-        width: calc(100% - 430px);
+        width: calc(100% - 425px);
         background-color: #333;
         border-radius: 10px;
         margin-bottom: 10px;
@@ -97,33 +97,116 @@
         display: flex;
         flex-direction: column;
         height: 310px;
-        width: calc(100% - 430px);
+        width: calc(100% - 425px);
         background-color: #333;
         border-radius: 10px;
         margin-bottom: 10px;
-        margin-top: 10px;
       }
 
       .reviews {
         display: flex;
         flex-direction: column;
         height: 310px;
-        width: calc(100% - 430px);
+        width: calc(100% - 425px);
         background-color: #333;
         border-radius: 10px;
         margin-bottom: 10px;
-        margin-top: 10px;
       }
 
       .additional {
         display: flex;
         flex-direction: column;
         height: 410px;
-        width: calc(100% - 430px);
+        width: calc(100% - 425px);
         background-color: #333;
         border-radius: 10px;
         margin-bottom: 10px;
-        margin-top: 10px;
+      }
+
+      .app-icon {
+        position: absolute;
+        border-radius: 10px;
+        top: 80px;
+        width: 135px; 
+        height: 135px;
+      }
+
+      .sticky-app-icon {
+        position: absolute;
+        border-radius: 5px;
+        top: 10px;
+        left: 10px;
+        width: 55px;
+        height: 55px;
+      }
+      
+      .apptitle {
+        font-weight: 5;
+        position: absolute;
+        font-size: 1.7rem;
+        color: #ffffff;
+        margin: 0;
+        top: 240px;
+      }
+
+      .sticky-apptitle {
+        font-weight: 5;
+        position: absolute;
+        font-size: 1.2rem;
+        color: #ffffff;
+        margin: 0;
+        top: 25px;
+        left: 75px;
+      }
+
+      .companytitle {
+        font-weight: 100;
+        position: absolute;
+        font-size: 0.9rem;
+        color: #d8aded;
+        margin: 0;
+        top: 280px;
+      }
+
+      .sticky-companytitle {
+        font-weight: 100;
+        position: absolute;
+        font-size: 0.70rem;
+        color: #d8aded;
+        margin: 0;
+        top: 48px;
+        left: 75px;
+      }
+
+      .getapp-btn {
+        color: #000000;
+        background-color: #cc92e9;
+        position: absolute;
+        top: 340px;
+        border-radius: 5px;
+        width: 155px;
+        height: 35px;
+        border: none;
+      }
+
+      .getapp-btn:hover {
+        background-color: #dbaef1;
+      }
+
+      .sticky-getapp-btn {
+        color: #000000;
+        background-color: #cc92e9;
+        position: absolute;
+        top: 20px;
+        border-radius: 5px;
+        width: 155px;
+        height: 35px;
+        border: none;
+        left: calc(100% - 170px);
+      }
+
+      .sticky-getapp-btn:hover {
+        background-color: #dbaef1;
       }
 
       @media (max-width: 1000px) {
@@ -133,8 +216,9 @@
 
         .app-container {
           position: relative;
+          text-align: left;
           width: calc(100% - 20px);
-          height: 300px;
+          height: 280px;
         }
 
         .info-container {
@@ -168,14 +252,107 @@
         .additional {
           width: calc(100% - 20px);
         }
+
+        .app-icon {
+          position: absolute;
+          border-radius: 10px;
+          top: 25px;
+          width: 180px; 
+          height: 180px;
+          left: 25px;
+        }
+
+        .apptitle {
+          font-weight: 5;
+          position: absolute;
+          font-size: 1.7rem;
+          color: #ffffff;
+          margin: 0;
+          top: 30px;
+          left: 225px;
+        }
+
+        .companytitle {
+          font-weight: 100;
+          position: absolute;
+          font-size: 0.9rem;
+          color: #d8aded;
+          margin: 0;
+          top: 65px;
+          left: 225px;
+        }
+
+        .getapp-btn {
+          position: absolute;
+          border-radius: 10px;
+          top: 25px;
+          left: calc(100% - 180px);
+        }
+      }
+
+      @media (max-width: 600px) {
+        .app-container {
+          display: flex;
+          flex-direction: column;
+          position: fixed;
+          width: calc(100% - 20px);
+          height: 805px;
+          left: 0;
+          top: 0;
+          justify-content: center;
+          align-items: center;
+          
+        }
+
+        .app-icon {
+          border-radius: 10px;
+          top: 80px;
+          width: 145px;
+          height: 145px;
+          margin: 10px 0;;
+        }
+
+        .apptitle {
+          font-weight: 5;
+          font-size: 1.7rem;
+          color: #ffffff;
+          margin: 0;
+          top: 250px;
+        }
+
+        .companytitle {
+          font-weight: 100;
+          font-size: 0.9rem;
+          color: #d8aded;
+          margin: 0;
+          top: 290px;
+        }
+
+        .getapp-btn {
+          position: absolute;
+          border-radius: 10px;
+          top: 375px;
+        }
       }
 
     </style>
   </head>
   <body>
     <div class="main-container">
-      <div class="app-container"></div>
-      <div class="sticky-header"></div>
+      <div class="app-container">
+        <img class="app-icon" src="C:\\imos\\imos-app\\marketplace-app\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
+        <p class="apptitle">WhatsApppppppppppppp</p>
+        <p class="companytitle">Company Inc.</p>
+        <button id="downloadButton" class="getapp-btn hidden">Download</button>
+        <button id="acquireButton" class="getapp-btn hidden">Acquire</button>
+      </div>
+      <div class="sticky-header">
+        <img class="sticky-app-icon" src="C:\\imos\\imos-app\\marketplace-app\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
+        <p class="sticky-apptitle">WhatsApp</p>
+        <p class="sticky-companytitle">Company Inc.</p>
+        <button id="downloadButton" class="sticky-getapp-btn hidden">Download</button>
+        <button id="acquireButton" class="sticky-getapp-btn hidden">Acquire</button>
+      </div>
       <div class="info-container">
         <div class="screenshots"></div>
         <div class="description"></div>
