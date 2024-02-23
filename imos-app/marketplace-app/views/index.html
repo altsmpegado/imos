@@ -72,16 +72,30 @@
       .slider {
         height: 435px;
         margin-bottom: 20px;
-        padding: 0 calc(100% - 730px) 50px 30px;
+        padding: 0 20px 50px;
       }
 
       .slider-item {
-        width: 275px !important;
+        width: 100%;
         transition: width 350ms ease-out;
       }
 
+      @media (min-width: 828px) {
+        .slider {
+          padding: 0 calc(100% - 730px) 50px 30px;
+        }
+
+        .slider-item {
+          width: 275px !important;
+        }
+
+        .swiper-slide-active {
+          width: 700px !important;
+        }
+      }
+
       .swiper-slide-active {
-        width: 700px !important;
+        width: 100%;
       }
 
       .slider-img {
@@ -340,9 +354,10 @@
 
     <script>
       const swiper = new Swiper('[data-slider]', {
-        slidesPerView: 'auto',
+        slidesPerView: 1,
         spaceBetween: 10,
         loop: true,
+        initialSlide: 0,
         pagination: {
           el: '.slider-pagination',
           clickable: true,
@@ -351,6 +366,15 @@
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev',
         },
+        breakpoints: {
+          828: {
+            slidesPerView: 'auto',
+          }
+        },
+      });
+
+      window.addEventListener('resize', function() {
+        swiper.update();
       });
     </script>
     <!--====== Renderer JS ======-->
