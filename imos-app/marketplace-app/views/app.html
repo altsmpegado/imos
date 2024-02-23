@@ -127,7 +127,8 @@
         position: absolute;
         border-radius: 10px;
         top: 80px;
-        width: 135px; height: 135px;
+        width: 135px; 
+        height: 135px;
       }
 
       .sticky-app-icon {
@@ -256,7 +257,8 @@
           position: absolute;
           border-radius: 10px;
           top: 25px;
-          width: 180px; height: 180px;
+          width: 180px; 
+          height: 180px;
           left: 25px;
         }
 
@@ -290,47 +292,46 @@
 
       @media (max-width: 600px) {
         .app-container {
-          position: relative;
-          text-align: center;
-          align-items: center;
+          display: flex;
+          flex-direction: column;
+          position: fixed;
           width: calc(100% - 20px);
           height: 805px;
+          left: 0;
+          top: 0;
+          justify-content: center;
+          align-items: center;
+          
         }
 
         .app-icon {
-          position: absolute;
           border-radius: 10px;
           top: 80px;
           width: 145px;
           height: 145px;
-          left: calc((100% - 145px) / 2);
+          margin: 10px 0;;
         }
 
         .apptitle {
           font-weight: 5;
-          position: absolute;
           font-size: 1.7rem;
           color: #ffffff;
           margin: 0;
           top: 250px;
-          left: calc((100% - 130px) / 2);
         }
 
         .companytitle {
           font-weight: 100;
-          position: absolute;
           font-size: 0.9rem;
           color: #d8aded;
           margin: 0;
           top: 290px;
-          left: calc((100% - 90px) / 2);
         }
 
         .getapp-btn {
           position: absolute;
           border-radius: 10px;
           top: 375px;
-          left: calc((100% - 155px) / 2);
         }
       }
 
@@ -340,7 +341,7 @@
     <div class="main-container">
       <div class="app-container">
         <img class="app-icon" src="C:\\imos\\imos-app\\marketplace-app\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
-        <p class="apptitle">WhatsApp</p>
+        <p class="apptitle">WhatsApppppppppppppp</p>
         <p class="companytitle">Company Inc.</p>
         <button id="downloadButton" class="getapp-btn hidden">Download</button>
         <button id="acquireButton" class="getapp-btn hidden">Acquire</button>
