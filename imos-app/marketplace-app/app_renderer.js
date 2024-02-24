@@ -23,23 +23,31 @@ document.addEventListener('DOMContentLoaded', () => {
         appInfoDiv.innerHTML = `
             <div class="app-container">
                 <img class="app-icon" src="C:\\imos\\imos-app\\marketplace-app\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
-                <p class="apptitle">${appjson.name}</p>
+                <h3 class="apptitle">${appjson.name}</h3>
                 <p class="companytitle">${appjson.company}</p>
                 <button id="downloadButton" class="getapp-btn hidden">Download</button>
                 <button id="acquireButton" class="getapp-btn hidden">Acquire</button>
             </div>
             <div class="sticky-header">
                 <img class="sticky-app-icon" src="C:\\imos\\imos-app\\marketplace-app\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
-                <p class="sticky-apptitle">${appjson.name}</p>
+                <h5 class="sticky-apptitle">${appjson.name}</h5>
                 <p class="sticky-companytitle">${appjson.company}</p>
                 <button id="downloadButton" class="sticky-getapp-btn hidden">Download</button>
                 <button id="acquireButton" class="sticky-getapp-btn hidden">Acquire</button>
             </div>
             <div class="info-container">
-                <div class="screenshots"></div>
-                <div class="description"></div>
-                <div class="reviews"></div>
-                <div class="additional"></div>
+                <div class="screenshots">
+                    <h4 class="tab-title">Screenshots</h4>
+                </div>
+                <div class="description">
+                    <h4 class="tab-title">About this</h4>
+                </div>
+                <div class="reviews">
+                    <h4 class="tab-title">Reviews</h4>
+                </div>
+                <div class="additional">
+                    <h4 class="tab-title">Additional Information</h4>
+                </div>
             </div>
         `;
         
