@@ -32,6 +32,8 @@ function createAppWindow(appjson) {
     appWindow = new BrowserWindow({
       width: 1200,
       height: 800,
+      minWidth: 450,
+      minHeight: 550,
       autoHideMenuBar: true,
       webPreferences: {
         nodeIntegration: true,
