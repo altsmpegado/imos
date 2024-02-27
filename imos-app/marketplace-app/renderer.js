@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch((error) => {
       console.error('Error fetching app information:', error);
     });
-
+    /*
     if (type == 'developer') {
       const moreFuncDiv = document.getElementById('btn-top');
       const devButton = document.createElement('button');
@@ -69,17 +69,34 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   
       moreFuncDiv.appendChild(devButton);
-    /*
-    const subStateButton = document.createElement('button');
-    subStateButton.textContent = 'Submissions';
-    subStateButton.classList.add('btn-bot'); 
-    subStateButton.addEventListener('click', () => {
-      ipcRenderer.send('openSubmissions');
-    });
     
-    moreFuncDiv.appendChild(subStateButton);
-    */
-  }
+      const subStateButton = document.createElement('button');
+      subStateButton.textContent = 'Submissions';
+      subStateButton.classList.add('btn-bot'); 
+      subStateButton.addEventListener('click', () => {
+        ipcRenderer.send('openSubmissions');
+      });
+      
+      moreFuncDiv.appendChild(subStateButton);
+    
+    }*/
+});
 
-  
+document.getElementById("loadAppsPage").addEventListener("click", function() {
+  var newPageUrl = "C:\\imos\\imos-app\\marketplace-app\\views\\apps_page.html";
+  window.location.href = newPageUrl;
+});
+
+document.getElementById("loadAppsPage").addEventListener("click", function() {
+  var newPageUrl = "C:\\imos\\imos-app\\marketplace-app\\views\\apps_page.html";
+  window.location.href = newPageUrl;
+});
+
+document.getElementById("loadLibPage").addEventListener("click", function() {
+  var newPageUrl = "C:\\imos\\imos-app\\marketplace-app\\views\\lib_page.html";
+  window.location.href = newPageUrl;
+});
+
+document.getElementById("loadSubmitPage").addEventListener("click", function() {
+  ipcRenderer.send('openDevForm');
 });
