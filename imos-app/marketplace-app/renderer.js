@@ -32,8 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
               <p class="title">${app.name}</p>
               <div class="subtitle">
                 <div class="rating-element">
-                  <span class="label">4.2</span>
-                  <span class="label">&#9733;</span>
+                  <span>4.2</span>
+                  <span>&#9733;</span>
                 </div>
                 <div class="text-ellipsis">| ${app.company}</div>
               </div>

@@ -22,6 +22,13 @@
         flex-direction: row;
       }
 
+      .title {
+        font-weight: 5;
+        font-size: 0.875rem;
+        color: #ffffff;
+        margin: 0;
+      }
+
       .sidebar{
         display: flex;
         flex-direction: column;
@@ -78,7 +85,7 @@
       .product {
         box-shadow: 0 1px 2px rgb(0 0 0 / 24%);
         transition: background-color 0.3s ease;
-        height: 67px;
+        height: 200px;
         user-select: none;
         border: 1px solid hsl(240, 5.9%, 11%);
         border-radius: 0.5rem;
@@ -95,6 +102,67 @@
 
       .product-card {
         width: var(--card-width);
+        height: 241px;
+      }
+
+      @media (min-width: 730px) {
+        .products-container {
+          grid-template-columns: repeat(2, 1fr); /* 2 columns for medium screens */
+        }
+      }
+
+      @media (min-width: 1000px) {
+        .products-container {
+          grid-template-columns: repeat(3, 1fr); /* 3 columns for large screens */
+        }
+      }
+
+      .product .subtitle {
+        font-size: 0.75rem;
+        color: #D1D1D1;
+        display: flex;
+        align-items: center;
+      }
+
+      .product .rating-element {
+        color: #D1D1D1;
+        font-size: 0.75rem;
+      }
+
+      .info-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .price-container {
+        display: flex;
+        align-items: flex-end;
+        border-radius: 4px;
+        padding: 2px 8px 3px 8px;
+        font-size: 12px;
+        position: relative;
+      }
+
+      .more-button {
+        background-color: #5d5d5d;
+        color: #fff;
+        border: none;
+        padding: 4px 8px;
+        border-radius: 4px;
+      }
+
+      .app-icon {
+        border-radius: 5px;
+        height: 75px;
+        width: 75px;
+      }
+
+      .text {
+        margin-left: 25px;
+        margin-right: 25px;
+        text-align: justify;
       }
 
       .material-symbols-outlined {
@@ -130,8 +198,45 @@
                 <p class="title">APP</p>
                 <div class="subtitle">
                   <div class="rating-element">
-                    <span class="label">4.2</span>
-                    <span class="label">&#9733;</span>
+                    <span>4.2</span>
+                    <span>&#9733;</span>
+                  </div>
+                  <div class="text-ellipsis">| COMPANY</div>
+                </div>
+              </div>
+              <p class="text"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </p>
+              <div class="price-container">
+                <button class="more-button">More</button>
+              </div>
+            </a>
+          </div>
+          <div class="product-card">
+            <a href="0#" class="product" data-app="">
+              <img class="app-icon" src="C:\\imos\\imos-app\\marketplace-app\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
+              <div class="info-container">
+                <p class="title">APP</p>
+                <div class="subtitle">
+                  <div class="rating-element">
+                    <span>4.2</span>
+                    <span>&#9733;</span>
+                  </div>
+                  <div class="text-ellipsis">| COMPANY</div>
+                </div>
+              </div>
+              <div class="price-container">
+                <button class="more-button">More</button>
+              </div>
+            </a>
+          </div>
+          <div class="product-card">
+            <a href="0#" class="product" data-app="">
+              <img class="app-icon" src="C:\\imos\\imos-app\\marketplace-app\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
+              <div class="info-container">
+                <p class="title">APP</p>
+                <div class="subtitle">
+                  <div class="rating-element">
+                    <span>4.2</span>
+                    <span>&#9733;</span>
                   </div>
                   <div class="text-ellipsis">| COMPANY</div>
                 </div>
