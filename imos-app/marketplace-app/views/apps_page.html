@@ -92,7 +92,6 @@
         background-color: #444;       
         display: flex;
         text-decoration: none;
-        gap: 1rem;
         padding: 20px;
       }
 
@@ -103,6 +102,7 @@
       .product-card {
         width: var(--card-width);
         height: 241px;
+        margin-top: 20px;
       }
 
       @media (min-width: 730px) {
@@ -160,9 +160,8 @@
       }
 
       .text {
-        margin-left: 25px;
-        margin-right: 25px;
-        text-align: justify;
+        color: white;
+        font-size: 14px;
       }
 
       .material-symbols-outlined {
@@ -193,18 +192,24 @@
         <div class="products-container direction-column" id="apps-container">
           <div class="product-card">
             <a href="0#" class="product" data-app="">
-              <img class="app-icon" src="C:\\imos\\imos-app\\marketplace-app\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
-              <div class="info-container">
-                <p class="title">APP</p>
-                <div class="subtitle">
-                  <div class="rating-element">
-                    <span>4.2</span>
-                    <span>&#9733;</span>
+              <div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                  <img class="app-icon" src="C:\\imos\\imos-app\\marketplace-app\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
+                  <div class="info-container">
+                    <p class="title">APP</p>
+                    <div class="subtitle">
+                      <div class="rating-element">
+                        <span>4.2</span>
+                        <span>&#9733;</span>
+                      </div>
+                      <div class="text-ellipsis">| COMPANY</div>
+                    </div>
                   </div>
-                  <div class="text-ellipsis">| COMPANY</div>
+                </div>
+                <div>
+                  <p class="text"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
                 </div>
               </div>
-              <p class="text"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </p>
               <div class="price-container">
                 <button class="more-button">More</button>
               </div>
