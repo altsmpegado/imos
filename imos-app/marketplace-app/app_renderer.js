@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     ipcRenderer.on('appInfo', (event, appjson, user) => {
         // Check user's ownedApps
-        console.log(appjson.company);
+        //console.log(appjson.company);
         fetch(`http://localhost:8000/apps/${user}`)
         .then((response) => response.json())
         .then(data => {

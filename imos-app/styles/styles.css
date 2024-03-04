@@ -87,8 +87,8 @@ body {
 
 .button-component[type=app] {
     position: absolute;
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 4.5rem;
+    height: 4.5rem;
     background-color: var(--button-background);
     border-radius: 50%;
     display: grid;

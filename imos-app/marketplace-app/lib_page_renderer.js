@@ -3,14 +3,15 @@ const fs = require('fs');
 
 document.addEventListener('DOMContentLoaded', () => {
     const data = fs.readFileSync('userData/session.json', 'utf8');
-    var { type } = JSON.parse(data);
+    console.log(JSON.parse(data).username);
     // Fetch app information from the server
-    fetch('http://localhost:8000/apps')
+    fetch(`http://localhost:8000/apps/${JSON.parse(data).username}`)
       .then((response) => response.json())
-      .then((apps) => {
+      .then((data) => {
+        console.log(data);
         const appListDiv = document.getElementById('apps-container');
         
-        apps.forEach((app) => {
+        data.ownedApps.forEach((app) => {
           console.log(app);
           const cardHtml = `
           <div class="product-card">
@@ -19,9 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div style="display: flex; align-items: center; gap: 1rem;">
                         <img class="app-icon" src="C:\\imos\\imos-app\\marketplace-app\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
                         <div class="info-container">
-                            <p class="title">${app.name}</p>
+                            <p class="title">${app}</p>
                             <div class="subtitle">
-                                <div class="text-ellipsis">${app.company}</div>
+                                <div class="text-ellipsis">Owned</div>
                             </div>
                         </div>
                     </div>
