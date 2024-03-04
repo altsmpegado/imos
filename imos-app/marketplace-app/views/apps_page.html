@@ -16,6 +16,25 @@
         margin: 0;
         padding: 0;
       }
+
+      ::-webkit-scrollbar {
+        width: 15px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background-color: #acacac;
+        border-radius: 15px;
+        border: 6px solid transparent;
+        background-clip: content-box;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: #e8ecec;
+      }
       
       .main-container{
         display: flex;
@@ -80,6 +99,7 @@
         overflow-y: auto;
         padding-left: 40px;
         padding-right: 40px; 
+        overflow: hidden;
       }
 
       .product {
@@ -164,6 +184,16 @@
         font-size: 14px;
       }
 
+      .huge-title {
+        font-weight: 5;
+        font-size: 5.875rem;
+        color: #ffffff;
+        /* margin: 60px; */
+        margin-top: auto;
+        margin-left: 60px;
+        margin-bottom: auto;
+      }
+
       .material-symbols-outlined {
         color: #ffffffa8;
         font-variation-settings:
@@ -189,6 +219,7 @@
         </div>
       </div>      
       <div class="panel">
+        <p class="huge-title">Applications</p>
         <div class="products-container direction-column" id="apps-container">
         </div>
       </div>
