@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
           console.log(app);
           const cardHtml = `
           <div class="product-card">
-            <a href="0#" class="product" data-app="${JSON.stringify(app).replace(/"/g, '&quot;')}">
+            <a class="product" data-app="${JSON.stringify(app).replace(/"/g, '&quot;')}">
                 <div>
                     <div style="display: flex; align-items: center; gap: 1rem;">
                         <img class="app-icon" src="C:\\imos\\imos-app\\marketplace-app\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
