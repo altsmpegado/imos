@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="info-container">
                             <p class="title">${app}</p>
                             <div class="subtitle">
-                                <div class="text-ellipsis">Owned</div>
+                                <div class="text-ellipsis">Owned/Download</div>
                             </div>
                         </div>
                     </div>
