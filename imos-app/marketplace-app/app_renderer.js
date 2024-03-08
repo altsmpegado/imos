@@ -1,5 +1,30 @@
 const { ipcRenderer } = require('electron');
 
+function myFunction(e) {
+    if (e.matches) {
+        updateButton();
+    }
+}
+
+var minWidth = window.matchMedia("(min-width: 730px)")
+
+function updateButton() {
+    const downloadButton = document.getElementById('downloadButton');
+    const acquireButton = document.getElementById('acquireButton');
+    
+    if (isAppOwned) {
+        downloadButton.style.display = 'block';
+        acquireButton.style.display = 'none';
+    } else {
+        downloadButton.style.display = 'none';
+        acquireButton.style.display = 'block';
+    }
+}
+
+minWidth.addEventListener("change", function() {
+    myFunction(minWidth);
+  });
+
 document.addEventListener('DOMContentLoaded', () => {
     let isAppOwned = false;
 
@@ -25,16 +50,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 <img class="app-icon" src="C:\\imos\\imos-app\\marketplace-app\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
                 <h3 class="apptitle">${appjson.name}</h3>
                 <p class="companytitle">${appjson.company}</p>
-                <button id="downloadButton" class="getapp-btn hidden">Download</button>
-                <button id="acquireButton" class="getapp-btn hidden">Acquire</button>
+                <button id="downloadButton" class="getapp-btn">Download</button>
+                <button id="acquireButton" class="getapp-btn">Acquire</button>
                 <h3 class="rating">4.3 &#9733; | 3K Ratings</h3>
             </div>
             <div class="sticky-header">
                 <img class="sticky-app-icon" src="C:\\imos\\imos-app\\marketplace-app\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
                 <h5 class="sticky-apptitle">${appjson.name}</h5>
                 <p class="sticky-companytitle">${appjson.company}</p>
-                <button id="downloadButton" class="sticky-getapp-btn hidden">Download</button>
-                <button id="acquireButton" class="sticky-getapp-btn hidden">Acquire</button>
+                <button id="downloadButton" class="sticky-getapp-btn">Download</button>
+                <button id="acquireButton" class="sticky-getapp-btn">Acquire</button>
             </div>
             <div class="info-container">
                 <div class="screenshots">
@@ -71,15 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ipcRenderer.send('acquireApp', user, appjson.name.toString());
         });
         
-        function updateButton() {
-            if (isAppOwned) {
-                downloadButton.style.display = 'block';
-                acquireButton.style.display = 'none';
-            } else {
-                downloadButton.style.display = 'none';
-                acquireButton.style.display = 'block';
-            }
-        }
+        updateButton();
     });
 
     ipcRenderer.on('downloadCompleted', (event, filePath) => {
