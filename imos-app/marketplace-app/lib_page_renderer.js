@@ -25,6 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <div class="text-ellipsis">Owned/Download</div>
                             </div>
                         </div>
+                        <div class="price-container">
+                          <button class="more-button">More</button>
+                        </div>
                     </div>
                 </div>
             </a>
