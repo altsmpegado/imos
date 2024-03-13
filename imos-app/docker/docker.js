@@ -1,5 +1,3 @@
-// docker.js
-const { ipcMain } = require('electron');
 const { spawn } = require('child_process');
 
 function createDockerProcess(appName) {

@@ -50,17 +50,17 @@ async function getInstalledApps() {
             .flat();
 
         // Fetch Kubernetes deployments
-        const kubeconfig = new KubeConfig();
+        /*const kubeconfig = new KubeConfig();
         kubeconfig.loadFromDefault();
         const k8sApi = kubeconfig.makeApiClient(AppsV1Api);
         const response = await k8sApi.listNamespacedDeployment('default');
         const deployedApps = response.body.items
             .filter((deployment) => deployment.metadata.name.includes('imos'))
             .map((deployment) => deployment.metadata.name);
-
+        */
         // Merge Docker images and Kubernetes deployments into one list
-        const installedApps = [...builtImages, ...deployedApps];
-
+        //const installedApps = [...builtImages, ...deployedApps];
+        const installedApps = [...builtImages]
         return installedApps;
     } catch (error) {
         console.error('Error fetching Docker images and Kubernetes deployments:', error);

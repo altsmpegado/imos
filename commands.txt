@@ -29,3 +29,4 @@ Check service url
 minikube service imos-local-deployment --url
 Expose deployment to create service
 kubectl expose deployment imos-local-deployment --type=NodePort --port=80
+minikube status | findstr /C:\"Running\" > nul && electron . || minikube start && electron .
