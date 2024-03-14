@@ -15,6 +15,8 @@ function createWindow() {
   const window = new BrowserWindow({
     width: 1200,
     height: 800,
+    minWidth: 700,
+    minHeight: 550,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false, // Set to false to allow the use of preload scripts

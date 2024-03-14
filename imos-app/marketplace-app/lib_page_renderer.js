@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
                         <div class="price-container">
-                          <button class="more-button">More</button>
+                          <button class="more-button"><span class="material-symbols-outlined">play_circle</span></button>
                         </div>
                     </div>
                 </div>
