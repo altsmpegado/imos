@@ -8,16 +8,16 @@ function myFunction(e) {
 
 var minWidth = window.matchMedia("(min-width: 730px)")
 
-function updateButton() {
+function updateButton(isAppOwned) {
     const downloadButton = document.getElementById('downloadButton');
     const acquireButton = document.getElementById('acquireButton');
     
     if (isAppOwned) {
-        downloadButton.style.display = 'block';
-        acquireButton.style.display = 'none';
-    } else {
         downloadButton.style.display = 'none';
         acquireButton.style.display = 'block';
+    } else {
+        downloadButton.style.display = 'block';
+        acquireButton.style.display = 'none';
     }
 }
 
@@ -35,9 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
         .then((response) => response.json())
         .then(data => {
         // Handle the data received from the server
-            //console.log(data.ownedApps);
+            console.log(data.ownedApps);
             isAppOwned = data.ownedApps.includes(appjson.name);
-            //console.log(isAppOwned);
+            console.log(isAppOwned);
             updateButton();
         })
             .catch(error => {
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ipcRenderer.send('acquireApp', user, appjson.name.toString());
         });
         
-        updateButton();
+        updateButton(isAppOwned);
     });
 
     ipcRenderer.on('downloadCompleted', (event, filePath) => {
