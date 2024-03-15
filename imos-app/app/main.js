@@ -11,6 +11,7 @@ let mainWindow;
 let authWindow;
 let regWindow;
 let logWindow;
+let setWindow;
 var remcheck = false;
 
 function createWindow() {
@@ -102,12 +103,29 @@ function createRegisterWindow() {
   });
 }
 
-//macOS
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-      createAuthWindow();
-  }
-});
+function createSetupWindow(appName) {
+  return new Promise((resolve, reject) => {
+    setWindow = new BrowserWindow({
+      width: 400,
+      height: 400,
+      autoHideMenuBar: true,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+        enableRemoteModule: true,
+        worldSafeExecuteJavaScript: true,
+        additionalArguments: [appName]
+      },
+    });
+  
+    // Handle window closed
+    setWindow.on('closed', () => {
+      setWindow = null;
+    });
+
+    setWindow.loadFile('views/setup.html', { query: { appName } });
+  });
+}
 
 app.whenReady().then(() => {
   const data = fs.readFileSync('userData/loginSettings.json', 'utf8');
@@ -159,7 +177,8 @@ app.on('window-all-closed', () => {
 });
 
 ipcMain.on('runDockerApp', (event, app) => {
-    createDockerProcess(app);
+  if(!setWindow)
+    createSetupWindow(app);
 });
 
 ipcMain.on('openLoginWindow', (event) => {
@@ -275,4 +294,10 @@ ipcMain.on('back', (event) => {
   if(regWindow)
     regWindow.close();
   createAuthWindow();
+});
+
+ipcMain.on('set', (event, appConfig) => {
+  //console.log(appConfig);
+  setWindow.close();
+  createDockerProcess(appConfig);
 });

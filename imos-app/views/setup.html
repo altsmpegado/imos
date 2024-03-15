@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id ="title"></title>
+</head>
+<body>
+    <h1 id ="header"></h1>
+    <form id="loginForm">
+        <input placeholder="Inset localhost" id="localhost" required>
+        <br>
+        <br>
+        <input placeholder="Insert Camera IP" id="ip" required>
+        <br>
+        <br>
+        <button type="submit">Submit</button> 
+    </form>
+    <script>
+        const { ipcRenderer } = require('electron');
+        const appName = new URLSearchParams(window.location.search).get('appName');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const title = document.getElementById('title');
+            title.innerText = 'App Setup ' + appName;
+
+            const header = document.getElementById('header');
+            header.innerText = 'Configuration of ' + appName;
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const localhost = document.getElementById('localhost').value;
+            const ip = document.getElementById('ip').value;
+
+            // Send the registration data to the main process
+            ipcRenderer.send('set', { appName, localhost, ip });
+        });
+        
+    </script>
+</body>
+</html>

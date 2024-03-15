@@ -16,6 +16,8 @@ COPY . .
 # Build the React app for production
 RUN npm run build
 
+ENV WEBCAM_IP=
+
 # Use Nginx as the base image for serving static files
 FROM nginx:alpine
 

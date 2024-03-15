@@ -4,8 +4,10 @@ function App() {
   const [cameraFeedError, setCameraFeedError] = useState(false);
 
   useEffect(() => {
+    const ip = process.env.WEBCAM_IP;
+    console.log('WEBCAM_IP:', ip);
     const img = document.createElement('img');
-    img.src = 'http://192.168.43.132:5000/video_feed';
+    img.src = `http://${ip}/video_feed`;
 
     img.onload = () => {
       document.body.appendChild(img);

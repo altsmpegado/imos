@@ -18,7 +18,10 @@ function doesContainerExist(containerName) {
     }
 }
 
-function createDockerProcess(appName) {
+function createDockerProcess(appConfig) {
+    const appName = appConfig.appName;
+    const ip = appConfig.ip;
+    const localhost = appConfig.localhost;
     /*const dockerProcess = spawnSync('docker', [
         'run',
         '--rm',
@@ -35,7 +38,7 @@ function createDockerProcess(appName) {
             console.error('Error starting existing container:', dockerProcess.stderr);
         } else {
             console.log('Container started successfully.');
-            openBrowser('http://localhost:8080');
+            openBrowser(`http://localhost:${localhost}`);
         }
 
         //console.log(`IMOS-local-example Output: ${dockerProcess.stdout}`);
@@ -46,23 +49,21 @@ function createDockerProcess(appName) {
         const dockerProcess = spawnSync('docker', [
             'run',
             '-d',
-            '-p',
-            '8080:80',
-            '--name',
-            appName,
+            '-p', localhost + ':80',
+            '--name', appName,
+            '-e', 'WEBCAM_IP=' + ip,
             appName
         ]);
     
         if (dockerProcess.status === 0) {
             console.log('Container created and started successfully.');
-            openBrowser('http://localhost:8080');
+            openBrowser(`http://localhost:${localhost}`);
         } else {
             console.error('Error creating or starting container:', dockerProcess.stderr);
         }
 
         //console.log(`IMOS-local-example Output: ${dockerProcess.stdout}`);
         //console.error(`IMOS-local-example Error: ${dockerProcess.stderr}`);
-
     }
 }
 
