@@ -16,7 +16,7 @@ COPY . .
 # Build the React app for production
 RUN npm run build
 
-ENV WEBCAM_IP=
+ARG WEBCAM_IP
 
 # Use Nginx as the base image for serving static files
 FROM nginx:alpine
@@ -26,6 +26,9 @@ COPY --from=build /app/build /usr/share/nginx/html
 
 # Expose port 80 to the outside world
 EXPOSE 80
+
+ARG WEBCAM_IP
+ENV APP_WEBCAM_IP=$WEBCAM_IP
 
 # Start Nginx server when the container starts
 CMD ["nginx", "-g", "daemon off;"]
