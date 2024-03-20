@@ -4,7 +4,7 @@ function App() {
   const [cameraFeedError, setCameraFeedError] = useState(false);
 
   useEffect(() => {
-    const ip = process.env.APP_WEBCAM_IP;
+    const ip = process.env.WEBCAM_IP;
     console.log('APP_WEBCAM_IP:', ip);
     console.log(typeof(ip));
     const img = document.createElement('img');
