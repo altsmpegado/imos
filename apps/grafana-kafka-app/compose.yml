@@ -1,0 +1,352 @@
+---
+version: '3.4'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:6.0.0
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    image: confluentinc/cp-enterprise-kafka:6.0.0
+    networks:
+     frontend:
+       ipv4_address: 172.16.238.4
+     default:
+    hostname: broker
+    container_name: broker
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "9101:9101"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://192.168.137.162:9092  #PLAINTEXT_HOST://localhost:9092
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_JMX_PORT: 9101
+      KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker:29092
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_METRICS_ENABLE: 'false'
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:6.0.0
+    hostname: schema-registry
+    container_name: schema-registry
+    depends_on:
+      - broker
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker:29092'
+  connect:
+    image: cnfldemos/cp-server-connect-datagen:0.3.2-5.5.0
+    hostname: connect
+    container_name: connect
+    depends_on:
+      - zookeeper
+      - broker
+      - schema-registry
+    ports:
+      - "8020:8020"
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: 'broker:29092'
+      CONNECT_REST_ADVERTISED_HOST_NAME: connect
+      CONNECT_REST_PORT: 8020
+      CONNECT_GROUP_ID: compose-connect-group
+      CONNECT_CONFIG_STORAGE_TOPIC: docker-connect-configs
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_FLUSH_INTERVAL_MS: 10000
+      CONNECT_OFFSET_STORAGE_TOPIC: docker-connect-offsets
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_TOPIC: docker-connect-status
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      # CLASSPATH required due to CC-2422
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.5.1.jar
+      CONNECT_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
+      CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
+      CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
+      CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
+
+  control-center:
+    image: confluentinc/cp-enterprise-control-center:6.0.0
+    hostname: control-center
+    container_name: control-center
+    depends_on:
+      - zookeeper
+      - broker
+      - schema-registry
+      - connect
+      - ksqldb-server
+    ports:
+      - "9021:9021"
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:29092'
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      CONTROL_CENTER_CONNECT_CLUSTER: 'connect:8020'
+      CONTROL_CENTER_KSQL_KSQLDB1_URL: "http://ksqldb-server:8088"
+      CONTROL_CENTER_KSQL_KSQLDB1_ADVERTISED_URL: "http://localhost:8088"
+      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
+      PORT: 9021
+
+  kafka-connect:
+    networks:
+      frontend:
+        ipv4_address: 172.16.238.9
+      default:
+    image: confluentinc/cp-kafka-connect-base:6.0.0
+    hostname: kafka-connect
+    container_name: kafka-connect
+    depends_on:
+      - broker
+      - schema-registry
+    ports:
+      - "8083:8083"
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: 'broker:29092'
+      CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: compose-connect-group
+      CONNECT_CONFIG_STORAGE_TOPIC: docker-connect-configs
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_FLUSH_INTERVAL_MS: 10000
+      CONNECT_OFFSET_STORAGE_TOPIC: docker-connect-offsets
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_TOPIC: docker-connect-status
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
+      CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
+      CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
+      CONNECT_LOG4J_ROOT_LOGLEVEL: "INFO"
+      CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
+      CONNECT_LOG4J_APPENDER_STDOUT_LAYOUT_CONVERSIONPATTERN: "[%d] %p %X{connector.context}%m (%c:%L)%n"
+      # CLASSPATH required due to CC-2422
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-6.0.0.jar
+      # If you want to use the Confluent Hub installer to d/l component, but make them available
+      # when running this offline, spin up the stack once and then run : 
+      #   docker cp kafka-connect:/usr/share/confluent-hub-components ./connectors
+      #   mv ./connectors/confluent-hub-components/* ./connectors
+      #   rm -rf ./connectors/confluent-hub-components
+    volumes:
+      - ./data/connectors:/connectors
+    # In the command section, $ are replaced with $$ to avoid the error 'Invalid interpolation format for "command" option'
+    command: 
+      - bash 
+      - -c 
+      - |
+        echo "Installing connector plugins"
+        confluent-hub install --no-prompt confluentinc/kafka-connect-http:1.0.16
+        confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest
+        #
+        echo "Launching Kafka Connect worker"
+        /etc/confluent/docker/run & 
+        #
+        sleep infinity
+  ksqldb-server:
+    image: confluentinc/cp-ksqldb-server:6.0.0
+    #confluentinc/cp-ksqldb-server:6.0.0
+    hostname: ksqldb-server
+    container_name: ksqldb-server
+    depends_on:
+      - broker
+      - kafka-connect
+    ports:
+      - "8088:8088" 
+    networks:
+      frontend:
+        ipv4_address: 172.16.238.6
+      default:
+    environment:
+      KSQL_CONFIG_DIR: "/etc/ksql"
+      KSQL_BOOTSTRAP_SERVERS: "broker:29092"
+      KSQL_HOST_NAME: ksqldb-server
+      KSQL_LISTENERS: "http://0.0.0.0:8088"
+      KSQL_CACHE_MAX_BYTES_BUFFERING: 0
+      KSQL_KSQL_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      KSQL_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
+      KSQL_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
+      KSQL_KSQL_CONNECT_URL: "http://kafka-connect:8083"
+      KSQL_KSQL_LOGGING_PROCESSING_TOPIC_REPLICATION_FACTOR: 1
+      KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: 'true'
+      KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: 'true'
+      #try
+      #KSQL_CONNECT_REST_ADVERTISED_HOST_NAME: 'ksqldb'
+      #KSQL_CONNECT_GROUP_ID: "ksql-connect-cluster"
+      #KSQL_CONNECT_BOOTSTRAP_SERVERS: "broker:29092"
+      #KSQL_CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.storage.StringConverter"
+      #KSQL_CONNECT_VALUE_CONVERTER: "io.confluent.connect.avro.AvroConverter"
+      #KSQL_CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      #KSQL_CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      #KSQL_CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+      #KSQL_CONNECT_CONFIG_STORAGE_TOPIC: "ksql-connect-configs"
+      #KSQL_CONNECT_OFFSET_STORAGE_TOPIC: "ksql-connect-offsets"
+      #KSQL_CONNECT_STATUS_STORAGE_TOPIC: "ksql-connect-statuses"
+      #KSQL_CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      #KSQL_CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      #KSQL_CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      #KSQL_CONNECT_PLUGIN_PATH: "/usr/share/kafka/plugins"  
+      #DB_UPSTREAM:"http://${DOCKER_GATEWAY_HOST:-host.docker.internal}:5432"
+    #command: sh -c "echo hello && bash echo ola" 
+    #command: bash -c "echo hello && sleep 10 && echo ola"    works!!!!
+    #command: sh -c "/etc/confluent/docker/run"
+    #ksql http://ksqldb-server:8088 "show streams;"
+    #/etc/confluent/docker/run &&
+    #command: bash -c " ksql http://ksqldb-server:8088 && CREATE STREAM TX (name VARCHAR, _id VARCHAR KEY, uniqueid VARCHAR, description VARCHAR, kpiid VARCHAR, type VARCHAR,unit VARCHAR, registered VARCHAR, value DOUBLE) WITH (KAFKA_TOPIC='test1',VALUE_FORMAT='JSON', PARTITIONS='1');"  
+      
+  
+  
+  
+  ksqldb-cli:
+    networks:
+      frontend:
+        ipv4_address: 172.16.238.7
+      default:
+    image: confluentinc/cp-ksqldb-cli:6.0.0
+    #confluentinc/cp-ksqldb-cli:6.0.0
+    #confluentinc/cp-ksqldb-cli:latest
+    container_name: ksqldb-cli
+    volumes:
+    - ./data/scripts/:/scripts
+    depends_on:
+      - broker
+      - kafka-connect
+      - ksqldb-server
+    entrypoint:
+        - /bin/bash
+        - -c 
+        - | 
+          echo -e "\n\n⏳ Waiting for KSQL to be available before launching CLI\n"
+          while [ $$(curl -s -o /dev/null -w %{http_code} http://ksqldb-server:8088/) -eq 000 ]
+          do 
+            echo -e $$(date) "KSQL Server HTTP state: " $$(curl -s -o /dev/null -w %{http_code} http://ksqldb-server:8088/) " (waiting for 200)"
+            sleep 5
+          done
+          sleep 60
+          echo -e "\n\n-> Running KSQL commands\n"
+          cat /scripts/teste.sql|ksql http://ksqldb-server:8088 
+          echo -e "\n\n-> Sleeping…\n"
+          sleep infinity  
+
+  rest-proxy:
+    image: confluentinc/cp-kafka-rest:6.2.0
+    depends_on:
+      - broker
+      - schema-registry
+    networks:
+      frontend:
+       ipv4_address: 172.16.238.3
+      default:
+    ports:
+      - 8082:8082
+    hostname: rest-proxy
+    container_name: rest-proxy
+    environment:
+      KAFKA_REST_HOST_NAME: rest-proxy
+      KAFKA_REST_BOOTSTRAP_SERVERS: 'broker:29092'
+      KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
+      KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+  #ntp:
+   # build: .
+    #image: cturra/ntp:latest
+    #container_name: ntp
+    #restart: always
+    #ports:
+    #  - 123:123/udp
+    #read_only: true
+    #privileged: true
+    #tmpfs:
+    #  - /etc/chrony:rw,mode=1750
+    #  - /run/chrony:rw,mode=1750
+    #  - /var/lib/chrony:rw,mode=1750
+    #environment:
+    #  - NTP_SERVERS=127.127.1.0
+#Other systems
+      
+  # kafka-teste-script:
+    # build: ./script_python
+    # image: kafka-teste-script:V1
+    # container_name: kafka-teste-script
+    # ports:
+      # - "5000:5000"
+    # depends_on:
+      # - broker
+    # volumes:
+      # - ./data/app:/script_python
+    # networks:
+      # frontend:
+       # ipv4_address: 172.16.238.5
+      # default:
+    
+    
+    #DAQUI PARA BAIXO DESCOMENTAR!!!!!!!!!!!!!!!!!!!!!!!!
+  postgres:
+    # *-----------------------------*
+    # To connect to the DB: 
+    #   docker exec -it postgres bash -c 'psql -U $POSTGRES_USER $POSTGRES_DB'
+    # *-----------------------------*
+    image: postgres:latest
+    container_name: postgres
+    environment:
+     POSTGRES_USER: postgres
+     POSTGRES_PASSWORD: postgres
+     POSTGRES_DB: Kafka
+     #- PGDATA= /tmp
+    volumes:
+      - ./data/data/postgres:/docker-entrypoint-initdb.d/
+      - ./data/pgdata:/var/lib/postgresql/data
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+    networks:
+      frontend:
+       ipv4_address: 172.16.238.8
+      default:
+  grafana:
+    image: grafana/grafana:8.3.3
+    #image: grafana/grafana:7.3.0
+    ports:
+      - "3001:3000"    #   port exterior 3001 por interior 3000 o docker d? map disto'
+    volumes:
+     - ./data/grafana-storage:/var/lib/grafana
+
+    networks:
+      frontend:
+       ipv4_address: 172.16.238.10
+      default:
+networks:
+  frontend:
+    #Use a custom driver
+    ipam:
+        driver: default
+        config:
+            - subnet: 172.16.238.0/24
+      
