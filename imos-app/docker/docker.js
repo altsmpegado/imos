@@ -18,6 +18,34 @@ function doesContainerExist(containerName) {
     }
 }
 
+function isContainerRunning(containerName) {
+    const result = spawnSync('docker', ['inspect', '--format={{.State.Running}}', containerName], { encoding: 'utf-8' });
+    if (result.status === 0) {
+        return result.stdout.trim() === 'true';
+    } else {
+        console.error('Error checking if container is running:', result.stderr);
+        return false;
+    }
+}
+
+function getContainerPort(containerName) {
+    const result = spawnSync('docker', ['inspect', '--format={{range $p := .NetworkSettings.Ports}}{{$p}} {{end}}', containerName], { encoding: 'utf-8' });
+    if (result.status === 0) {
+        const portMappings = result.stdout.trim().slice(2, -2);
+        if (portMappings.length > 0) {
+            // Extract the host port from the port mappings
+            const hostPort = portMappings.split(' ')[1];
+            return hostPort;
+        } else {
+            console.error('No port mappings found for the container.');
+            return null;
+        }
+    } else {
+        console.error('Error retrieving container port:', result.stderr);
+        return null;
+    }
+}
+
 function createDockerProcess(appConfig) {
     const appName = appConfig.appName;
     const ip = appConfig.ip;
@@ -30,41 +58,40 @@ function createDockerProcess(appConfig) {
         '-e', 'DISPLAY=host.docker.internal:0',
         appName
     ]);*/
+    // Create and run a new container
+    const dockerProcess = spawnSync('docker', [
+        'run',
+        '-d',
+        '-p', localhost + ':3000',
+        '--name', appName,
+        '-e', 'PORT=' + localhost,
+        '-e', 'WEBCAM_IP=' + ip,
+        appName
+    ]);
 
-    if (doesContainerExist(appName)) {
-        // Start the existing container
-        const dockerProcess = spawnSync('docker', ['start', appName]);
+    if (dockerProcess.status === 0) {
+        console.log('Container created and started successfully.');
+        openBrowser(`http://localhost:${localhost}`);
+    } else {
+        console.error('Error creating or starting container:', dockerProcess.stderr);
+    }
+}
+
+function startDockerProcess(containerName) {
+    //console.log(containerName);
+    if (!isContainerRunning(containerName)) {
+        // start the existing container if not already running
+        const dockerProcess = spawnSync('docker', ['start', containerName]);
         if (dockerProcess.status !== 0) {
             console.error('Error starting existing container:', dockerProcess.stderr);
         } else {
             console.log('Container started successfully.');
-            openBrowser(`http://localhost:${localhost}`);
         }
-
-        //console.log(`IMOS-local-example Output: ${dockerProcess.stdout}`);
-        //console.error(`IMOS-local-example Error: ${dockerProcess.stderr}`);
-
-    } else {
-        // Create and run a new container
-        const dockerProcess = spawnSync('docker', [
-            'run',
-            '-d',
-            '-p', localhost + ':80',
-            '--name', appName,
-            '-e', 'WEBCAM_IP=' + ip,
-            appName
-        ]);
-    
-        if (dockerProcess.status === 0) {
-            console.log('Container created and started successfully.');
-            openBrowser(`http://localhost:${localhost}`);
-        } else {
-            console.error('Error creating or starting container:', dockerProcess.stderr);
-        }
-
-        //console.log(`IMOS-local-example Output: ${dockerProcess.stdout}`);
-        //console.error(`IMOS-local-example Error: ${dockerProcess.stderr}`);
+    }
+    const containerPort = getContainerPort(containerName);
+    if (containerPort !== null) {
+        openBrowser(`http://localhost:${containerPort}`);
     }
 }
 
-module.exports = { createDockerProcess };
+module.exports = { createDockerProcess, doesContainerExist, startDockerProcess };
