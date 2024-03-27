@@ -46,6 +46,17 @@ function getContainerPort(containerName) {
     }
 }
 
+function getImageMetadata(imageName) {
+    const result = spawnSync('docker', ['inspect', '--format={{json .Config.Labels}}', imageName], { encoding: 'utf-8' });
+    if (result.status === 0) {
+        const labels = JSON.parse(result.stdout);
+        return labels;
+    } else {
+        console.error('Error retrieving labels:', result.stderr);
+        return null;
+    }
+}
+
 function createDockerProcess(appConfig) {
     const appName = appConfig.appName;
     const ip = appConfig.ip;
@@ -94,4 +105,4 @@ function startDockerProcess(containerName) {
     }
 }
 
-module.exports = { createDockerProcess, doesContainerExist, startDockerProcess };
+module.exports = { createDockerProcess, doesContainerExist, startDockerProcess, getImageMetadata};

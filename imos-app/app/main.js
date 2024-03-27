@@ -1,6 +1,6 @@
 // main.js
 const { app, BrowserWindow, ipcMain } = require('electron');
-const { createDockerProcess, doesContainerExist, startDockerProcess } = require('../docker/docker');
+const { createDockerProcess, doesContainerExist, startDockerProcess, getImageMetadata } = require('../docker/docker');
 const request = require('request');
 const fs = require('fs');
 const { log } = require('console');
@@ -177,6 +177,7 @@ app.on('window-all-closed', () => {
 });
 
 ipcMain.on('runDockerApp', (event, app) => {
+  console.log(getImageMetadata(app));
   if(!setWindow && !doesContainerExist(app))
     createSetupWindow(app);
   else
