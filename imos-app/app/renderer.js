@@ -96,6 +96,7 @@ getInstalledApps().then((builtImages) => {
         // Create a new button
         const newButton = document.createElement('button');
         newButton.setAttribute('class', 'button-component');
+        newButton.setAttribute('title', appName);
         newButton.setAttribute('type', 'app');
         newButton.setAttribute('id', buttonId);
         newButton.innerHTML = `<span class='circle-info'>${index + 1}</span>`;
