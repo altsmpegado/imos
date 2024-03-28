@@ -122,8 +122,9 @@ function createSetupWindow(appName) {
     setWindow.on('closed', () => {
       setWindow = null;
     });
-
-    setWindow.loadFile('views/setup.html', { query: { appName } });
+    const labels = JSON.stringify(getImageMetadata(appName));
+    console.log(labels);
+    setWindow.loadFile('views/setup.html', { query: { appName,  labels} });
   });
 }
 
@@ -177,7 +178,6 @@ app.on('window-all-closed', () => {
 });
 
 ipcMain.on('runDockerApp', (event, app) => {
-  console.log(getImageMetadata(app));
   if(!setWindow && !doesContainerExist(app))
     createSetupWindow(app);
   else
@@ -300,7 +300,7 @@ ipcMain.on('back', (event) => {
 });
 
 ipcMain.on('set', (event, appConfig) => {
-  //console.log(appConfig);
+  console.log(appConfig);
   setWindow.close();
   createDockerProcess(appConfig);
 });

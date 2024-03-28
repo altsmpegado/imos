@@ -7,18 +7,13 @@
 </head>
 <body>
     <h1 id ="header"></h1>
-    <form id="loginForm">
-        <input placeholder="Insert localhost" id="localhost" required>
-        <br>
-        <br>
-        <input placeholder="Insert Camera IP" id="ip" required>
-        <br>
-        <br>
-        <button type="submit">Submit</button> 
-    </form>
+    <form id="configForm"></form>
     <script>
         const { ipcRenderer } = require('electron');
         const appName = new URLSearchParams(window.location.search).get('appName');
+        const metadata = new URLSearchParams(window.location.search).get('labels');
+        const labels = JSON.parse(metadata);
+        const labelArray = labels["required-configs"].split(',').map(label => label.trim());
 
         document.addEventListener('DOMContentLoaded', () => {
             const title = document.getElementById('title');
@@ -26,16 +21,41 @@
 
             const header = document.getElementById('header');
             header.innerText = 'Configuration of ' + appName;
+
+            createInputFields(labelArray);
         });
 
-        document.getElementById('loginForm').addEventListener('submit', (event) => {
+        function createInputFields(labels) {
+            const form = document.getElementById('configForm');
+            labels.forEach(label => {
+                const labelElement = document.createElement('label');
+                labelElement.innerText = label + ': ';
+                
+                const inputElement = document.createElement('input');
+                inputElement.setAttribute('id', label);
+                inputElement.setAttribute('placeholder', 'Insert ' + label);
+                inputElement.setAttribute('required', true);
+
+                form.appendChild(labelElement);
+                form.appendChild(inputElement);
+                form.appendChild(document.createElement('br'));
+            });
+
+            const submitButton = document.createElement('button');
+            submitButton.setAttribute('type', 'submit');
+            submitButton.innerText = 'Submit';
+            form.appendChild(submitButton);
+        }
+
+        document.getElementById('configForm').addEventListener('submit', (event) => {
             event.preventDefault();
 
-            const localhost = document.getElementById('localhost').value;
-            const ip = document.getElementById('ip').value;
-
-            // Send the registration data to the main process
-            ipcRenderer.send('set', { appName, localhost, ip });
+            const configData = {};
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                configData[input.id] = input.value;
+            });
+            ipcRenderer.send('set', { appName, ...configData });
         });
         
     </script>

@@ -57,32 +57,31 @@ function getImageMetadata(imageName) {
     }
 }
 
-function createDockerProcess(appConfig) {
-    const appName = appConfig.appName;
-    const ip = appConfig.ip;
-    const localhost = appConfig.localhost;
-    /*const dockerProcess = spawnSync('docker', [
-        'run',
-        '--rm',
-        '--name',
-        appName,
-        '-e', 'DISPLAY=host.docker.internal:0',
-        appName
-    ]);*/
-    // Create and run a new container
-    const dockerProcess = spawnSync('docker', [
+function createDockerProcess(configData) {
+    const appName = configData.appName;
+    delete configData.appName; // Remove appName from configData
+
+    const dockerArgs = [
         'run',
         '-d',
-        '-p', localhost + ':3000',
-        '--name', appName,
-        '-e', 'PORT=' + localhost,
-        '-e', 'WEBCAM_IP=' + ip,
-        appName
-    ]);
+        // app could not have interface
+        '-p', configData.PORT + ':3000',
+        '--name', appName        
+    ];
+
+    // Iterate over the remaining properties of configData and add them as environment variables
+    for (const [key, value] of Object.entries(configData)) {
+        dockerArgs.push('-e', `${key}=${value}`);
+    }
+
+    dockerArgs.push(appName);
+
+    const dockerProcess = spawnSync('docker', dockerArgs);
 
     if (dockerProcess.status === 0) {
         console.log('Container created and started successfully.');
-        openBrowser(`http://localhost:${localhost}`);
+        // app could not have interface
+        openBrowser(`http://localhost:${configData.PORT}`);
     } else {
         console.error('Error creating or starting container:', dockerProcess.stderr);
     }
