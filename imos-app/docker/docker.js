@@ -59,7 +59,7 @@ function getImageMetadata(imageName) {
 
 function createDockerProcess(configData) {
     const appName = configData.appName;
-    delete configData.appName; // Remove appName from configData
+    delete configData.appName;
 
     const dockerArgs = [
         'run',
@@ -69,7 +69,6 @@ function createDockerProcess(configData) {
         '--name', appName        
     ];
 
-    // Iterate over the remaining properties of configData and add them as environment variables
     for (const [key, value] of Object.entries(configData)) {
         dockerArgs.push('-e', `${key}=${value}`);
     }
