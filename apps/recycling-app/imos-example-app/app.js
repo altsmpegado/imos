@@ -1,51 +1,52 @@
 const express = require('express');
-const axios = require('axios');
-const { loadImage, detect } = require('yolov5-tfjs');
-
 const app = express();
+const tf = require('@tensorflow/tfjs-node');
+const { createCanvas, loadImage } = require('canvas');
+const { loadTfliteModel, getBoundingBoxes } = require('./customModelUtils');
+
 const port = process.env.PORT || 3000;
-const imageUrl = process.env.IMAGE_URL || 'http://example.com/image.jpg';
+const webcamIP = process.env.WEBCAM_IP || 'Hello, World!';
+const ip = `http://${webcamIP}/video_feed`;
+
+async function processImage(url, model) {
+  const image = await loadImage(url);
+  const canvas = createCanvas(image.width, image.height);
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(image, 0, 0, image.width, image.height);
+  const inputTensor = tf.browser.fromPixels(canvas).expandDims();
+  const predictions = model.predict(inputTensor);
+  const boundingBoxes = getBoundingBoxes(predictions); // Function to extract bounding boxes from model output
+  for (const bbox of boundingBoxes) {
+    ctx.strokeStyle = '#FF0000';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.rect(bbox.x, bbox.y, bbox.width, bbox.height);
+    ctx.stroke();
+  }
+  return canvas.toBuffer();
+}
 
 app.get('/', async (req, res) => {
   try {
-    // Fetch image from URL
-    const imageBuffer = await fetchImage(imageUrl);
-
-    // Load YOLOv5 model
-    const model = await loadImage('path/to/your/model');
-
-    // Perform object detection
-    const detections = await detect(model, imageBuffer);
-
-    // Draw bounding boxes on the image
-    const imageWithBoxes = drawBoundingBoxes(imageBuffer, detections);
-
-    // Send the modified HTML page with the image and bounding boxes
+    const model = await await tf.lite.loadModel('best-fp16.tflite'); // Load your custom TensorFlow Lite model
+    const imageBuffer = await processImage(ip, model);
+    const imageSrc = `data:image/jpeg;base64,${imageBuffer.toString('base64')}`;
     res.send(`
       <html>
         <head>
-          <title>Object Detection</title>
+          <title>IMOS Example App</title>
         </head>
         <body>
-          <h1>Object Detection</h1>
-          <img src="data:image/jpeg;base64,${imageWithBoxes.toString('base64')}" alt="Object Detection">
+          <h1>IMOS Example App</h1>
+          <img src="${imageSrc}" alt="Camera Feed">
         </body>
       </html>
     `);
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error processing image:', error);
     res.status(500).send('Internal Server Error');
   }
 });
-
-async function fetchImage(url) {
-  const response = await axios.get(url, { responseType: 'arraybuffer' });
-  return Buffer.from(response.data, 'binary');
-}
-
-function drawBoundingBoxes(imageBuffer, detections) {
-
-}
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
