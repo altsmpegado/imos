@@ -1,3 +1,8 @@
+import * as tf from '@tensorflow/tfjs';
+import {loadGraphModel} from '@tensorflow/tfjs-converter';
+
+const MODEL_URL = 'best_web_model/model.json';
+
 const video = document.getElementById('webcam');
 const liveView = document.getElementById('liveView');
 const demosSection = document.getElementById('demos');
@@ -90,12 +95,8 @@ function predictWebcam() {
 
 // Store the resulting model in the global scope of our app.
 var model = undefined;
-
-// Before we can use COCO-SSD class we must wait for it to finish
-// loading. Machine Learning models can be large and take a moment 
-// to get everything needed to run.
-cocoSsd.load().then(function (loadedModel) {
-    model = loadedModel;
-    // Show demo section now model is ready to use.
-    demosSection.classList.remove('invisible');
-});
+model = await loadGraphModel(MODEL_URL);
+const cat = document.getElementById('cat');
+model.execute(tf.browser.fromPixels(cat));
+// Show demo section now model is ready to use.
+demosSection.classList.remove('invisible');
