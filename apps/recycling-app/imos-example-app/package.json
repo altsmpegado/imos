@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@tensorflow/tfjs-node": "^4.17.0",
+    "@tensorflow/tfjs-node-gpu": "^4.17.0",
     "axios": "^1.6.8",
     "canvas": "^2.11.2",
     "express": "^4.19.2"
