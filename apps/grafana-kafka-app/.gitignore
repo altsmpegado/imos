@@ -132,5 +132,7 @@ dist
 # SSL Certificate
 *.pem
 
+# App specific data
+__pycache__
 pgdata
 grafana-storage
