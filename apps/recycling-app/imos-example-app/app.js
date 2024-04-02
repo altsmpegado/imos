@@ -3,9 +3,10 @@ const app = express();
 
 const port = process.env.PORT || 3000;
 //const webcamIP = process.env.WEBCAM_IP || 'Hello, World!';
-const ip = `http://192.168.1.72:5001/processed_video_feed`;
+const ip = `http://localhost:5001/processed_video_feed`;
 
 app.get('/', (req, res) => {
+  
   res.send(`
     <html>
       <head>

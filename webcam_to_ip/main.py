@@ -6,8 +6,6 @@ app = Flask(__name__)
 CORS(app)
 
 cap = cv2.VideoCapture(0)
-##cap.set(3, 640)  # set width
-##cap.set(4, 480)  # set height
 
 def generate_frames():
     while True:

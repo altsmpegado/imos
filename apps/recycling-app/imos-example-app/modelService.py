@@ -3,9 +3,8 @@ from flask_cors import CORS
 import cv2
 import torch
 from PIL import Image
-from io import BytesIO
-import base64
 import pathlib
+import json
 
 temp = pathlib.PosixPath
 pathlib.PosixPath = pathlib.WindowsPath
@@ -15,13 +14,51 @@ CORS(app)
 
 # Load the YOLOv5 model
 model = torch.hub.load('ultralytics/yolov5', 'custom', path='best.pt', force_reload=True)
-#model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
+
+def detect_objects(frame):
+    # Convert the frame to RGB format (OpenCV uses BGR)
+    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+    # Convert the frame to PIL Image format
+    pil_image = Image.fromarray(frame_rgb)
+
+    # Predict on the image
+    results = model(pil_image)
+
+    # Get bounding box coordinates and labels
+    bboxes = results.xyxy[0].cpu().numpy()
+    labels = results.names
+
+    # Prepare JSON data for detections
+    detections = []
+    for bbox in bboxes:
+        xmin, ymin, xmax, ymax, confidence, class_idx = bbox
+        class_name = labels[int(class_idx)]
+        detections.append({
+            'class': class_name,
+            'confidence': float(confidence),
+            'xmin': int(xmin),
+            'ymin': int(ymin),
+            'xmax': int(xmax),
+            'ymax': int(ymax)
+        })
+
+        # Draw bounding boxes on the image
+        color = (0, 255, 0)  # Green color for bounding boxes
+        cv2.rectangle(frame_rgb, (int(xmin), int(ymin)), (int(xmax), int(ymax)), color, 2)
+        cv2.putText(frame_rgb, f'{class_name}: {confidence:.2f}', (int(xmin), int(ymin - 10)),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+
+    # Convert the frame back to BGR format (OpenCV uses BGR)
+    frame_bgr = cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR)
+
+    return frame_bgr, detections
 
 def predict_video_feed():
     try:
         # Open the video capture
-        cap = cv2.VideoCapture('http://192.168.1.72:5000/video_feed')
-
+        cap = cv2.VideoCapture('http://localhost:5000/video_feed')
+        #cap = cv2.VideoCapture(0)
         while cap.isOpened():
             # Read a frame from the video feed
             success, frame = cap.read()
@@ -29,40 +66,21 @@ def predict_video_feed():
             if not success:
                 break
 
-            # Convert the frame to RGB format
-            rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            frame_detected, detections = detect_objects(frame)
 
-            # Convert the frame to PIL Image format
-            image = Image.fromarray(rgb_frame)
+            _, buffer = cv2.imencode('.jpg', frame_detected)
+            frame_bytes = buffer.tobytes()
 
-            # Predict on the image
-            results = model(image)
-
-            # Get bounding box coordinates and labels
-            bboxes = results.xyxy[0].cpu().numpy()
-            labels = results.names
-
-            # Draw bounding boxes on the image
-            for bbox in bboxes:
-                xmin, ymin, xmax, ymax, confidence, class_idx = bbox
-                class_name = labels[int(class_idx)]
-                color = (0, 255, 0)  # Green color for bounding boxes
-                cv2.rectangle(frame, (int(xmin), int(ymin)), (int(xmax), int(ymax)), color, 2)
-                cv2.putText(frame, f'{class_name}: {confidence:.2f}', (int(xmin), int(ymin - 10)),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
-                
-            # Convert the processed image to OpenCV format (BGR)
-            processed_frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-
-            # Encode the processed frame as JPEG
-            _, buffer = cv2.imencode('.jpg', processed_frame)
-
-            # Convert image to base64 string
-            frame = buffer.tobytes()
-
-            # Yield the processed frame
+            print(detections)
+            
             yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+                    b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n\r\n')
+            
+            if detections:
+                json_data = json.dumps(detections)
+                yield (b'--json\r\n'
+                       b'Content-Type: application/json\r\n\r\n' + json_data.encode() + b'\r\n\r\n')
+
     except Exception as e:
         print(f"Error processing video feed: {e}")
 
