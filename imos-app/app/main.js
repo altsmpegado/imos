@@ -177,7 +177,7 @@ app.on('window-all-closed', () => {
     }
 });
 
-ipcMain.on('runDockerApp', (event, app) => {
+ipcMain.on('runDockerApp', (event, app, type) => {
   if(!setWindow && !doesContainerExist(app))
     createSetupWindow(app);
   else

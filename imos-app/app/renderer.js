@@ -1,14 +1,14 @@
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, app } = require('electron');
 const { spawn } = require('child_process');
 const Docker = require('dockerode');
 const { KubeConfig, AppsV1Api } = require('@kubernetes/client-node');
 
 const openApps = {};
 
-function setupButton(buttonId, appPath) {
+function setupButton(buttonId, appPath, appType) {
     if (buttonId.includes('imos')){
         document.getElementById(buttonId).addEventListener('click', () => {
-            ipcRenderer.send('runDockerApp', appPath);
+            ipcRenderer.send('runDockerApp', appPath, appType);
         });
     }
     else {
@@ -34,31 +34,41 @@ function launchApp(appPath) {
     });
 }
 
-let installedApps = [];
-let defaultApps = ['marketplace-app', 'enabler-app', 'settings-app'];
+let installedApps = {};
+let defaultApps = {
+    'marketplace-app': { type: 'default' },
+    'enabler-app': { type: 'default' },
+    'settings-app': { type: 'default' }
+};
 
 async function getInstalledApps() {
     const docker = new Docker();
 
     try {
-        // Fetch Docker images
+        // Fetch Docker images - for solo containers
         const dockerImages = await docker.listImages();
         console.log(dockerImages);
         const imosImages = dockerImages
-            .filter((image) => image.RepoTags)
-            .filter((image) => image.RepoTags.some((tag) => tag.includes('imos')))
-            .map((image) => image.RepoTags.map((tag) => tag.split(':')[0]))
-            .flat();
+            .filter(image => image.RepoTags)
+            .filter(image => image.RepoTags.some(tag => tag.includes('imos')))
+            .map(image => ({ name: image.RepoTags[0].split(':')[0], type: 'image' }));
 
+        // Fetch Docker containers - for multi containers/services in compose file
         const dockerContainers = await docker.listContainers({ all: true });
-        console.log(dockerContainers);
+        //console.log(dockerContainers);
         const imosContainers = dockerContainers
-            .filter((image) => image.RepoTags)
-            .filter((image) => image.RepoTags.some((tag) => tag.includes('imos')))
-            .map((image) => image.RepoTags.map((tag) => tag.split(':')[0]))
-            .flat();
+            .reduce((acc, container) => {
+                const labels = container.Labels || {};
+                const projectName = labels['com.docker.compose.project'];
+                if (projectName && projectName.startsWith('imos') && !acc.find(app => app.name === projectName)) {
+                    acc.push({ name: projectName, type: 'multicontainer' });
+                }
+                return acc;
+            }, []);
+        
+        //console.log(imosContainers);
 
-        // Fetch Kubernetes deployments
+        // Fetch Kubernetes deployments - for kubernetes deployment files
         /*const kubeconfig = new KubeConfig();
         kubeconfig.loadFromDefault();
         const k8sApi = kubeconfig.makeApiClient(AppsV1Api);
@@ -69,8 +79,18 @@ async function getInstalledApps() {
         */
         // Merge Docker images and Kubernetes deployments into one list
         //const installedApps = [...builtImages, ...deployedApps];
+
         const installedApps = [...imosImages,  ...imosContainers]
-        return installedApps;
+
+        // Create a dictionary to store apps with their types
+        const appDictionary = installedApps.reduce((acc, app) => {
+            acc[app.name] = { type: app.type };
+            return acc;
+        }, {});
+
+        console.log(appDictionary);
+        return appDictionary;
+        
     } catch (error) {
         console.error('Error fetching Docker images and Kubernetes deployments:', error);
         return [];
@@ -90,23 +110,25 @@ function circular() {
     });
 }
 
-getInstalledApps().then((builtImages) => {
-    console.log('Built Images:', builtImages);
-    installedApps = defaultApps.concat(builtImages);
+getInstalledApps().then((builtApps) => {
+
+    console.log('Built Apps:', builtApps);
+    installedApps = Object.assign({}, defaultApps, builtApps);
     console.log('Installed Apps:', installedApps);
 
     const dynamicButtonsContainer = document.getElementById('dynamicButtonsContainer');
 
     // Dynamically generate buttons for installed apps
-    installedApps.forEach((appName, index) => {
+    Object.keys(installedApps).forEach((appName, index) => {
         const buttonId = `button_${appName}`;
+        const appType = installedApps[appName].type;
         const appPath = appName.includes('imos') ? appName : `${appName}/main.js`;
-
+        
         // Create a new button
         const newButton = document.createElement('button');
         newButton.setAttribute('class', 'button-component');
         newButton.setAttribute('title', appName);
-        newButton.setAttribute('type', 'app');
+        newButton.setAttribute('type', appType);
         newButton.setAttribute('id', buttonId);
         newButton.innerHTML = `<span class='circle-info'>${index + 1}</span>`;
 
@@ -114,7 +136,7 @@ getInstalledApps().then((builtImages) => {
         dynamicButtonsContainer.appendChild(newButton);
 
         // Set up the button click event
-        setupButton(buttonId, appPath);
+        setupButton(buttonId, appPath, appType);
     });
     circular();
 });
