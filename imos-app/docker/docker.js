@@ -65,7 +65,7 @@ function createDockerProcess(configData) {
         'run',
         '-d',
         // app could not have interface
-        '-p', configData.PORT + ':3000',
+        '-p', configData.PORT + ':' + configData.PORT,
         '--name', appName        
     ];
 

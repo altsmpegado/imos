@@ -43,7 +43,16 @@ async function getInstalledApps() {
     try {
         // Fetch Docker images
         const dockerImages = await docker.listImages();
-        const builtImages = dockerImages
+        console.log(dockerImages);
+        const imosImages = dockerImages
+            .filter((image) => image.RepoTags)
+            .filter((image) => image.RepoTags.some((tag) => tag.includes('imos')))
+            .map((image) => image.RepoTags.map((tag) => tag.split(':')[0]))
+            .flat();
+
+        const dockerContainers = await docker.listContainers({ all: true });
+        console.log(dockerContainers);
+        const imosContainers = dockerContainers
             .filter((image) => image.RepoTags)
             .filter((image) => image.RepoTags.some((tag) => tag.includes('imos')))
             .map((image) => image.RepoTags.map((tag) => tag.split(':')[0]))
@@ -60,7 +69,7 @@ async function getInstalledApps() {
         */
         // Merge Docker images and Kubernetes deployments into one list
         //const installedApps = [...builtImages, ...deployedApps];
-        const installedApps = [...builtImages]
+        const installedApps = [...imosImages,  ...imosContainers]
         return installedApps;
     } catch (error) {
         console.error('Error fetching Docker images and Kubernetes deployments:', error);

@@ -1,0 +1,2 @@
+postgres commands
+psql -U postgres Kafka
