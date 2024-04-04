@@ -336,10 +336,6 @@ services:
       - "3001:3000"
     volumes:
      - ./data/grafana-storage:/var/lib/grafana
-    labels:
-      - "com.example.description=This is the Grafana service"
-      - "com.example.department=IT"
-      - "com.example.environment=Production"
     networks:
       frontend:
        ipv4_address: 172.16.238.10
