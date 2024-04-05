@@ -3,7 +3,8 @@ version: '3.4'
 
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:6.0.0
+    #image: confluentinc/cp-zookeeper:6.0.0
+    image: datavisapp-zookeeper
     hostname: zookeeper
     container_name: zookeeper
     ports:
@@ -13,7 +14,8 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   broker:
-    image: confluentinc/cp-enterprise-kafka:6.0.0
+    #image: confluentinc/cp-enterprise-kafka:6.0.0
+    image: datavisapp-broker
     networks:
      frontend:
        ipv4_address: 172.16.238.4
@@ -44,7 +46,8 @@ services:
       CONFLUENT_METRICS_ENABLE: 'false'
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:6.0.0
+    #image: confluentinc/cp-schema-registry:6.0.0
+    image: datavisapp-schema-registry
     hostname: schema-registry
     container_name: schema-registry
     depends_on:
@@ -56,7 +59,8 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker:29092'
 
   connect:
-    image: cnfldemos/cp-server-connect-datagen:0.3.2-5.5.0
+    #image: cnfldemos/cp-server-connect-datagen:0.3.2-5.5.0
+    image: datavisapp-connect
     hostname: connect
     container_name: connect
     depends_on:
@@ -91,7 +95,8 @@ services:
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
 
   control-center:
-    image: confluentinc/cp-enterprise-control-center:6.0.0
+    #image: confluentinc/cp-enterprise-control-center:6.0.0
+    image: datavisapp-control-center
     hostname: control-center
     container_name: control-center
     depends_on:
@@ -120,7 +125,8 @@ services:
       frontend:
         ipv4_address: 172.16.238.9
       default:
-    image: confluentinc/cp-kafka-connect-base:6.0.0
+    #image: confluentinc/cp-kafka-connect-base:6.0.0
+    image: datavisapp-kafka-connect
     hostname: kafka-connect
     container_name: kafka-connect
     depends_on:
@@ -175,7 +181,8 @@ services:
         sleep infinity
 
   ksqldb-server:
-    image: confluentinc/cp-ksqldb-server:6.0.0
+    #image: confluentinc/cp-ksqldb-server:6.0.0
+    image: datavisapp-ksqldb-server
     #confluentinc/cp-ksqldb-server:6.0.0
     hostname: ksqldb-server
     container_name: ksqldb-server
@@ -230,7 +237,8 @@ services:
       frontend:
         ipv4_address: 172.16.238.7
       default:
-    image: confluentinc/cp-ksqldb-cli:6.0.0
+    #image: confluentinc/cp-ksqldb-cli:6.0.0
+    image: datavisapp-ksqldb-cli
     #confluentinc/cp-ksqldb-cli:6.0.0
     #confluentinc/cp-ksqldb-cli:latest
     container_name: ksqldb-cli
@@ -257,7 +265,8 @@ services:
           sleep infinity  
 
   rest-proxy:
-    image: confluentinc/cp-kafka-rest:6.2.0
+    #image: confluentinc/cp-kafka-rest:6.2.0
+    image: datavisapp-rest-proxy
     depends_on:
       - broker
       - schema-registry
@@ -312,7 +321,8 @@ services:
     # To connect to the DB: 
     #   docker exec -it postgres bash -c 'psql -U $POSTGRES_USER $POSTGRES_DB'
     # *-----------------------------*
-    image: postgres:latest
+    #image: postgres:latest
+    image: datavisapp-postgres
     container_name: postgres
     environment:
      POSTGRES_USER: postgres
@@ -330,12 +340,13 @@ services:
       default:
 
   grafana:
-    image: grafana/grafana:8.3.3
+    #image: grafana/grafana:8.3.3
     #image: grafana/grafana:7.3.0
+    image: datavisapp-grafana
     ports:
       - "3001:3000"
     volumes:
-     - ./data/grafana-storage:/var/lib/grafana
+      - ./data/grafana-storage:/var/lib/grafana
     networks:
       frontend:
        ipv4_address: 172.16.238.10

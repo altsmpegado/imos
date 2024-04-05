@@ -53,8 +53,19 @@ async function getInstalledApps() {
             .filter(image => image.RepoTags.some(tag => tag.includes('imos')))
             .map(image => ({ name: image.RepoTags[0].split(':')[0], type: 'image' }));
 
+        const imosMultiImages = dockerImages
+            .reduce((acc, image) => {
+                const labels = image.Labels || {};
+                const projectName = labels['com.main.multicontainer'];
+                if (projectName && projectName.startsWith('imos') && !acc.find(app => app.name === projectName)) {
+                    acc.push({ name: projectName, type: 'multicontainer' });
+                }
+                return acc;
+            }, []);
+        console.log(imosMultiImages);
+
         // Fetch Docker containers - for multi containers/services in compose file
-        const dockerContainers = await docker.listContainers({ all: true });
+        /*const dockerContainers = await docker.listContainers({ all: true });
         //console.log(dockerContainers);
         const imosContainers = dockerContainers
             .reduce((acc, container) => {
@@ -64,7 +75,7 @@ async function getInstalledApps() {
                     acc.push({ name: projectName, type: 'multicontainer' });
                 }
                 return acc;
-            }, []);
+            }, []);*/
         
         //console.log(imosContainers);
 
@@ -80,7 +91,7 @@ async function getInstalledApps() {
         // Merge Docker images and Kubernetes deployments into one list
         //const installedApps = [...builtImages, ...deployedApps];
 
-        const installedApps = [...imosImages,  ...imosContainers]
+        const installedApps = [...imosImages,  ...imosMultiImages]
 
         // Create a dictionary to store apps with their types
         const appDictionary = installedApps.reduce((acc, app) => {
@@ -128,7 +139,7 @@ getInstalledApps().then((builtApps) => {
         const newButton = document.createElement('button');
         newButton.setAttribute('class', 'button-component');
         newButton.setAttribute('title', appName);
-        newButton.setAttribute('type', appType);
+        newButton.setAttribute('type', 'app');
         newButton.setAttribute('id', buttonId);
         newButton.innerHTML = `<span class='circle-info'>${index + 1}</span>`;
 

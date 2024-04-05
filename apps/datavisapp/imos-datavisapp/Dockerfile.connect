@@ -1,0 +1,3 @@
+FROM cnfldemos/cp-server-connect-datagen:0.3.2-5.5.0
+
+LABEL com.main.multicontainer="imos-datavisapp"
