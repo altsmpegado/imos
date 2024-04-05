@@ -178,10 +178,12 @@ app.on('window-all-closed', () => {
 });
 
 ipcMain.on('runDockerApp', (event, app, type) => {
-  if(!setWindow && !doesContainerExist(app))
+  if(type == 'multicontainer')
+    startDockerProcess(app, type);
+  else if(!setWindow && !doesContainerExist(app))
     createSetupWindow(app);
   else
-    startDockerProcess(app);
+    startDockerProcess(app, type);
 });
 
 ipcMain.on('openLoginWindow', (event) => {

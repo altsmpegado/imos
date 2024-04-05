@@ -1,4 +1,4 @@
-const { spawnSync } = require('child_process');
+const { execSync , spawnSync } = require('child_process');
 
 function openBrowser(url) {
     const { status, error } = spawnSync('start', [url], { shell: true });
@@ -24,6 +24,17 @@ function isContainerRunning(containerName) {
         return result.stdout.trim() === 'true';
     } else {
         console.error('Error checking if container is running:', result.stderr);
+        return false;
+    }
+}
+
+function isMultiContainerRunning(projectName) {
+    const result = spawnSync('docker-compose', ['-p', projectName, 'ps', '-q'], { encoding: 'utf-8' });
+    if (result.status === 0) {
+        const containerIds = result.stdout.trim().split('\n');
+        return containerIds.length > 0; // If there are any container IDs, at least one container is running
+    } else {
+        console.error('Error checking if multi-container environment is running:', result.stderr);
         return false;
     }
 }
@@ -86,9 +97,25 @@ function createDockerProcess(configData) {
     }
 }
 
-function startDockerProcess(containerName) {
+function startDockerProcess(containerName, type) {
+    if (/*!isContainerRunning(containerName) && */type == 'multicontainer') {
+        // start the existing container if not already running
+        try {
+            execSync(`docker compose -p ${containerName} start`);
+            console.log('Docker Compose started successfully.');
+        } catch (error) {
+            console.error('Error starting Docker Compose:', error.stderr.toString());
+        }
+        // need to get ports of multiple containers
+        // label which containers are intend for user interaction
+        /*const containerPort = getContainerPort(containerName);
+        if (containerPort !== null) {
+            openBrowser(`http://localhost:${containerPort}`);
+        }*/
+        
+    }
     //console.log(containerName);
-    if (!isContainerRunning(containerName)) {
+    else if (!isContainerRunning(containerName) && type == 'image') {
         // start the existing container if not already running
         const dockerProcess = spawnSync('docker', ['start', containerName]);
         if (dockerProcess.status !== 0) {
@@ -96,10 +123,27 @@ function startDockerProcess(containerName) {
         } else {
             console.log('Container started successfully.');
         }
+        const containerPort = getContainerPort(containerName);
+        if (containerPort !== null) {
+            openBrowser(`http://localhost:${containerPort}`);
+        }
     }
-    const containerPort = getContainerPort(containerName);
-    if (containerPort !== null) {
-        openBrowser(`http://localhost:${containerPort}`);
+
+    else if (/*!isContainerRunning(containerName) && */type == 'multicontainer') {
+        // start the existing container if not already running
+        const dockerProcess = spawnSync('docker compose', ['-p', containerName, 'start']);
+        if (dockerProcess.status !== 0) {
+            console.error('Error starting existing container:', dockerProcess.stderr);
+        } else {
+            console.log('Container started successfully.');
+        }
+        // need to get ports of multiple containers
+        // label which containers are intend for user interaction
+        /*const containerPort = getContainerPort(containerName);
+        if (containerPort !== null) {
+            openBrowser(`http://localhost:${containerPort}`);
+        }*/
+        
     }
 }
 
