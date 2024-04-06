@@ -344,7 +344,9 @@ services:
     image: datavisapp-grafana
     container_name: datavisapp-grafana
     ports:
-      - "3001:3000"
+      - "${GRAFANA_PORT}"
+    #ports:
+    #  - "3001:3000"
     volumes:
       - ./data/grafana-storage:/var/lib/grafana
     networks:

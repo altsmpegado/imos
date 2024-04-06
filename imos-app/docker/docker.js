@@ -1,4 +1,5 @@
-const { execSync , spawnSync } = require('child_process');
+const { exec, execSync , spawnSync } = require('child_process');
+const Docker = require('dockerode');
 
 function openBrowser(url) {
     const { status, error } = spawnSync('start', [url], { shell: true });
@@ -14,6 +15,25 @@ function doesContainerExist(containerName) {
         return containers.includes(containerName);
     } else {
         console.error('Error checking if container exists:', result.stderr);
+        return false;
+    }
+}
+
+function doesMultiContainerExist(containerName) {
+    const result = spawnSync('docker', ['ps', '-a', '--format', '{{.Labels}}'], { encoding: 'utf-8' });
+    if (result.status === 0) {
+        const containers = result.stdout.trim().split('\n');
+        for (const container of containers) {
+            const labels = container.split(',');
+            for (const label of labels) {
+                if (label.includes(`com.docker.compose.project=${containerName}`)) {
+                    return true; // If the project name is found in any container's labels, return true
+                }
+            }
+        }
+        return false; // If the project name is not found in any container's labels, return false
+    } else {
+        console.error('Error checking if multi-container environment exists:', result.stderr);
         return false;
     }
 }
@@ -70,6 +90,31 @@ function getImageMetadata(imageName) {
     }
 }
 
+async function getMultiImageMetadata(projectName) {
+    const docker = new Docker();
+    const requiredConfigs = {};
+    try {
+        const dockerImages = await docker.listImages();
+        dockerImages.forEach((image) => {
+            const labels = image.Labels || {};
+            if (labels["com.main.multicontainer"] === "imos-datavisapp") {
+                const requiredConfigsLabel = labels["com.required.configs"];
+                if (requiredConfigsLabel) {
+                    const configs = requiredConfigsLabel.split(",").map(config => config.trim());
+                    configs.forEach((config) => {
+                        requiredConfigs[config] = true;
+                    });
+                }
+            }
+        });
+        //console.log({ "com.required.configs": Object.keys(requiredConfigs) });
+        return { "com.required.configs": Object.keys(requiredConfigs) };
+    } catch (error) {
+        console.error('Error fetching multi-container configs:', error);
+        return null;
+    }
+}
+
 function createDockerProcess(configData) {
     const appName = configData.appName;
     delete configData.appName;
@@ -99,30 +144,60 @@ function createDockerProcess(configData) {
     }
 }
 
+function createMultiDockerProcess(configData) {
+    const appName = configData.appName;
+    const projectDir = appName.split('-')[1];
+    delete configData.appName;
+    delete configData.type;
+
+    let envArgs = '';
+
+    for (const [key, value] of Object.entries(configData)) {
+        envArgs += `$env:${key}='"${value}"'; `;
+    }
+
+    const baseDir = process.env.IMOS_APPS_DIR || 'C:\\Program Files (x86)\\IMOS\\Apps';
+
+    const command = `powershell -Command "{ Set-Location '${baseDir}\\${projectDir}'; ${envArgs} docker compose -p ${appName} up}"`;
+
+    console.log('Executing command:', command);
+
+    const dockerProcess = spawnSync('powershell', ['-Command', command], { shell: true });
+
+    if (dockerProcess.status === 0) {
+        console.log('Container created and started successfully.');
+    } else {
+        console.error('Error creating or starting container:', dockerProcess.stderr ? dockerProcess.stderr.toString() : 'Unknown error');
+    }
+}
+
 function startDockerProcess(containerName, type) {
 
     //console.log(containerName);
-    if (!isContainerRunning(containerName) && type == 'image') {
-        // start the existing container if not already running
-        const dockerProcess = spawnSync('docker', ['start', containerName]);
-        if (dockerProcess.status !== 0) {
-            console.error('Error starting existing container:', dockerProcess.stderr);
-        } else {
-            console.log('Container started successfully.');
+    if(type == 'image'){
+        if (!isContainerRunning(containerName)) {
+            // start the existing container if not already running
+            const dockerProcess = spawnSync('docker', ['start', containerName]);
+            if (dockerProcess.status !== 0) {
+                console.error('Error starting existing container:', dockerProcess.stderr);
+            } else {
+                console.log('Container started successfully.');
+            }
         }
         const containerPort = getContainerPort(containerName);
         if (containerPort !== null) {
             openBrowser(`http://localhost:${containerPort}`);
         }
     }
-
-    else if (!isMultiContainerRunning(containerName) && type == 'multicontainer') {
-        // start the existing container if not already running
-        try {
-            execSync(`docker compose -p ${containerName} start`);
-            console.log('Docker Compose started successfully.');
-        } catch (error) {
-            console.error('Error starting Docker Compose:', error.stderr.toString());
+    else if(type == 'multicontainer'){
+        if (!isMultiContainerRunning(containerName)) {
+            // start the existing container if not already running
+            try {
+                execSync(`docker compose -p ${containerName} start`);
+                console.log('Docker Compose started successfully.');
+            } catch (error) {
+                console.error('Error starting Docker Compose:', error.stderr.toString());
+            }
         }
         // need to get ports of multiple containers
         // label which containers are intend for user interaction
@@ -130,8 +205,8 @@ function startDockerProcess(containerName, type) {
         if (containerPort !== null) {
             openBrowser(`http://localhost:${containerPort}`);
         }*/
-        
     }
 }
 
-module.exports = { createDockerProcess, doesContainerExist, startDockerProcess, getImageMetadata};
+module.exports = { createDockerProcess, createMultiDockerProcess, doesContainerExist, doesMultiContainerExist, 
+                   startDockerProcess, getImageMetadata, getMultiImageMetadata};

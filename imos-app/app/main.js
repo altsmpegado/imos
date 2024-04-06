@@ -1,6 +1,7 @@
 // main.js
 const { app, BrowserWindow, ipcMain } = require('electron');
-const { createDockerProcess, doesContainerExist, startDockerProcess, getImageMetadata } = require('../docker/docker');
+const { createDockerProcess, createMultiDockerProcess, doesContainerExist, doesMultiContainerExist, 
+         startDockerProcess, getImageMetadata, getMultiImageMetadata } = require('../docker/docker');
 const request = require('request');
 const fs = require('fs');
 const { log } = require('console');
@@ -103,7 +104,7 @@ function createRegisterWindow() {
   });
 }
 
-function createSetupWindow(appName) {
+function createSetupWindow(appName, labels, type) {
   return new Promise((resolve, reject) => {
     setWindow = new BrowserWindow({
       width: 400,
@@ -122,9 +123,8 @@ function createSetupWindow(appName) {
     setWindow.on('closed', () => {
       setWindow = null;
     });
-    const labels = JSON.stringify(getImageMetadata(appName));
     console.log(labels);
-    setWindow.loadFile('views/setup.html', { query: { appName,  labels} });
+    setWindow.loadFile('views/setup.html', { query: { appName, type, labels} });
   });
 }
 
@@ -178,12 +178,28 @@ app.on('window-all-closed', () => {
 });
 
 ipcMain.on('runDockerApp', (event, app, type) => {
-  if(type == 'multicontainer')
-    startDockerProcess(app, type);
-  else if(!setWindow && !doesContainerExist(app))
-    createSetupWindow(app);
-  else
-    startDockerProcess(app, type);
+  if(type == 'multicontainer'){
+    if(!setWindow && !doesMultiContainerExist(app)){
+      //console.log("nao existe");
+      getMultiImageMetadata(app)
+        .then((labels) => {
+          //console.log(labels);
+          createSetupWindow(app, JSON.stringify(labels), type);
+        }).catch((error) => {
+            console.error('Error fetching multi-container configs:', error);
+        });
+    }
+    else
+      startDockerProcess(app, type);
+  }
+  else if(type == 'image'){
+    if(!setWindow && !doesContainerExist(app)){
+      const labels = JSON.stringify(getImageMetadata(app));
+      createSetupWindow(app, labels, type);
+    }
+    else
+      startDockerProcess(app, type);
+  }
 });
 
 ipcMain.on('openLoginWindow', (event) => {
@@ -304,5 +320,8 @@ ipcMain.on('back', (event) => {
 ipcMain.on('set', (event, appConfig) => {
   console.log(appConfig);
   setWindow.close();
-  createDockerProcess(appConfig);
+  if(appConfig.type == 'image')
+    createDockerProcess(appConfig);
+  else if(appConfig.type == 'multicontainer')
+    createMultiDockerProcess(appConfig);
 });

@@ -8,7 +8,7 @@ RUN npm install
 COPY . .
 
 # define metadata variables
-LABEL "required-configs"="PORT, WEBCAM_IP"
+LABEL com.required.configs="PORT, WEBCAM_IP"
 
 EXPOSE 3000
 

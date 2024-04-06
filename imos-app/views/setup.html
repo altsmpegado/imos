@@ -11,9 +11,15 @@
     <script>
         const { ipcRenderer } = require('electron');
         const appName = new URLSearchParams(window.location.search).get('appName');
+        const type = new URLSearchParams(window.location.search).get('type');
         const metadata = new URLSearchParams(window.location.search).get('labels');
         const labels = JSON.parse(metadata);
-        const labelArray = labels["required-configs"].split(',').map(label => label.trim());
+        const requiredConfigs = labels["com.required.configs"];
+        if (requiredConfigs.includes(',')) {
+            labelArray = requiredConfigs.split(',').map(label => label.trim());
+        } else {
+            labelArray = [requiredConfigs];
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
             const title = document.getElementById('title');
@@ -55,7 +61,7 @@
             inputs.forEach(input => {
                 configData[input.id] = input.value;
             });
-            ipcRenderer.send('set', { appName, ...configData });
+            ipcRenderer.send('set', { appName, type, ...configData });
         });
         
     </script>

@@ -1,3 +1,4 @@
 FROM grafana/grafana:8.3.3
 
-LABEL com.main.multicontainer="imos-datavisapp"
+LABEL com.main.multicontainer="imos-datavisapp" \
+      com.required.configs="GRAFANA_PORT"
