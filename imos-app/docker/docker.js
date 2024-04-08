@@ -6,6 +6,7 @@ function openBrowser(url) {
     if (status !== 0) {
         console.error('Error opening web browser:', error);
     }
+    console.error('Opened web browser at:', url);
 }
 
 function doesContainerExist(containerName) {
@@ -27,11 +28,12 @@ function doesMultiContainerExist(containerName) {
             const labels = container.split(',');
             for (const label of labels) {
                 if (label.includes(`com.docker.compose.project=${containerName}`)) {
-                    return true; // If the project name is found in any container's labels, return true
+                    return true; // if the project name is found in any container's labels
                 }
             }
         }
-        return false; // If the project name is not found in any container's labels, return false
+        console.error('Error checking if multi-container environment exists:', result.stderr);
+        return false; 
     } else {
         console.error('Error checking if multi-container environment exists:', result.stderr);
         return false;
@@ -50,10 +52,10 @@ function isContainerRunning(containerName) {
 
 function isMultiContainerRunning(projectName) {
     const result = spawnSync('docker', ['compose', '-p', projectName, 'ps', '-q'], { encoding: 'utf-8', shell: true });
-    console.log(result);
+    //console.log(result);
     if (result.status === 0) {
         const containerIds = result.stdout.trim().split('\n');
-        console.log(containerIds);
+        //console.log(containerIds);
         return containerIds.length > 1; // at least one container is running
     } else {
         console.error('Error checking if multi-container environment is running:', result.stderr);
@@ -79,10 +81,43 @@ function getContainerPort(containerName) {
     }
 }
 
+async function getMultiContainerPorts(projectName) {
+    const docker = new Docker();
+    const ports = [];
+
+    try {
+        const dockerContainers = await docker.listContainers({ all: true });
+
+        dockerContainers.forEach(container => {
+            const labels = container.Labels || {};
+            const containerProjectName = labels['com.docker.compose.project'];
+            if (containerProjectName === projectName) {
+                const displayLabel = labels['com.user.display'];
+                if (displayLabel === 'True') {
+                    const portMappings = container.Ports || [];
+                    portMappings.forEach(mapping => {
+                        if (mapping.PublicPort) {
+                            ports.push(mapping.PublicPort);
+                        }
+                    });
+                }
+            }
+        });
+
+        return ports;
+    } catch (error) {
+        console.error('Error fetching container ports:', error);
+        return [];
+    }
+}
+
 function getImageMetadata(imageName) {
     const result = spawnSync('docker', ['inspect', '--format={{json .Config.Labels}}', imageName], { encoding: 'utf-8' });
     if (result.status === 0) {
         const labels = JSON.parse(result.stdout);
+        if (labels['com.required.configs']) {
+            labels['com.required.configs'] = labels['com.required.configs'].split(',').map(item => item.trim());
+        }
         return labels;
     } else {
         console.error('Error retrieving labels:', result.stderr);
@@ -166,10 +201,21 @@ function createMultiDockerProcess(configData) {
     const dockerProcess = spawnSync('powershell', ['-Command', command], { shell: true });
 
     if (dockerProcess.status === 0) {
-        console.log('Container created and started successfully.');
+        console.log('Multicontainer created and started successfully.');
     } else {
-        console.error('Error creating or starting container:', dockerProcess.stderr ? dockerProcess.stderr.toString() : 'Unknown error');
+        console.error('Error creating or starting multicontainer:', dockerProcess.stderr ? dockerProcess.stderr.toString() : 'Unknown error');
     }
+
+    getMultiContainerPorts(containerName)
+        .then(ports => {
+            console.log('Ports:', ports);
+            ports.forEach(port => {
+                openBrowser(`http://localhost:${port}`);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
 
 function startDockerProcess(containerName, type) {
@@ -190,19 +236,33 @@ function startDockerProcess(containerName, type) {
             openBrowser(`http://localhost:${containerPort}`);
         }
     }
+
     else if(type == 'multicontainer'){
         console.log(containerName);
         if (!isMultiContainerRunning(containerName)) {
             // start the existing container if not already running
             try {
+                console.log('Docker Compose started');
                 execSync(`docker compose -p ${containerName} start`);
-                console.log('Docker Compose started successfully.');
             } catch (error) {
                 console.error('Error starting Docker Compose:', error.stderr.toString());
             }
         }
+
         // need to get ports of multiple containers
         // label which containers are intend for user interaction
+        getMultiContainerPorts(containerName)
+            .then(ports => {
+                console.log('Ports:', ports);
+                ports.forEach(port => {
+                    openBrowser(`http://localhost:${port}`);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+        
         /*const containerPort = getContainerPort(containerName);
         if (containerPort !== null) {
             openBrowser(`http://localhost:${containerPort}`);

@@ -1,6 +1,6 @@
 Outfile "IMOS-DataVisAppInstaller.exe"
 Name "DataVisApp Installer"
-; InstallDir $PROGRAMFILES\IMOS\Apps\DataVisApp
+# InstallDir $PROGRAMFILES\IMOS\Apps\DataVisApp
 InstallDir "C:\IMOS\Apps\DataVisApp"
 
 # Specify the icon file
@@ -12,18 +12,18 @@ LicenseData ".\license.txt"
 Page instfiles
 
 Section
-    ; Set the installation directory
+    # Set the installation directory
     SetOutPath "$INSTDIR"
 
-    ; Create the installation directory if it doesn't exist
+    # Create the installation directory if it doesn't exist
     CreateDirectory $INSTDIR
 
-    ; Copy Docker container files to the installation directory
-    File /r /x *.gitignore /x data\pgdata\*.* /x data\grafana-storage\*.* "imos-datavisapp\*.*"
+    # Copy Docker container files to the installation directory
+    File /r /x *.gitignore "imos-datavisapp\*.*"
 
     Push "$INSTDIR\imos-datavisapp"
 
-    ; Execute Docker build command
+    # Execute Docker build command
     #ExecWait 'docker compose -p imos-datavisapp up --no-start'
     ExecWait '"$INSTDIR\build_images.bat"'
 

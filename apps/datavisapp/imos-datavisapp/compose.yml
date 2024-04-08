@@ -6,9 +6,11 @@ services:
     #image: confluentinc/cp-zookeeper:6.0.0
     image: datavisapp-zookeeper
     container_name: datavisapp-zookeeper
-    hostname: zookeeper«
+    hostname: zookeeper
     ports:
-      - "2181:2181"
+      - "${ZOOKEEPER_PORT}"
+    #ports:
+    #  - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -25,8 +27,11 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - "9092:9092"
-      - "9101:9101"
+      - "${BROKER_PORT1}"
+      - "${BROKER_PORT2}"
+    #ports:
+    #  - "9092:9092"
+    #  - "9101:9101"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
@@ -53,7 +58,9 @@ services:
     depends_on:
       - broker
     ports:
-      - "8081:8081"
+      - "${SCHEMAREG_PORT}"
+    #ports:
+    #  - "8081:8081"
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker:29092'
@@ -68,7 +75,9 @@ services:
       - broker
       - schema-registry
     ports:
-      - "8020:8020"
+      - "${CONNECT_PORT}"
+    #ports:
+    #  - "8020:8020"
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'broker:29092'
       CONNECT_REST_ADVERTISED_HOST_NAME: connect
@@ -106,7 +115,9 @@ services:
       - connect
       - ksqldb-server
     ports:
-      - "9021:9021"
+      - "${CONTROLCENTER_PORT}"
+    #ports:
+    #  - "9021:9021"
     environment:
       CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:29092'
       CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:2181'
@@ -133,7 +144,9 @@ services:
       - broker
       - schema-registry
     ports:
-      - "8083:8083"
+      - "${KAFKACNCT_PORT}"
+    #ports:
+    #  - "8083:8083"
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'broker:29092'
       CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect
@@ -189,7 +202,9 @@ services:
       - broker
       - kafka-connect
     ports:
-      - "8088:8088" 
+      - "${KSQLDBSERVER_PORT}"
+    #ports:
+    #  - "8088:8088" 
     networks:
       frontend:
         ipv4_address: 172.16.238.6
@@ -275,7 +290,9 @@ services:
        ipv4_address: 172.16.238.3
       default:
     ports:
-      - 8082:8082
+      - "${RESTPROXY_PORT}"
+    #ports:
+    #  - 8082:8082
     hostname: rest-proxy
     environment:
       KAFKA_REST_HOST_NAME: rest-proxy

@@ -1,3 +1,5 @@
 FROM confluentinc/cp-schema-registry:6.0.0
 
-LABEL com.main.multicontainer="imos-datavisapp"
+LABEL com.main.multicontainer="imos-datavisapp" \
+       com.required.configs="SCHEMAREG_PORT" \
+       com.user.display="False"

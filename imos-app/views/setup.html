@@ -15,11 +15,8 @@
         const metadata = new URLSearchParams(window.location.search).get('labels');
         const labels = JSON.parse(metadata);
         const requiredConfigs = labels["com.required.configs"];
-        if (requiredConfigs.includes(',')) {
-            labelArray = requiredConfigs.split(',').map(label => label.trim());
-        } else {
-            labelArray = [requiredConfigs];
-        }
+        console.log(requiredConfigs);
+        
 
         document.addEventListener('DOMContentLoaded', () => {
             const title = document.getElementById('title');
@@ -28,7 +25,7 @@
             const header = document.getElementById('header');
             header.innerText = 'Configuration of ' + appName;
 
-            createInputFields(labelArray);
+            createInputFields(requiredConfigs);
         });
 
         function createInputFields(labels) {
