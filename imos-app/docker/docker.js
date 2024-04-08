@@ -206,7 +206,7 @@ function createMultiDockerProcess(configData) {
         console.error('Error creating or starting multicontainer:', dockerProcess.stderr ? dockerProcess.stderr.toString() : 'Unknown error');
     }
 
-    getMultiContainerPorts(containerName)
+    getMultiContainerPorts(appName)
         .then(ports => {
             console.log('Ports:', ports);
             ports.forEach(port => {
