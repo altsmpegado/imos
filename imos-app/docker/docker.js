@@ -50,10 +50,10 @@ function isContainerRunning(containerName) {
 
 function isMultiContainerRunning(projectName) {
     const result = spawnSync('docker', ['compose', '-p', projectName, 'ps', '-q'], { encoding: 'utf-8', shell: true });
-    //console.log(result);
+    console.log(result);
     if (result.status === 0) {
         const containerIds = result.stdout.trim().split('\n');
-        //console.log(containerIds);
+        console.log(containerIds);
         return containerIds.length > 1; // at least one container is running
     } else {
         console.error('Error checking if multi-container environment is running:', result.stderr);
@@ -123,7 +123,7 @@ function createDockerProcess(configData) {
         'run',
         '-d',
         // app could not have interface
-        '-p', configData.PORT + ':' + configData.PORT,
+        '-p', configData.PORT,
         '--name', appName        
     ];
 
@@ -131,6 +131,7 @@ function createDockerProcess(configData) {
         dockerArgs.push('-e', `${key}=${value}`);
     }
 
+    // add iamge name to the end, which is the same as the container name
     dockerArgs.push(appName);
 
     const dockerProcess = spawnSync('docker', dockerArgs);
@@ -138,7 +139,7 @@ function createDockerProcess(configData) {
     if (dockerProcess.status === 0) {
         console.log('Container created and started successfully.');
         // app could not have interface
-        openBrowser(`http://localhost:${configData.PORT}`);
+        openBrowser(`http://localhost:${configData.PORT.split(":")[1]}`);
     } else {
         console.error('Error creating or starting container:', dockerProcess.stderr);
     }
@@ -156,7 +157,7 @@ function createMultiDockerProcess(configData) {
         envArgs += `$env:${key}='"${value}"'; `;
     }
 
-    const baseDir = process.env.IMOS_APPS_DIR || 'C:\\Program Files (x86)\\IMOS\\Apps';
+    const baseDir = process.env.IMOS_APPS_DIR || 'C:\\IMOS\\Apps';
 
     const command = `powershell -Command "{ Set-Location '${baseDir}\\${projectDir}'; ${envArgs} docker compose -p ${appName} up}"`;
 
@@ -190,6 +191,7 @@ function startDockerProcess(containerName, type) {
         }
     }
     else if(type == 'multicontainer'){
+        console.log(containerName);
         if (!isMultiContainerRunning(containerName)) {
             // start the existing container if not already running
             try {
