@@ -8,7 +8,7 @@ services:
     container_name: datavisapp-zookeeper
     hostname: zookeeper
     ports:
-      - "${ZOOKEEPER_PORT}"
+      - "${ZOOKEEPER_PORT:-2181:2181}"
     #ports:
     #  - "2181:2181"
     environment:
@@ -27,8 +27,8 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - "${BROKER_PORT1}"
-      - "${BROKER_PORT2}"
+      - "${BROKER_PORT1:-9092:9092}"
+      - "${BROKER_PORT2:-9101:9101}"
     #ports:
     #  - "9092:9092"
     #  - "9101:9101"
@@ -58,7 +58,7 @@ services:
     depends_on:
       - broker
     ports:
-      - "${SCHEMAREG_PORT}"
+      - "${SCHEMAREG_PORT:-8081:8081}"
     #ports:
     #  - "8081:8081"
     environment:
@@ -75,7 +75,7 @@ services:
       - broker
       - schema-registry
     ports:
-      - "${CONNECT_PORT}"
+      - "${CONNECT_PORT:-8020:8020}"
     #ports:
     #  - "8020:8020"
     environment:
@@ -115,7 +115,7 @@ services:
       - connect
       - ksqldb-server
     ports:
-      - "${CONTROLCENTER_PORT}"
+      - "${CONTROLCENTER_PORT:-9021:9021}"
     #ports:
     #  - "9021:9021"
     environment:
@@ -144,7 +144,7 @@ services:
       - broker
       - schema-registry
     ports:
-      - "${KAFKACNCT_PORT}"
+      - "${KAFKACNCT_PORT:-8083:8083}"
     #ports:
     #  - "8083:8083"
     environment:
@@ -202,7 +202,7 @@ services:
       - broker
       - kafka-connect
     ports:
-      - "${KSQLDBSERVER_PORT}"
+      - "${KSQLDBSERVER_PORT:-8088:8088}"
     #ports:
     #  - "8088:8088" 
     networks:
@@ -290,7 +290,7 @@ services:
        ipv4_address: 172.16.238.3
       default:
     ports:
-      - "${RESTPROXY_PORT}"
+      - "${RESTPROXY_PORT:-8082:8082}"
     #ports:
     #  - 8082:8082
     hostname: rest-proxy
@@ -361,7 +361,7 @@ services:
     image: datavisapp-grafana
     container_name: datavisapp-grafana
     ports:
-      - "${GRAFANA_PORT}"
+      - "${GRAFANA_PORT:-3001:3000}"
     #ports:
     #  - "3001:3000"
     volumes:

@@ -32,7 +32,7 @@ function doesMultiContainerExist(containerName) {
                 }
             }
         }
-        console.error('Error checking if multi-container environment exists:', result.stderr);
+        console.error('Multi-container environment does not exist.');
         return false; 
     } else {
         console.error('Error checking if multi-container environment exists:', result.stderr);
@@ -189,7 +189,8 @@ function createMultiDockerProcess(configData) {
     let envArgs = '';
 
     for (const [key, value] of Object.entries(configData)) {
-        envArgs += `$env:${key}='"${value}"'; `;
+        if(value != '')
+            envArgs += `$env:${key}='"${value}"'; `;
     }
 
     const baseDir = process.env.IMOS_APPS_DIR || 'C:\\IMOS\\Apps';
