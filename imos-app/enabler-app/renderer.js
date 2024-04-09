@@ -1,9 +1,9 @@
 const { ipcRenderer } = require('electron');
 
 function startDeployment() {
-  const deploymentName = document.getElementById('deployment-name').value.trim();
+  const deploymentName = document.getElementById('app-name').value.trim();
   if (!deploymentName) {
-    displayMessage('Please enter a deployment name.', 'error');
+    displayMessage('Please enter a valid application name.', 'error');
     return;
   }
 
@@ -12,6 +12,8 @@ function startDeployment() {
     const deploymentFileInput = document.createElement('input');
     deploymentFileInput.type = 'file';
     deploymentFileInput.accept = '.yaml';
+    // Trigger click event to open file dialog
+    deploymentFileInput.click();
 
     // Listen for change event when user selects a file
     deploymentFileInput.addEventListener('change', () => {
@@ -24,15 +26,15 @@ function startDeployment() {
   }
 
   else{
+    //console.log(deploymentName);
     ipcRenderer.send('start-deployment', { name: deploymentName, path: "" });
   }
 
-  // Trigger click event to open file dialog
-  deploymentFileInput.click();
+ 
 }
 
 function stopDeployment() {
-  const deploymentName = document.getElementById('deployment-name').value.trim();
+  const deploymentName = document.getElementById('app-name').value.trim();
   if (!deploymentName) {
     displayMessage('Please enter a deployment name.', 'error');
     return;

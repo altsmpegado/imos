@@ -218,9 +218,9 @@ function createMultiDockerProcess(configData) {
         });
 }
 
-function startDockerProcess(containerName, type) {
+function startDockerProcess(containerName, type, interface=1) {
 
-    //console.log(containerName);
+    console.log(containerName);
     if(type == 'image'){
         if (!isContainerRunning(containerName)) {
             // start the existing container if not already running
@@ -231,14 +231,15 @@ function startDockerProcess(containerName, type) {
                 console.log('Container started successfully.');
             }
         }
-        const containerPort = getContainerPort(containerName);
-        if (containerPort !== null) {
-            openBrowser(`http://localhost:${containerPort}`);
+        if(interface==1){
+            const containerPort = getContainerPort(containerName);
+            if (containerPort !== null) {
+                openBrowser(`http://localhost:${containerPort}`);
+            }
         }
     }
 
     else if(type == 'multicontainer'){
-        console.log(containerName);
         if (!isMultiContainerRunning(containerName)) {
             // start the existing container if not already running
             try {
@@ -251,24 +252,46 @@ function startDockerProcess(containerName, type) {
 
         // need to get ports of multiple containers
         // label which containers are intend for user interaction
-        getMultiContainerPorts(containerName)
-            .then(ports => {
-                console.log('Ports:', ports);
-                ports.forEach(port => {
-                    openBrowser(`http://localhost:${port}`);
+        if(interface==1){
+            getMultiContainerPorts(containerName)
+                .then(ports => {
+                    console.log('Ports:', ports);
+                    ports.forEach(port => {
+                        openBrowser(`http://localhost:${port}`);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                 });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        }
+    }
+}
 
-        
-        /*const containerPort = getContainerPort(containerName);
-        if (containerPort !== null) {
-            openBrowser(`http://localhost:${containerPort}`);
-        }*/
+function stopDockerProcess(containerName, type) {
+
+    console.log(containerName);
+    if(type == 'image'){
+        if (isContainerRunning(containerName)) {
+            const dockerProcess = spawnSync('docker', ['stop', containerName]);
+            if (dockerProcess.status !== 0) {
+                console.error('Error stoping existing container:', dockerProcess.stderr);
+            } else {
+                console.log('Container exited successfully.');
+            }
+        }
+    }
+
+    else if(type == 'multicontainer'){
+        if (isMultiContainerRunning(containerName)) {
+            try {
+                console.log('Docker Compose started');
+                execSync(`docker compose -p ${containerName} stop`);
+            } catch (error) {
+                console.error('Error exiting docker compose:', error.stderr.toString());
+            }
+        }  
     }
 }
 
 module.exports = { createDockerProcess, createMultiDockerProcess, doesContainerExist, doesMultiContainerExist, 
-                   startDockerProcess, getImageMetadata, getMultiImageMetadata};
+                   startDockerProcess, stopDockerProcess, getImageMetadata, getMultiImageMetadata};

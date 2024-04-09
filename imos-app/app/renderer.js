@@ -21,7 +21,7 @@ function setupButton(buttonId, appPath, appType) {
 }
 
 function launchApp(appPath) {
-    const electronPath = 'C:/imos/imos-app/node_modules/.bin/electron.cmd';
+    const electronPath = 'C:/imos-dev/imos-app/node_modules/.bin/electron.cmd';
     const childProcess = spawn(electronPath, [appPath]);
     
     openApps[appPath] = {

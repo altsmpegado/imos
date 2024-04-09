@@ -1,0 +1,10 @@
+grafana - 3001:3000
+ksqldb-server - 8088:8088
+schema-registry - 8081:8081
+control-center - 9021:9021
+kafka-connect - 8083:8083
+broker1 - 9092:9092
+broker2 - 9101:9101
+zookeeper - 2181:2181
+rest-proxy - 8082:8082
+connect - 8020:8020
