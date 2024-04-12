@@ -218,6 +218,26 @@ async function getMultiImageMetadata(projectName) {
     }
 }
 
+async function getAllImagesFromMultiContainer(projectName) {
+    const docker = new Docker();
+    const containers = [];
+    try {
+        const dockerImages = await docker.listImages();
+        dockerImages.forEach((image) => {
+            const labels = image.Labels || {};
+            if (labels["com.main.multicontainer"] === projectName) {
+                const repoTag = image.RepoTags[0];
+                const imageName = repoTag.split(':')[0];
+                containers.push(imageName);
+            }
+        });
+        return containers;
+    } catch (error) {
+        console.error('Error fetching multi-container configs:', error);
+        return null;
+    }
+}
+
 function createDockerProcess(configData) {
     const appName = configData.appName;
     delete configData.appName;
@@ -370,8 +390,23 @@ function deleteDockerProcess(containerName, type) {
         } else {
             console.log('Container deleted successfully.');
         }
-    } else if (type === 'multicontainer') {
-        console.error('Deleting multicontainer is not supported.');
+    } 
+    else if (type === 'multicontainer') {
+        getAllImagesFromMultiContainer(containerName)
+            .then((containers) => {
+                containers.forEach((container) => {
+                    const dockerProcess = spawnSync('docker', ['rm', container]);
+                    if (dockerProcess.status !== 0) {
+                        console.error('Error deleting existing container:', dockerProcess.stderr);
+                    } else {
+                        console.log('Container deleted successfully.');
+                    }
+                });
+            })
+            .catch((error) => {
+                console.error('Error fetching images from multi-container:', error);
+            });
+        console.log('Multicontainer', containerName, 'deleted with all sub-containers.');
     } else {
         console.error('Unknown container type:', type);
     }
@@ -379,4 +414,4 @@ function deleteDockerProcess(containerName, type) {
 
 module.exports = { createDockerProcess, createMultiDockerProcess, doesContainerExist, doesMultiContainerExist, 
                    startDockerProcess, stopDockerProcess, getImageMetadata, getMultiImageMetadata, getInstalledApps,
-                   isContainerRunning, isMultiContainerRunning, deleteDockerProcess};
+                   isContainerRunning, isMultiContainerRunning, deleteDockerProcess, getAllImagesFromMultiContainer};

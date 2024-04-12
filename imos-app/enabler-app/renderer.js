@@ -1,6 +1,6 @@
 const { ipcRenderer, app } = require('electron');
 const { getInstalledApps ,  isContainerRunning, isMultiContainerRunning, deleteDockerProcess, 
-        startDockerProcess, stopDockerProcess} = require('../docker/docker');
+        startDockerProcess, stopDockerProcess, getAllImagesFromMultiContainer} = require('../docker/docker');
 
 function startDeployment() {
   const deploymentName = document.getElementById('app-name').value.trim();
@@ -57,6 +57,7 @@ function createStatusLED(isRunning) {
 
 async function createAppCards() {
   const appContainer = document.getElementById('appContainer');
+  
   try {
     
     const installedApps = await getInstalledApps();
@@ -64,7 +65,6 @@ async function createAppCards() {
     
     for (const app in installedApps) {
       const appData = installedApps[app];
-      
       
       let isRunning = false;
       if (appData.type == 'image') {
@@ -110,6 +110,7 @@ function resetApp(appName, type){
   stopDockerProcess(appName, type);
   location.reload();
   deleteDockerProcess(appName, type);
+  console.log('AQUI', appName, type);
   ipcRenderer.send('runDockerApp', appName, type);
 }
 
