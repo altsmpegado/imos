@@ -2,15 +2,34 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline'"
-    />
-    <meta
-      http-equiv="X-Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IMOSKube</title>
+    <style>
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+        }
+        .button {
+            margin-right: 5px;
+        }
+        .status-led {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%; /* Makes it a circle */
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .green {
+            background-color: green;
+        }
+
+        .red {
+            background-color: red;
+        }
+    </style>
   </head>
   <body>
     <h1>IMOSKube</h1>
@@ -20,9 +39,7 @@
       <button onclick="startDeployment()">Start App</button>
       <button onclick="stopDeployment()">Stop App</button>
     </div>
-  
-    <div id="status-message"></div>
-  
+    <div id="appContainer"></div>
     <script type="text/javascript" src="renderer.js"></script>
   </body>
 </html>

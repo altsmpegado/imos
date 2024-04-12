@@ -44,9 +44,7 @@ ipcMain.on('start-deployment', (event, { name, path }) => {
     if(doesContainerExist(name)){
       startDockerProcess(name, "image", interface=0);
     }
-    else if(doesMultiContainerExist(name)){
-      //open browser
-      
+    else if(doesMultiContainerExist(name)){   
       startDockerProcess(name, "multicontainer", interface=0);
     }
   }

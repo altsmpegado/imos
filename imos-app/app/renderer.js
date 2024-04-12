@@ -1,7 +1,6 @@
-const { ipcRenderer, app } = require('electron');
+const { ipcRenderer } = require('electron');
 const { spawn } = require('child_process');
-const Docker = require('dockerode');
-const { KubeConfig, AppsV1Api } = require('@kubernetes/client-node');
+const { getInstalledApps } = require('../docker/docker');
 
 const openApps = {};
 
@@ -40,73 +39,6 @@ let defaultApps = {
     'enabler-app': { type: 'default' },
     'settings-app': { type: 'default' }
 };
-
-async function getInstalledApps() {
-    const docker = new Docker();
-
-    try {
-        // Fetch Docker images - for solo containers
-        const dockerImages = await docker.listImages();
-        console.log(dockerImages);
-        const imosImages = dockerImages
-            .filter(image => image.RepoTags)
-            .filter(image => image.RepoTags.some(tag => tag.includes('imos')))
-            .map(image => ({ name: image.RepoTags[0].split(':')[0], type: 'image' }));
-
-        const imosMultiImages = dockerImages
-            .reduce((acc, image) => {
-                const labels = image.Labels || {};
-                const projectName = labels['com.main.multicontainer'];
-                if (projectName && projectName.startsWith('imos') && !acc.find(app => app.name === projectName)) {
-                    acc.push({ name: projectName, type: 'multicontainer' });
-                }
-                return acc;
-            }, []);
-        console.log(imosMultiImages);
-
-        // Fetch Docker containers - for multi containers/services in compose file
-        /*const dockerContainers = await docker.listContainers({ all: true });
-        //console.log(dockerContainers);
-        const imosContainers = dockerContainers
-            .reduce((acc, container) => {
-                const labels = container.Labels || {};
-                const projectName = labels['com.docker.compose.project'];
-                if (projectName && projectName.startsWith('imos') && !acc.find(app => app.name === projectName)) {
-                    acc.push({ name: projectName, type: 'multicontainer' });
-                }
-                return acc;
-            }, []);*/
-        
-        //console.log(imosContainers);
-
-        // Fetch Kubernetes deployments - for kubernetes deployment files
-        /*const kubeconfig = new KubeConfig();
-        kubeconfig.loadFromDefault();
-        const k8sApi = kubeconfig.makeApiClient(AppsV1Api);
-        const response = await k8sApi.listNamespacedDeployment('default');
-        const deployedApps = response.body.items
-            .filter((deployment) => deployment.metadata.name.includes('imos'))
-            .map((deployment) => deployment.metadata.name);
-        */
-        // Merge Docker images and Kubernetes deployments into one list
-        //const installedApps = [...builtImages, ...deployedApps];
-
-        const installedApps = [...imosImages,  ...imosMultiImages]
-
-        // Create a dictionary to store apps with their types
-        const appDictionary = installedApps.reduce((acc, app) => {
-            acc[app.name] = { type: app.type };
-            return acc;
-        }, {});
-
-        console.log(appDictionary);
-        return appDictionary;
-        
-    } catch (error) {
-        console.error('Error fetching Docker images and Kubernetes deployments:', error);
-        return [];
-    }
-}
 
 function circular() {
     const container = document.querySelector('.app-container');
