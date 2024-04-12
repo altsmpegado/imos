@@ -1,7 +1,6 @@
-const { ipcRenderer } = require('electron');
-const { getInstalledApps ,  doesContainerExist , doesMultiContainerExist , isContainerRunning, isMultiContainerRunning, 
+const { ipcRenderer, app } = require('electron');
+const { getInstalledApps ,  isContainerRunning, isMultiContainerRunning, deleteDockerProcess, 
         startDockerProcess, stopDockerProcess} = require('../docker/docker');
-const { cpSync } = require('original-fs');
 
 function startDeployment() {
   const deploymentName = document.getElementById('app-name').value.trim();
@@ -45,6 +44,17 @@ function stopDeployment() {
   ipcRenderer.send('stop-deployment', deploymentName);
 }
 
+function createStatusLED(isRunning) {
+  const statusLED = document.createElement('div');
+  statusLED.classList.add('status-led');
+  if (isRunning) {
+      statusLED.classList.add('green');
+  } else {
+      statusLED.classList.add('red');
+  }
+  return statusLED;
+}
+
 async function createAppCards() {
   const appContainer = document.getElementById('appContainer');
   try {
@@ -73,7 +83,7 @@ async function createAppCards() {
 
       startStopBtn.addEventListener('click', () => {
         if (isRunning) {
-            stopDockerProcess(app, appData.type, 0);
+            stopDockerProcess(app, appData.type);
             location.reload();
         } else {
             startDockerProcess(app, appData.type, 0);
@@ -81,9 +91,10 @@ async function createAppCards() {
         }
       });
 
-      const resetBtn = createButton('Reset', () => resetApp(app));
+      const resetBtn = createButton('Reset', () => resetApp(app, appData.type));
       const settingsBtn = createButton('Settings', () => openSettings(app));
-
+      const statusLED = createStatusLED(isRunning);
+      card.appendChild(statusLED);
       card.appendChild(startStopBtn);
       card.appendChild(resetBtn);
       card.appendChild(settingsBtn);
@@ -95,6 +106,13 @@ async function createAppCards() {
   }
 }
 
+function resetApp(appName, type){
+  stopDockerProcess(appName, type);
+  location.reload();
+  deleteDockerProcess(appName, type);
+  ipcRenderer.send('runDockerApp', appName, type);
+}
+
 function createButton(text, clickHandler) {
     const button = document.createElement('button');
     button.className = 'button';
@@ -103,7 +121,17 @@ function createButton(text, clickHandler) {
     return button;
 }
 
+ipcRenderer.on('all-set', (event) => {
+  location.reload();
+});
+
 window.onload = createAppCards;
+
+const reloadButton = document.getElementById('reloadButton');
+
+reloadButton.addEventListener('click', () => {
+    location.reload();
+});
 
 /*
 setInterval(() => {

@@ -1,8 +1,10 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { exec } = require('child_process');
-const { doesContainerExist, doesMultiContainerExist , startDockerProcess, stopDockerProcess} = require('../docker/docker');
+const { doesContainerExist, doesMultiContainerExist , startDockerProcess, stopDockerProcess,
+        createDockerProcess, createMultiDockerProcess, getImageMetadata} = require('../docker/docker');
 
 let mainWindow;
+let setWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -17,6 +19,30 @@ function createWindow() {
   });
 
   mainWindow.loadFile('index.html');
+}
+
+function createSetupWindow(appName, labels, type) {
+  return new Promise((resolve, reject) => {
+    setWindow = new BrowserWindow({
+      width: 400,
+      height: 400,
+      autoHideMenuBar: true,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+        enableRemoteModule: true,
+        worldSafeExecuteJavaScript: true,
+        additionalArguments: [appName]
+      },
+    });
+  
+    // Handle window closed
+    setWindow.on('closed', () => {
+      setWindow = null;
+    });
+    console.log(labels);
+    setWindow.loadFile('setup.html', { query: { appName, type, labels} });
+  });
 }
 
 app.whenReady().then(createWindow);
@@ -87,4 +113,40 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
+});
+
+ipcMain.on('runDockerApp', (event, app, type) => {
+  if(type == 'multicontainer'){
+    if(!setWindow && !doesMultiContainerExist(app)){
+      //console.log("nao existe");
+      getMultiImageMetadata(app)
+        .then((labels) => {
+          //console.log(labels);
+          createSetupWindow(app, JSON.stringify(labels), type);
+        }).catch((error) => {
+            console.error('Error fetching multi-container configs:', error);
+        });
+    }
+    else
+      startDockerProcess(app, type);
+  }
+  else if(type == 'image'){
+    if(!setWindow && !doesContainerExist(app)){
+      const labels = JSON.stringify(getImageMetadata(app));
+      createSetupWindow(app, labels, type);
+    }
+    else
+      startDockerProcess(app, type);
+  }
+});
+
+ipcMain.on('set', (event, appConfig) => {
+  console.log(appConfig);
+  setWindow.close();
+  if(appConfig.type == 'image')
+    createDockerProcess(appConfig);
+  else if(appConfig.type == 'multicontainer')
+    createMultiDockerProcess(appConfig);
+
+  event.reply('all-set');
 });

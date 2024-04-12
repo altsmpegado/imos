@@ -362,6 +362,21 @@ function stopDockerProcess(containerName, type) {
     }
 }
 
+function deleteDockerProcess(containerName, type) {
+    if (type === 'image') {
+        const dockerProcess = spawnSync('docker', ['rm', containerName]);
+        if (dockerProcess.status !== 0) {
+            console.error('Error deleting existing container:', dockerProcess.stderr);
+        } else {
+            console.log('Container deleted successfully.');
+        }
+    } else if (type === 'multicontainer') {
+        console.error('Deleting multicontainer is not supported.');
+    } else {
+        console.error('Unknown container type:', type);
+    }
+}
+
 module.exports = { createDockerProcess, createMultiDockerProcess, doesContainerExist, doesMultiContainerExist, 
                    startDockerProcess, stopDockerProcess, getImageMetadata, getMultiImageMetadata, getInstalledApps,
-                   isContainerRunning, isMultiContainerRunning};
+                   isContainerRunning, isMultiContainerRunning, deleteDockerProcess};

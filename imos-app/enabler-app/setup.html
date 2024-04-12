@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id ="title"></title>
+</head>
+<body>
+    <h1 id ="header"></h1>
+    <form id="configForm"></form>
+    <script>
+        const { ipcRenderer } = require('electron');
+        const appName = new URLSearchParams(window.location.search).get('appName');
+        const type = new URLSearchParams(window.location.search).get('type');
+        const metadata = new URLSearchParams(window.location.search).get('labels');
+        const labels = JSON.parse(metadata);
+        const requiredConfigs = labels["com.required.configs"];
+        console.log(requiredConfigs);
+        
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const title = document.getElementById('title');
+            title.innerText = 'App Setup ' + appName;
+
+            const header = document.getElementById('header');
+            header.innerText = 'Configuration of ' + appName;
+
+            createInputFields(requiredConfigs);
+        });
+
+        function createInputFields(labels) {
+            const form = document.getElementById('configForm');
+            labels.forEach(label => {
+                const labelElement = document.createElement('label');
+                labelElement.innerText = label + ': ';
+                
+                const inputElement = document.createElement('input');
+                inputElement.setAttribute('id', label);
+                inputElement.setAttribute('placeholder', 'Insert ' + label);
+
+                form.appendChild(labelElement);
+                form.appendChild(inputElement);
+                form.appendChild(document.createElement('br'));
+            });
+
+            const submitButton = document.createElement('button');
+            submitButton.setAttribute('type', 'submit');
+            submitButton.innerText = 'Submit';
+            form.appendChild(submitButton);
+        }
+
+        document.getElementById('configForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const configData = {};
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                configData[input.id] = input.value;
+            });
+            ipcRenderer.send('set', { appName, type, ...configData });
+        });
+        
+    </script>
+</body>
+</html>
