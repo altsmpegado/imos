@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { exec } = require('child_process');
 const { doesContainerExist, doesMultiContainerExist , startDockerProcess, stopDockerProcess,
-        createDockerProcess, createMultiDockerProcess, getImageMetadata} = require('../docker/docker');
+        createDockerProcess, createMultiDockerProcess, getImageMetadata, getMultiImageMetadata} = require('../docker/docker');
 
 let mainWindow;
 let setWindow;
@@ -115,10 +115,9 @@ app.on('activate', () => {
   }
 });
 
-ipcMain.on('runDockerApp', (event, app, type) => {
+ipcMain.on('restartApp', (event, app, type) => {
   if(type == 'multicontainer'){
-    if(!setWindow && !doesMultiContainerExist(app)){
-      //console.log("nao existe");
+    if(!setWindow){
       getMultiImageMetadata(app)
         .then((labels) => {
           //console.log(labels);
@@ -127,16 +126,12 @@ ipcMain.on('runDockerApp', (event, app, type) => {
             console.error('Error fetching multi-container configs:', error);
         });
     }
-    else
-      startDockerProcess(app, type);
   }
   else if(type == 'image'){
-    if(!setWindow && !doesContainerExist(app)){
+    if(!setWindow){
       const labels = JSON.stringify(getImageMetadata(app));
       createSetupWindow(app, labels, type);
     }
-    else
-      startDockerProcess(app, type);
   }
 });
 
@@ -144,9 +139,9 @@ ipcMain.on('set', (event, appConfig) => {
   console.log(appConfig);
   setWindow.close();
   if(appConfig.type == 'image')
-    createDockerProcess(appConfig);
+    createDockerProcess(appConfig, 0);
   else if(appConfig.type == 'multicontainer')
-    createMultiDockerProcess(appConfig);
+    createMultiDockerProcess(appConfig, 0);
 
   event.reply('all-set');
 });

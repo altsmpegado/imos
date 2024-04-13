@@ -16,7 +16,7 @@ async function getInstalledApps() {
     try {
         // Fetch Docker images - for solo containers
         const dockerImages = await docker.listImages();
-        console.log(dockerImages);
+        //console.log(dockerImages);
         const imosImages = dockerImages
             .filter(image => image.RepoTags)
             .filter(image => image.RepoTags.some(tag => tag.includes('imos')))
@@ -31,7 +31,7 @@ async function getInstalledApps() {
                 }
                 return acc;
             }, []);
-        console.log(imosMultiImages);
+        //console.log(imosMultiImages);
 
         // Fetch Docker containers - for multi containers/services in compose file
         /*const dockerContainers = await docker.listContainers({ all: true });
@@ -68,7 +68,7 @@ async function getInstalledApps() {
             return acc;
         }, {});
 
-        console.log(appDictionary);
+        //console.log(appDictionary);
         return appDictionary;
         
     } catch (error) {
@@ -109,6 +109,7 @@ function doesMultiContainerExist(containerName) {
 }
 
 function isContainerRunning(containerName) {
+    //console.log(containerName);
     const result = spawnSync('docker', ['inspect', '--format={{.State.Running}}', containerName], { encoding: 'utf-8' });
     if (result.status === 0) {
         return result.stdout.trim() === 'true';
@@ -238,7 +239,7 @@ async function getAllImagesFromMultiContainer(projectName) {
     }
 }
 
-function createDockerProcess(configData) {
+function createDockerProcess(configData, interface=1) {
     const appName = configData.appName;
     delete configData.appName;
 
@@ -262,13 +263,14 @@ function createDockerProcess(configData) {
     if (dockerProcess.status === 0) {
         console.log('Container created and started successfully.');
         // app could not have interface
-        openBrowser(`http://localhost:${configData.PORT.split(":")[1]}`);
+        if(interface==1)
+            openBrowser(`http://localhost:${configData.PORT.split(":")[1]}`);
     } else {
         console.error('Error creating or starting container:', dockerProcess.stderr);
     }
 }
 
-function createMultiDockerProcess(configData) {
+function createMultiDockerProcess(configData, interface=1) {
     const appName = configData.appName;
     const projectDir = appName.split('-')[1];
     delete configData.appName;
@@ -294,17 +296,18 @@ function createMultiDockerProcess(configData) {
     } else {
         console.error('Error creating or starting multicontainer:', dockerProcess.stderr ? dockerProcess.stderr.toString() : 'Unknown error');
     }
-
-    getMultiContainerPorts(appName)
-        .then(ports => {
-            console.log('Ports:', ports);
-            ports.forEach(port => {
-                openBrowser(`http://localhost:${port}`);
+    if(interface==1){
+        getMultiContainerPorts(appName)
+            .then(ports => {
+                console.log('Ports:', ports);
+                ports.forEach(port => {
+                    openBrowser(`http://localhost:${port}`);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+    }
 }
 
 function startDockerProcess(containerName, type, interface=1) {
@@ -373,7 +376,7 @@ function stopDockerProcess(containerName, type) {
     else if(type == 'multicontainer'){
         if (isMultiContainerRunning(containerName)) {
             try {
-                console.log('Docker Compose started');
+                console.log('Docker compose stop started');
                 execSync(`docker compose -p ${containerName} stop`);
             } catch (error) {
                 console.error('Error exiting docker compose:', error.stderr.toString());

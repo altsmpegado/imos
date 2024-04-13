@@ -1,6 +1,6 @@
-const { ipcRenderer, app } = require('electron');
+const { ipcRenderer  } = require('electron');
 const { getInstalledApps ,  isContainerRunning, isMultiContainerRunning, deleteDockerProcess, 
-        startDockerProcess, stopDockerProcess, getAllImagesFromMultiContainer} = require('../docker/docker');
+        startDockerProcess, stopDockerProcess , doesContainerExist ,doesMultiContainerExist } = require('../docker/docker');
 
 function startDeployment() {
   const deploymentName = document.getElementById('app-name').value.trim();
@@ -61,11 +61,11 @@ async function createAppCards() {
   try {
     
     const installedApps = await getInstalledApps();
-    console.log(installedApps);
+    //console.log(installedApps);
     
     for (const app in installedApps) {
       const appData = installedApps[app];
-      
+      //console.log(app);
       let isRunning = false;
       if (appData.type == 'image') {
         isRunning = isContainerRunning(app);
@@ -82,16 +82,25 @@ async function createAppCards() {
       startStopBtn.innerText = isRunning ? 'Stop' : 'Start';
 
       startStopBtn.addEventListener('click', () => {
-        if (isRunning) {
+
+        if(appData.type == 'image' && !doesContainerExist(app))
+          ipcRenderer.send('restartApp', app, appData.type);
+
+        else if(appData.type == 'multicontainer' && !doesMultiContainerExist(app))
+          ipcRenderer.send('restartApp', app, appData.type);
+        
+        else if (isRunning) {
             stopDockerProcess(app, appData.type);
             location.reload();
-        } else {
+        } 
+        
+        else {
             startDockerProcess(app, appData.type, 0);
             location.reload();
         }
       });
 
-      const resetBtn = createButton('Reset', () => resetApp(app, appData.type));
+      const resetBtn = createButton('Reset', () => resetApp(app, appData.type, isRunning));
       const settingsBtn = createButton('Settings', () => openSettings(app));
       const statusLED = createStatusLED(isRunning);
       card.appendChild(statusLED);
@@ -106,12 +115,16 @@ async function createAppCards() {
   }
 }
 
-function resetApp(appName, type){
-  stopDockerProcess(appName, type);
-  location.reload();
-  deleteDockerProcess(appName, type);
-  console.log('AQUI', appName, type);
-  ipcRenderer.send('runDockerApp', appName, type);
+function resetApp(appName, type, isRunning) {
+  if(doesContainerExist(appName) || doesMultiContainerExist(appName)){
+    if (isRunning)
+      stopDockerProcess(appName, type);
+
+    deleteDockerProcess(appName, type);
+    location.reload();
+  }
+  ipcRenderer.send('restartApp', appName, type);
+
 }
 
 function createButton(text, clickHandler) {
@@ -122,7 +135,9 @@ function createButton(text, clickHandler) {
     return button;
 }
 
-ipcRenderer.on('all-set', (event) => {
+// NOT RECEIVING RESTAR CONFIRMATION, CANT RELOAD PAGE
+ipcRenderer.on('all-set', () => {
+  console.log('Received all-set event');
   location.reload();
 });
 
