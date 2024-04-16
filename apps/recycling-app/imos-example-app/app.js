@@ -5,6 +5,7 @@ const axios = require('axios');
 const port = process.env.PORT || 3000;
 const ip = `http://localhost:5001/processed_video_feed`;
 const detectionsUrl = `http://127.0.0.1:5001/get_detection_history`;
+const classCountsUrl = `http://127.0.0.1:5001/get_detected_classes`;
 
 async function fetchDetections() {
   try {
@@ -14,6 +15,16 @@ async function fetchDetections() {
   } catch (error) {
     console.error('Error fetching detections:', error);
     return [];
+  }
+}
+
+async function fetchClassCounts() {
+  try {
+    const response = await axios.get(classCountsUrl);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching class counts:', error);
+    return {};
   }
 }
 
@@ -43,6 +54,55 @@ function generateDetectionsTable(detectionObject) {
   return tableHtml;
 }
 
+// Function to generate bar plot of class counts
+async function generateBarPlot() {
+  try {
+    const classCounts = await fetchClassCounts();
+    const labels = Object.keys(classCounts);
+    const counts = Object.values(classCounts);
+    
+    const chartConfig = {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Detection Counts',
+          data: counts,
+          backgroundColor: 'rgba(54, 162, 235, 0.5)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Counts'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Classes'
+            }
+          }
+        }
+      }
+    };
+
+    const chartCanvas = `<canvas id="barChart" width="400" height="400"></canvas>`;
+    const script = `<script>const ctx = document.getElementById('barChart').getContext('2d'); new Chart(ctx, ${JSON.stringify(chartConfig)});</script>`;
+    
+    return chartCanvas + script;
+  } catch (error) {
+    console.error('Error generating bar plot:', error);
+    return '';
+  }
+}
 
 // Route for serving the homepage
 app.get('/', async (req, res) => {
@@ -53,6 +113,8 @@ app.get('/', async (req, res) => {
     // Generate HTML for the detections table
     const detectionsTable = generateDetectionsTable(detections);
 
+    const barPlot = await generateBarPlot();
+
     // Serve the HTML with the camera feed and detections table
     const html = `
       <!DOCTYPE html>
@@ -61,6 +123,7 @@ app.get('/', async (req, res) => {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Industrial Station for Waste Separation</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
           body {
             font-family: Arial, sans-serif;
@@ -76,6 +139,7 @@ app.get('/', async (req, res) => {
             padding: 20px;
           }
           
+          .bar-plot,
           .camera-feed,
           .detections-table {
             background-color: #fff;
@@ -85,6 +149,11 @@ app.get('/', async (req, res) => {
           }
           
           .camera-feed {
+            flex: 1;
+            margin-right: 20px;
+          }
+
+          .bar-plot {
             flex: 1;
             margin-right: 20px;
           }
@@ -120,7 +189,7 @@ app.get('/', async (req, res) => {
           tr:hover {
             background-color: #f0f0f0;
           }
-          
+
           tr:first-child th:first-child {
             border-top-left-radius: 8px; /* Rounded top-left corner for the first cell in the first row */
           }
@@ -147,8 +216,12 @@ app.get('/', async (req, res) => {
           </div>
           <div class="detections-table">
             <h1>Detections</h1>
-            ${generateDetectionsTable(detections)}
+            ${detectionsTable}
           </div>
+        </div>
+        <div class="bar-plot">
+          <h1>Class Counts</h1>
+          ${barPlot}
         </div>
       </body>
       </html>
