@@ -2,7 +2,8 @@ import cv2
 import torch
 from PIL import Image
 import pathlib
-from flask import Flask, Response
+import time
+from flask import Flask, Response, jsonify
 from flask_cors import CORS
 
 temp = pathlib.PosixPath
@@ -14,30 +15,36 @@ CORS(app)
 # Load the YOLOv5 model
 model = torch.hub.load('ultralytics/yolov5', 'custom', path='best.pt', force_reload=True)
 
+detectionHistory = []
+detection = []
+
 def detect_objects(frame):
     # Convert the frame to PIL Image format
     pil_image = Image.fromarray(frame)
 
     # Predict on the image
     results = model(pil_image)
-
+    
     # Get bounding box coordinates and labels
     bboxes = results.xyxy[0].cpu().numpy()
     labels = results.names
 
     # Prepare JSON data for detections
-    detections = []
-    
+    global detectionHistory, detection
+    detection = []
+    timestamp = time.time()
+
     for bbox in bboxes:
         xmin, ymin, xmax, ymax, confidence, class_idx = bbox
         class_name = labels[int(class_idx)]
-        detections.append({
+        detection.append({
             'class': class_name,
             'confidence': float(confidence),
             'xmin': int(xmin),
             'ymin': int(ymin),
             'xmax': int(xmax),
-            'ymax': int(ymax)
+            'ymax': int(ymax),
+            'timestamp': timestamp
         })
 
         # Draw bounding boxes on the frame
@@ -45,11 +52,16 @@ def detect_objects(frame):
         cv2.putText(frame, f'{class_name}: {confidence:.2f}', (int(xmin), int(ymin - 10)),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-    return frame, detections
+    if (not len(detection) == 0):
+        detectionHistory.append(detection)
+
+    return frame
 
 def generate_frames():
     try:
         # Open the video capture
+        #const webcamIP = process.env.WEBCAM_IP || 'Hello, World!'
+
         cap = cv2.VideoCapture('http://localhost:5000/video_feed')
 
         while cap.isOpened():
@@ -60,13 +72,13 @@ def generate_frames():
                 break
 
             # Detect objects in the frame
-            frame_with_detections, _ = detect_objects(frame)
+            frame_with_detections = detect_objects(frame)
 
             # Encode the processed frame as JPEG
             _, buffer = cv2.imencode('.jpg', frame_with_detections)
             frame_bytes = buffer.tobytes()
 
-            # Yield the processed frame
+            # Yield the processed frame and detections
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n\r\n')
 
@@ -76,6 +88,16 @@ def generate_frames():
 @app.route('/processed_video_feed')
 def processed_video_feed():
     return Response(generate_frames(), content_type='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/get_detection_history')
+def get_detection_history():
+    global detectionHistory
+    return jsonify(detectionHistory)
+
+@app.route('/get_detection')
+def get_detection():
+    global detection
+    return jsonify(detection)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port='5001', debug=False)
