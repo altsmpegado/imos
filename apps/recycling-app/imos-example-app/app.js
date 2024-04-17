@@ -75,7 +75,6 @@ async function generateBarPlot() {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false,
         scales: {
           y: {
             beginAtZero: true,
@@ -139,15 +138,34 @@ app.get('/', async (req, res) => {
             padding: 20px;
           }
           
-          .bar-plot,
+          .left-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+          }
+          
+          .right-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+          }
+
           .camera-feed,
+          .bar-plot {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+          }
+          
           .detections-table {
             background-color: #fff;
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
           }
-          
+
           .camera-feed {
             flex: 1;
             margin-right: 20px;
@@ -211,18 +229,22 @@ app.get('/', async (req, res) => {
       </head>
       <body>
         <div class="container">
-          <div class="camera-feed">
-            <h1>Camera Feed</h1>
-            <img src="${ip}" alt="Camera Feed">
+          <div class="left-column">
+            <div class="camera-feed">
+              <h1>Camera Feed</h1>
+              <img src="${ip}" alt="Camera Feed">
+            </div>
+            <div class="bar-plot">
+              <h1>Class Counts</h1>
+              ${barPlot}
+            </div>
           </div>
-          <div class="detections-table">
-            <h1>Detections</h1>
-            ${detectionsTable}
+          <div class="right-column">
+            <div class="detections-table">
+              <h1>Detections</h1>
+              ${detectionsTable}
+            </div>
           </div>
-        </div>
-        <div class="bar-plot">
-          <h1>Class Counts</h1>
-          ${barPlot}
         </div>
       </body>
       </html>
