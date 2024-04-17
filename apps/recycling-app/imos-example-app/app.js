@@ -156,6 +156,7 @@ app.get('/', async (req, res) => {
           .bar-plot {
             flex: 1;
             margin-right: 20px;
+            margin-left: 20px;
           }
           
           .detections-table {
@@ -191,19 +192,19 @@ app.get('/', async (req, res) => {
           }
 
           tr:first-child th:first-child {
-            border-top-left-radius: 8px; /* Rounded top-left corner for the first cell in the first row */
+            border-top-left-radius: 8px;
           }
           
           tr:first-child th:last-child {
-            border-top-right-radius: 8px; /* Rounded top-right corner for the last cell in the first row */
+            border-top-right-radius: 8px;
           }
           
           tr:last-child td:first-child {
-            border-bottom-left-radius: 8px; /* Rounded bottom-left corner for the first cell in the last row */
+            border-bottom-left-radius: 8px;
           }
           
           tr:last-child td:last-child {
-            border-bottom-right-radius: 8px; /* Rounded bottom-right corner for the last cell in the last row */
+            border-bottom-right-radius: 8px;
           }
 
         </style>
