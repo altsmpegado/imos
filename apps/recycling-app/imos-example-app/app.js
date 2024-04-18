@@ -21,6 +21,7 @@ async function fetchDetections() {
 async function fetchClassCounts() {
   try {
     const response = await axios.get(classCountsUrl);
+    //console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching class counts:', error);
@@ -30,6 +31,7 @@ async function fetchClassCounts() {
 
 // Function to generate HTML for the detections table
 function generateDetectionsTable(detectionObject) {
+  //console.log(detectionObject);
   const detectionsArray = detectionObject.slice(-20);
 
   let tableHtml = '<table>';
@@ -37,7 +39,8 @@ function generateDetectionsTable(detectionObject) {
   
   detectionsArray.forEach((detections, index) => {
     detections.forEach(detection => {
-      tableHtml += `<tr>
+
+      tableHtml += `<tr onclick="displayFrame('${detection.frame}')">
                       <td>${new Date(detection.timestamp * 1000).toLocaleString()}</td>
                       <td>${detection.class}</td>
                       <td>${detection.confidence.toFixed(2)}</td>
@@ -200,6 +203,26 @@ app.get('/', async (req, res) => {
           .detections-table {
             flex: 1;
           }
+
+          .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+          }
+          
+          .modal-image {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+          }
           
           .material-symbols-outlined {
             font-variation-settings:
@@ -285,6 +308,24 @@ app.get('/', async (req, res) => {
             </div>
           </div>
         </div>
+        <script>
+          function displayFrame(frameBase64) {
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'modal-overlay';
+
+            const img = document.createElement('img');
+            img.src = \`data:image/jpeg;base64,\${frameBase64}\`;
+            img.className = 'modal-image';
+
+            modalOverlay.appendChild(img);
+
+            document.body.appendChild(modalOverlay);
+
+            modalOverlay.addEventListener('click', () => {
+              modalOverlay.remove();
+            });
+          }
+        </script>
       </body>
       </html>
     `;
