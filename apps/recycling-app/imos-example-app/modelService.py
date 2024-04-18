@@ -3,6 +3,7 @@ import torch
 from PIL import Image
 import pathlib
 import time
+import base64
 from flask import Flask, Response, jsonify
 from flask_cors import CORS
 
@@ -46,6 +47,16 @@ def detect_objects(frame):
                 class_counts[class_name] += 1
             last_count_update = time.time()
 
+                # Draw bounding boxes on the frame
+        cv2.rectangle(frame, (int(xmin), int(ymin)), (int(xmax), int(ymax)), (0, 255, 0), 2)
+        cv2.putText(frame, f'{class_name}: {confidence:.2f}', (int(xmin), int(ymin - 10)),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+        # Convert the frame with bounding boxes to base64
+        _, buffer = cv2.imencode('.jpg', frame)
+        frame_bytes = buffer.tobytes()
+        frame_base64 = base64.b64encode(frame_bytes).decode('utf-8')
+
         detection.append({
             'class': class_name,
             'confidence': float(confidence),
@@ -53,13 +64,9 @@ def detect_objects(frame):
             'ymin': int(ymin),
             'xmax': int(xmax),
             'ymax': int(ymax),
-            'timestamp': timestamp
+            'timestamp': timestamp,
+            'frame': frame_base64
         })
-
-        # Draw bounding boxes on the frame
-        cv2.rectangle(frame, (int(xmin), int(ymin)), (int(xmax), int(ymax)), (0, 255, 0), 2)
-        cv2.putText(frame, f'{class_name}: {confidence:.2f}', (int(xmin), int(ymin - 10)),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
     if time.time() - last_detect_update >= 3:
         if (not len(detection) == 0):
