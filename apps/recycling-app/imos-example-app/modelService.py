@@ -1,11 +1,11 @@
-import cv2
-import torch
-from PIL import Image
+import cv2 # type: ignore
+import torch # type: ignore
+from PIL import Image # type: ignore
 import pathlib
 import time
 import base64
-from flask import Flask, Response, jsonify
-from flask_cors import CORS
+from flask import Flask, Response, jsonify # type: ignore
+from flask_cors import CORS # type: ignore
 
 temp = pathlib.PosixPath
 pathlib.PosixPath = pathlib.WindowsPath
