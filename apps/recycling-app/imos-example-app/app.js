@@ -30,7 +30,7 @@ async function fetchClassCounts() {
 
 // Function to generate HTML for the detections table
 function generateDetectionsTable(detectionObject) {
-  const detectionsArray = detectionObject.slice(-10);
+  const detectionsArray = detectionObject.slice(-20);
 
   let tableHtml = '<table>';
   tableHtml += '<tr><th>Timestamp</th><th>Class</th><th>Confidence</th><th>Xmin</th><th>Ymin</th><th>Xmax</th><th>Ymax</th></tr>';
@@ -61,23 +61,43 @@ async function generateBarPlot() {
     const labels = Object.keys(classCounts);
     const counts = Object.values(classCounts);
     
+    const backgroundColors = [
+      'rgba(255, 99, 132, 0.5)', // Red
+      'rgba(54, 162, 235, 0.5)', // Blue
+      'rgba(255, 206, 86, 0.5)', // Yellow
+      'rgba(75, 192, 192, 0.5)', // Green
+      'rgba(153, 102, 255, 0.5)', // Purple
+      'rgba(255, 159, 64, 0.5)', // Orange
+      'rgba(201, 203, 207, 0.5)' // Gray
+    ];
+
+    const borderColor = 'rgba(0, 0, 0, 0.5)';
+
+    const datasets = labels.map((label, index) => {
+      return {
+        label: label,
+        data: [counts[index]],
+        backgroundColor: backgroundColors[index],
+        borderColor: borderColor,
+        borderWidth: 1
+      };
+    });
+
     const chartConfig = {
       type: 'bar',
       data: {
-        labels: labels,
-        datasets: [{
-          label: 'Detection Counts',
-          data: counts,
-          backgroundColor: 'rgba(54, 162, 235, 0.5)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1
-        }]
+        labels: [''], // Empty label as we're not displaying labels in the legend
+        datasets: datasets
       },
       options: {
         responsive: true,
         scales: {
           y: {
             beginAtZero: true,
+            ticks: {
+              stepSize: 1,
+              precision: 0
+            },
             title: {
               display: true,
               text: 'Counts'
@@ -93,7 +113,7 @@ async function generateBarPlot() {
       }
     };
 
-    const chartCanvas = `<canvas id="barChart" width="400" height="400"></canvas>`;
+    const chartCanvas = `<canvas id="barChart" width="640" height="610"></canvas>`;
     const script = `<script>const ctx = document.getElementById('barChart').getContext('2d'); new Chart(ctx, ${JSON.stringify(chartConfig)});</script>`;
     
     return chartCanvas + script;
@@ -123,6 +143,7 @@ app.get('/', async (req, res) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Industrial Station for Waste Separation</title>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
         <style>
           body {
             font-family: Arial, sans-serif;
@@ -131,39 +152,39 @@ app.get('/', async (req, res) => {
             padding: 0;
           }
           
-          .container {
+          .title-container {
+            text-align: center;
+          }
+          
+          .main-container {
             display: flex;
             align-items: flex-start;
             justify-content: center;
-            padding: 20px;
+            padding: 25px;
           }
           
           .left-column {
             flex: 1;
             display: flex;
             flex-direction: column;
+            align-items:center;
           }
           
           .right-column {
             flex: 1;
             display: flex;
             flex-direction: column;
+            align-items:center;
           }
 
           .camera-feed,
-          .bar-plot {
-            background-color: #fff;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-          }
-          
+          .bar-plot,
           .detections-table {
             background-color: #fff;
             border-radius: 8px;
-            padding: 20px;
+            padding: 35px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
           }
 
           .camera-feed {
@@ -172,16 +193,30 @@ app.get('/', async (req, res) => {
           }
 
           .bar-plot {
-            flex: 1;
             margin-right: 20px;
-            margin-left: 20px;
+            height: 665px;
           }
           
           .detections-table {
             flex: 1;
           }
           
+          .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 48;
+            margin-left: 10px;
+            color: #44bd3b;
+            font-size: xx-large;
+          }
+          
           h1 {
+            font-size: 40px;
+          }
+
+          h2 {
             font-size: 24px;
             margin-bottom: 20px;
           }
@@ -228,20 +263,24 @@ app.get('/', async (req, res) => {
         </style>
       </head>
       <body>
-        <div class="container">
+        <div class="title-container">
+          <h1 class="title">Industrial Station for Waste Separation<span class="material-symbols-outlined">recycling</span></h1>
+          <h2>by IMOS</h2>
+        </div>
+        <div class="main-container">
           <div class="left-column">
             <div class="camera-feed">
-              <h1>Camera Feed</h1>
+              <h2>Camera Feed</h2>
               <img src="${ip}" alt="Camera Feed">
             </div>
             <div class="bar-plot">
-              <h1>Class Counts</h1>
+              <h2>Class Counts</h2>
               ${barPlot}
             </div>
           </div>
           <div class="right-column">
             <div class="detections-table">
-              <h1>Detections</h1>
+              <h2>Detections</h2>
               ${detectionsTable}
             </div>
           </div>
