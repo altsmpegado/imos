@@ -3,10 +3,10 @@ const app = express();
 const axios = require('axios');
 
 const port = process.env.GUI_PORT.split(":")[1] || 3000;
-const detector_port = process.env.MODEL_DETECTOR_PORT.split(":")[1] || 3000;
+const detector_port = process.env.MODEL_DETECTOR_PORT.split(":")[1] || 5001;
 const ip = `http://localhost:${detector_port}/processed_video_feed`;
-const detectionsUrl = `http://localhost:${detector_port}/get_detection_history`;
-const classCountsUrl = `http://localhost:${detector_port}/get_detected_classes`;
+const detectionsUrl = `http://host.docker.internal:${detector_port}/get_detection_history`;
+const classCountsUrl = `http://host.docker.internal:${detector_port}/get_detected_classes`;
 
 async function fetchDetections() {
   try {
