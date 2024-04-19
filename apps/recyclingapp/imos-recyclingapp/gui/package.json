@@ -9,8 +9,6 @@
   "author": "altsmpegado",
   "license": "ISC",
   "dependencies": {
-    "@tensorflow/tfjs-node": "^4.17.0",
-    "@tensorflow/tfjs-node-gpu": "^4.17.0",
     "axios": "^1.6.8",
     "canvas": "^2.11.2",
     "chart.js": "^4.4.2",

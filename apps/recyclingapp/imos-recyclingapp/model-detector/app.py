@@ -1,6 +1,7 @@
 import cv2 # type: ignore
 import torch # type: ignore
 from PIL import Image # type: ignore
+import os
 import pathlib
 import time
 import base64
@@ -12,6 +13,9 @@ pathlib.PosixPath = pathlib.WindowsPath
 
 app = Flask(__name__)
 CORS(app)
+
+detector_port = os.getenv('MODEL_DETECTOR_PORT', '5001').split(':')[1]
+webcam_ip = os.getenv('WEBCAM_IP', 'INVALID_PORT')
 
 # Load the YOLOv5 model
 model = torch.hub.load('ultralytics/yolov5', 'custom', path='best.pt', force_reload=True)
@@ -76,11 +80,10 @@ def detect_objects(frame):
     return frame
 
 def generate_frames():
+    global webcam_ip
     try:
         # Open the video capture
-        #const webcamIP = process.env.WEBCAM_IP || 'Hello, World!'
-
-        cap = cv2.VideoCapture('http://localhost:5000/video_feed')
+        cap = cv2.VideoCapture(f'http://{webcam_ip}/video_feed')
 
         while cap.isOpened():
             # Read a frame from the video feed
@@ -123,4 +126,4 @@ def get_detected_classes():
     return jsonify(class_counts)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5001', debug=False)
+    app.run(host='0.0.0.0', port=detector_port, debug=False)
