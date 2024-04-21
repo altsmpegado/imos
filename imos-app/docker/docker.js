@@ -132,22 +132,34 @@ function isMultiContainerRunning(projectName) {
     }
 }
 
-function getContainerPort(containerName) {
-    const result = spawnSync('docker', ['inspect', '--format={{range $p := .NetworkSettings.Ports}}{{$p}} {{end}}', containerName], { encoding: 'utf-8' });
-    if (result.status === 0) {
-        const portMappings = result.stdout.trim().slice(2, -2);
-        if (portMappings.length > 0) {
-            // Extract the host port from the port mappings
-            const hostPort = portMappings.split(' ')[1];
-            return hostPort;
-        } else {
-            console.error('No port mappings found for the container.');
-            return null;
-        }
-    } else {
-        console.error('Error retrieving container port:', result.stderr);
-        return null;
+async function getContainerPort(containerName) {
+    const docker = new Docker();
+    const ports = [];
+
+    try {
+        const dockerContainers = await docker.listContainers({ all: true });
+
+        dockerContainers.forEach(container => {
+            if (containerName === container.Image) {
+                const labels = container.Labels || {};
+                const displayLabel = labels['com.user.display'];
+                if (displayLabel === 'True') {
+                    const portMappings = container.Ports || [];
+                    portMappings.forEach(mapping => {
+                        if (mapping.PublicPort) {
+                            ports.push(mapping.PublicPort);
+                        }
+                    });
+                }
+            }
+        });
+        //console.log(ports);
+        return ports;
+    } catch (error) {
+        console.error('Error fetching container ports:', error);
+        return [];
     }
+
 }
 
 async function getMultiContainerPorts(projectName) {
@@ -325,10 +337,15 @@ function startDockerProcess(containerName, type, interface=1) {
             }
         }
         if(interface==1){
-            const containerPort = getContainerPort(containerName);
-            if (containerPort !== null) {
-                openBrowser(`http://localhost:${containerPort}`);
-            }
+            getContainerPort(containerName)
+                .then(port => {
+                    console.log('Port:', port);
+                    openBrowser(`http://localhost:${port}`);
+                   
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         }
     }
 
