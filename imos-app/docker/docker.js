@@ -285,7 +285,7 @@ function createMultiDockerProcess(configData, interface=1) {
 
     const baseDir = process.env.IMOS_APPS_DIR || 'C:\\IMOS\\Apps';
 
-    const command = `powershell -Command "{ Set-Location '${baseDir}\\${projectDir}'; ${envArgs} docker compose -p ${appName} up}"`;
+    const command = `powershell -Command "{ Set-Location '${baseDir}\\${projectDir}'; ${envArgs} docker compose -p ${appName} up -d}"`;
 
     console.log('Executing command:', command);
 
@@ -296,6 +296,7 @@ function createMultiDockerProcess(configData, interface=1) {
     } else {
         console.error('Error creating or starting multicontainer:', dockerProcess.stderr ? dockerProcess.stderr.toString() : 'Unknown error');
     }
+
     if(interface==1){
         getMultiContainerPorts(appName)
             .then(ports => {

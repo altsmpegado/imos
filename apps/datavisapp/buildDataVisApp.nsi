@@ -24,7 +24,7 @@ Section
     Push "$INSTDIR\imos-datavisapp"
 
     # Execute Docker build command
-    #ExecWait 'docker compose -p imos-datavisapp up --no-start'
+    # ExecWait 'docker compose -p imos-datavisapp up --no-start'
     ExecWait '"$INSTDIR\build_images.bat"'
 
 SectionEnd
