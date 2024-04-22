@@ -1,5 +1,5 @@
 FROM confluentinc/cp-ksqldb-server:6.0.0
 
 LABEL com.main.multicontainer="imos-datavisapp" \
-      com.required.configs="KSQLDBSERVER_PORT" \
+      com.available.configs="KSQLDBSERVER_PORT" \
       com.user.display="False"

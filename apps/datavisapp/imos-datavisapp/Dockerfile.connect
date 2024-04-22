@@ -1,5 +1,5 @@
 FROM cnfldemos/cp-server-connect-datagen:0.3.2-5.5.0
 
 LABEL com.main.multicontainer="imos-datavisapp" \
-      com.required.configs="CONNECT_PORT" \
+      com.available.configs="CONNECT_PORT" \
       com.user.display="False"

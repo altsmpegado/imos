@@ -1,5 +1,5 @@
 FROM confluentinc/cp-kafka-connect-base:6.0.0
 
 LABEL com.main.multicontainer="imos-datavisapp" \
-      com.required.configs="KAFKACNCT_PORT" \
+      com.available.configs="KAFKACNCT_PORT" \
       com.user.display="False"

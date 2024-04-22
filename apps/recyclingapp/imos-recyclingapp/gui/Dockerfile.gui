@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 LABEL com.main.multicontainer="imos-recyclingapp" \
-      com.required.configs="GUI_PORT" \
+      com.available.configs="GUI_PORT" \
       com.user.display="True"
 
 # Run the application

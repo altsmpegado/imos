@@ -1,5 +1,5 @@
 FROM grafana/grafana:8.3.3
 
 LABEL com.main.multicontainer="imos-datavisapp" \
-      com.required.configs="GRAFANA_PORT" \
+      com.available.configs="GRAFANA_PORT" \
       com.user.display="True"

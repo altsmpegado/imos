@@ -193,13 +193,27 @@ async function getMultiContainerPorts(projectName) {
 }
 
 function getImageMetadata(imageName) {
+    const metadata = {};
     const result = spawnSync('docker', ['inspect', '--format={{json .Config.Labels}}', imageName], { encoding: 'utf-8' });
     if (result.status === 0) {
         const labels = JSON.parse(result.stdout);
-        if (labels['com.required.configs']) {
-            labels['com.required.configs'] = labels['com.required.configs'].split(',').map(item => item.trim());
+        const availableConfigsLabel = labels["com.available.configs"];
+        const requiredConfigsLabel = labels["com.required.configs"];
+        if (availableConfigsLabel) {
+            const aconfigs = availableConfigsLabel.split(",").map(config => config.trim());
+            var rconfigs = [];
+            if (requiredConfigsLabel) {
+                rconfigs = requiredConfigsLabel.split(",").map(config => config.trim());
+            }
+            //console.log(rconfigs);
+            aconfigs.forEach((aconfig) => {
+                if (rconfigs.includes(aconfig))
+                    metadata[aconfig] = true;
+                else
+                    metadata[aconfig] = false;
+            });
         }
-        return labels;
+        return metadata;
     } else {
         console.error('Error retrieving labels:', result.stderr);
         return null;
@@ -208,23 +222,33 @@ function getImageMetadata(imageName) {
 
 async function getMultiImageMetadata(projectName) {
     const docker = new Docker();
-    const requiredConfigs = {};
+    const metadata = {};
     try {
         const dockerImages = await docker.listImages();
         dockerImages.forEach((image) => {
             const labels = image.Labels || {};
             if (labels["com.main.multicontainer"] === projectName) {
+                const availableConfigsLabel = labels["com.available.configs"];
                 const requiredConfigsLabel = labels["com.required.configs"];
-                if (requiredConfigsLabel) {
-                    const configs = requiredConfigsLabel.split(",").map(config => config.trim());
-                    configs.forEach((config) => {
-                        requiredConfigs[config] = true;
+                //console.log(requiredConfigsLabel);
+                if (availableConfigsLabel) {
+                    const aconfigs = availableConfigsLabel.split(",").map(config => config.trim());
+                    var rconfigs = [];
+                    if (requiredConfigsLabel) {
+                        rconfigs = requiredConfigsLabel.split(",").map(config => config.trim());
+                    }
+                    //console.log(rconfigs);
+                    aconfigs.forEach((aconfig) => {
+                        if (rconfigs.includes(aconfig))
+                            metadata[aconfig] = true;
+                        else
+                            metadata[aconfig] = false;
                     });
                 }
             }
         });
-        //console.log({ "com.required.configs": Object.keys(requiredConfigs) });
-        return { "com.required.configs": Object.keys(requiredConfigs) };
+        //console.log(Object(metadata));
+        return Object(metadata);
     } catch (error) {
         console.error('Error fetching multi-container configs:', error);
         return null;
@@ -258,7 +282,6 @@ function createDockerProcess(configData, interface=1) {
     const dockerArgs = [
         'run',
         '-d',
-        // app could not have interface
         '-p', configData.PORT,
         '--name', appName        
     ];

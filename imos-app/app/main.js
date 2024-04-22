@@ -183,10 +183,9 @@ ipcMain.on('runDockerApp', (event, app, type) => {
       //console.log("nao existe");
       getMultiImageMetadata(app)
         .then((labels) => {
-          //console.log(labels);
           createSetupWindow(app, JSON.stringify(labels), type);
         }).catch((error) => {
-            console.error('Error fetching multi-container configs:', error);
+          console.error('Error fetching multi-container configs:', error);
         });
     }
     else
