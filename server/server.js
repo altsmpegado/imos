@@ -222,12 +222,12 @@ db.once('open', () => {
 
   // Login failure route
   app.get('/login-failure', (req, res) => {
-    res.status(401).send('Login attempt failed.');
+    res.status(401).send({ message:'Login attempt failed.' });
   });
 
   // Login success route
-  app.get('/login-success', (req, res) => {
-    res.status(200).send('Login attempt was successful.');
+  app.get('/login-success', (req, res) => { 
+    res.status(200).send({ message:'Login attempt was successful.' });
   });
 
   // Start the server
