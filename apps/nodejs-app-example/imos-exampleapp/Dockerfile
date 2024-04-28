@@ -9,7 +9,7 @@ COPY . .
 
 # define metadata variables
 LABEL com.available.configs="PORT, WEBCAM_IP" \
-      com.required.configs="WEBCAM_IP" \
+      com.required.configs="PORT, WEBCAM_IP" \
       com.user.display="True"
 
 #EXPOSE 3000

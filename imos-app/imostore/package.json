@@ -2,7 +2,7 @@
   "devDependencies": {
     "electron": "^28.1.0"
   },
-  "name": "marketplace-app",
+  "name": "imostore-app",
   "version": "1.0.0",
   "main": "main.js",
   "dependencies": {

@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cardHtml = `
         <div class="product-card">
           <a href="0#" class="product" data-app="${JSON.stringify(app).replace(/"/g, '&quot;')}">
-            <img class="app-icon" src="C:\\imos\\imos-app\\marketplace-app\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
+            <img class="app-icon" src="C:\\imos-dev\\imos-app\\imostore\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
             <div class="info-container">
               <p class="title">${app.name}</p>
               <div class="subtitle">
@@ -83,17 +83,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.getElementById("loadAppsPage").addEventListener("click", function() {
-  var newPageUrl = "C:\\imos\\imos-app\\marketplace-app\\views\\apps_page.html";
+  var newPageUrl = "C:\\imos-dev\\imos-app\\imostore\\views\\apps_page.html";
   window.location.href = newPageUrl;
 });
 
 document.getElementById("loadAppsPage").addEventListener("click", function() {
-  var newPageUrl = "C:\\imos\\imos-app\\marketplace-app\\views\\apps_page.html";
+  var newPageUrl = "C:\\imos-dev\\imos-app\\imostore\\views\\apps_page.html";
   window.location.href = newPageUrl;
 });
 
 document.getElementById("loadLibPage").addEventListener("click", function() {
-  var newPageUrl = "C:\\imos\\imos-app\\marketplace-app\\views\\lib_page.html";
+  var newPageUrl = "C:\\imos-dev\\imos-app\\imostore\\views\\lib_page.html";
   window.location.href = newPageUrl;
 });
 

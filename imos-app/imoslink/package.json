@@ -2,7 +2,7 @@
   "devDependencies": {
     "electron": "^28.1.0"
   },
-  "name": "imos-app",
+  "name": "imoslink-app",
   "version": "1.0.0",
   "main": "main.js",
   "dependencies": {

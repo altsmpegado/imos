@@ -456,6 +456,37 @@ function deleteDockerProcess(containerName, type) {
     }
 }
 
+function deleteDockerApp(containerName, type) {
+    if (type === 'image') {
+        const dockerProcess = spawnSync('docker', ['rmi', containerName]);
+        if (dockerProcess.status !== 0) {
+            console.error('Error deleting existing container:', dockerProcess.stderr);
+        } else {
+            console.log('App unnistalled successfully.');
+        }
+    } 
+    else if (type === 'multicontainer') {
+        getAllImagesFromMultiContainer(containerName)
+            .then((containers) => {
+                containers.forEach((container) => {
+                    const dockerProcess = spawnSync('docker', ['rmi', container]);
+                    if (dockerProcess.status !== 0) {
+                        console.error('Error deleting existing container:', dockerProcess.stderr);
+                    } else {
+                        console.log('Container deleted successfully.');
+                    }
+                });
+            })
+            .catch((error) => {
+                console.error('Error fetching images from multi-container:', error);
+            });
+        console.log('Multicontainer', containerName, 'unnistalled with all sub-containers.');
+    } else {
+        console.error('Unknown container type:', type);
+    }
+}
+
 module.exports = { createDockerProcess, createMultiDockerProcess, doesContainerExist, doesMultiContainerExist, 
                    startDockerProcess, stopDockerProcess, getImageMetadata, getMultiImageMetadata, getInstalledApps,
-                   isContainerRunning, isMultiContainerRunning, deleteDockerProcess, getAllImagesFromMultiContainer};
+                   isContainerRunning, isMultiContainerRunning, deleteDockerProcess, getAllImagesFromMultiContainer,
+                   deleteDockerApp};

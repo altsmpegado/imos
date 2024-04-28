@@ -1,6 +1,6 @@
 const { ipcRenderer  } = require('electron');
-const { getInstalledApps ,  isContainerRunning, isMultiContainerRunning, deleteDockerProcess, 
-        startDockerProcess, stopDockerProcess , doesContainerExist ,doesMultiContainerExist } = require('../docker/docker');
+const { getInstalledApps ,  isContainerRunning, isMultiContainerRunning, 
+        startDockerProcess, stopDockerProcess, doesContainerExist, doesMultiContainerExist } = require('../docker/docker');
 
 function startDeployment() {
   const deploymentName = document.getElementById('app-name').value.trim();
@@ -101,11 +101,13 @@ async function createAppCards() {
       });
 
       const resetBtn = createButton('Reset', () => resetApp(app, appData.type, isRunning));
+      const deleteBtn = createButton('Delete', () => deleteApp(app, appData.type, isRunning));
       const settingsBtn = createButton('Settings', () => openSettings(app));
       const statusLED = createStatusLED(isRunning);
       card.appendChild(statusLED);
       card.appendChild(startStopBtn);
       card.appendChild(resetBtn);
+      card.appendChild(deleteBtn);
       card.appendChild(settingsBtn);
 
       appContainer.appendChild(card);
@@ -120,11 +122,25 @@ function resetApp(appName, type, isRunning) {
     if (isRunning)
       stopDockerProcess(appName, type);
 
-    deleteDockerProcess(appName, type);
-    location.reload();
+    ipcRenderer.send('deleteProcess', appName, type);
+    ipcRenderer.on('deleted', () => {
+      console.log('Received deleted event');
+      ipcRenderer.send('restartApp', appName, type);
+    });
   }
-  ipcRenderer.send('restartApp', appName, type);
+}
 
+function deleteApp(appName, type, isRunning) {
+  if(doesContainerExist(appName) || doesMultiContainerExist(appName)){
+    if (isRunning)
+      stopDockerProcess(appName, type);
+
+    ipcRenderer.send('deleteProcess', appName, type);
+    ipcRenderer.on('deleted', () => {
+      console.log('Received deleted event');
+      ipcRenderer.send('unnistallApp', appName, type);
+    });
+  }
 }
 
 function createButton(text, clickHandler) {

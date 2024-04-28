@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const appInfoDiv = document.getElementById('main');
         appInfoDiv.innerHTML = `
             <div class="app-container">
-                <img class="app-icon" src="C:\\imos\\imos-app\\marketplace-app\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
+                <img class="app-icon" src="C:\\imos-dev\\imos-app\\imostore\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
                 <h3 class="apptitle">${appjson.name}</h3>
                 <p class="companytitle">${appjson.company}</p>
                 <button id="downloadButton" class="getapp-btn">Download</button>
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3 class="rating">4.3 &#9733; | 3K Ratings</h3>
             </div>
             <div class="sticky-header">
-                <img class="sticky-app-icon" src="C:\\imos\\imos-app\\marketplace-app\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
+                <img class="sticky-app-icon" src="C:\\imos-dev\\imos-app\\imostore\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
                 <h5 class="sticky-apptitle">${appjson.name}</h5>
                 <p class="sticky-companytitle">${appjson.company}</p>
                 <button id="downloadButton" class="sticky-getapp-btn">Download</button>
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="info-container">
                 <div class="screenshots">
                     <h4 class="tab-title">Screenshots</h4>
-                    <img class="imgs-screenshots" src="C:\\imos\\imos-app\\marketplace-app\\views\\wtsapp.jpeg"></img>
+                    <img class="imgs-screenshots" src="C:\\imos-dev\\imos-app\\imostore\\views\\wtsapp.jpeg"></img>
                 </div>
                 <div class="description">
                     <h4 class="tab-title">About</h4>

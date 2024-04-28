@@ -5,7 +5,7 @@ const { getInstalledApps } = require('../docker/docker');
 const openApps = {};
 
 function setupButton(buttonId, appPath, appType) {
-    if (buttonId.includes('imos')){
+    if (appType != 'default'){
         document.getElementById(buttonId).addEventListener('click', () => {
             ipcRenderer.send('runDockerApp', appPath, appType);
         });
@@ -35,8 +35,8 @@ function launchApp(appPath) {
 
 let installedApps = {};
 let defaultApps = {
-    'marketplace-app': { type: 'default' },
-    'enabler-app': { type: 'default' },
+    'imostore': { type: 'default' },
+    'imoslink': { type: 'default' },
     'settings-app': { type: 'default' }
 };
 
@@ -65,7 +65,7 @@ getInstalledApps().then((builtApps) => {
     Object.keys(installedApps).forEach((appName, index) => {
         const buttonId = `button_${appName}`;
         const appType = installedApps[appName].type;
-        const appPath = appName.includes('imos') ? appName : `${appName}/main.js`;
+        const appPath = appType.includes('default') ? `${appName}/main.js` : appName;
         
         // Create a new button
         const newButton = document.createElement('button');

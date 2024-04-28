@@ -1,7 +1,8 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { exec } = require('child_process');
 const { doesContainerExist, doesMultiContainerExist , startDockerProcess, stopDockerProcess,
-        createDockerProcess, createMultiDockerProcess, getImageMetadata, getMultiImageMetadata} = require('../docker/docker');
+        createDockerProcess, createMultiDockerProcess, getImageMetadata, getMultiImageMetadata,
+        deleteDockerProcess, deleteDockerApp} = require('../docker/docker');
 
 let mainWindow;
 let setWindow;
@@ -133,6 +134,15 @@ ipcMain.on('restartApp', (event, app, type) => {
       createSetupWindow(app, labels, type);
     }
   }
+});
+
+ipcMain.on('deleteProcess', (event, app, type) => {
+  deleteDockerProcess(app, type);
+  event.reply('deleted');
+});
+
+ipcMain.on('unnistallApp', (event, app, type) => {
+  deleteDockerApp(app, type);
 });
 
 ipcMain.on('set', (event, appConfig) => {
