@@ -83,9 +83,10 @@ function launchApp(appPath) {
 
 let installedApps = {};
 let defaultApps = {
-    'imostore': { type: 'default' },
     'imoslink': { type: 'default' },
-    'settings-app': { type: 'default' }
+    'imostore': { type: 'default' },
+    'imoshub': { type: 'default' },
+    'settings': { type: 'default' }
 };
 
 function circular() {
