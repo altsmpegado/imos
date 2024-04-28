@@ -5,18 +5,66 @@ const { getInstalledApps } = require('../docker/docker');
 const openApps = {};
 
 function setupButton(buttonId, appPath, appType) {
-    if (appType != 'default'){
-        document.getElementById(buttonId).addEventListener('click', () => {
+    const button = document.getElementById(buttonId);
+    
+    button.addEventListener('click', () => {
+        if (appType !== 'default') {
             ipcRenderer.send('runDockerApp', appPath, appType);
-        });
-    }
-    else {
-        document.getElementById(buttonId).addEventListener('click', () => {
+        } else {
             if (!openApps[appPath] || openApps[appPath].closed) {
                 launchApp(appPath);
             }
+        }
+    });
+
+    button.addEventListener('contextmenu', (event) => {
+        event.preventDefault();
+        
+        const contextMenu = document.createElement('div');
+        contextMenu.classList.add('context-menu');
+        contextMenu.innerHTML = `
+            <div class="context-menu-option" id="open">Open</div>
+            <div class="context-menu-option" id="uninstall">Uninstall</div>
+            <div class="context-menu-option" id="settings">Settings</div>
+        `;
+
+        contextMenu.style.position = 'absolute';
+        contextMenu.style.left = `${event.pageX}px`;
+        contextMenu.style.top = `${event.pageY}px`;
+
+        document.body.appendChild(contextMenu);
+
+        // Event listeners for context menu options
+        document.getElementById('open').addEventListener('click', () => {
+            if (appType !== 'default') {
+                ipcRenderer.send('runDockerApp', appPath, appType);
+            } else {
+                if (!openApps[appPath] || openApps[appPath].closed) {
+                    launchApp(appPath);
+                }
+            }
+            document.body.removeChild(contextMenu);
         });
-    }
+
+        document.getElementById('uninstall').addEventListener('click', () => {
+            // Implement uninstall action
+            console.log('Uninstall action triggered');
+            document.body.removeChild(contextMenu);
+        });
+
+        document.getElementById('settings').addEventListener('click', () => {
+            // Implement settings action
+            console.log('Settings action triggered');
+            document.body.removeChild(contextMenu);
+        });
+
+        // Hide context menu when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('.context-menu')) {
+                document.body.removeChild(contextMenu);
+            }
+        });
+    });
 }
 
 function launchApp(appPath) {
