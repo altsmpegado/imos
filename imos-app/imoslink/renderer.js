@@ -31,7 +31,6 @@ function startDeployment() {
     //console.log(deploymentName);
     ipcRenderer.send('start-deployment', { name: deploymentName, path: "" });
   }
-  
 }
 
 function stopDeployment() {
