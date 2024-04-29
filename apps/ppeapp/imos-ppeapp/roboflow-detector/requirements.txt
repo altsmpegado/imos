@@ -1,9 +1,0 @@
-Flask==3.0.2
-flask_cors==4.0.0
-requests==2.31.0
-opencv-python==4.9.0.80
-torch==2.2.2
-torchvision==0.17.2
-pillow==10.3.0
-numpy==1.26.4
-pandas==2.2.1
