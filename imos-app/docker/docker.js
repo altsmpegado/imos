@@ -114,7 +114,7 @@ function isContainerRunning(containerName) {
     if (result.status === 0) {
         return result.stdout.trim() === 'true';
     } else {
-        console.error('Error checking if container is running:', result.stderr);
+        console.error('Container is not running', containerName);
         return false;
     }
 }

@@ -131,16 +131,21 @@ function resetApp(appName, type, isRunning) {
 }
 
 function deleteApp(appName, type, isRunning) {
-  if(doesContainerExist(appName) || doesMultiContainerExist(appName)){
-    if (isRunning)
-      stopDockerProcess(appName, type);
-
-    ipcRenderer.send('deleteProcess', appName, type);
-    ipcRenderer.on('deleted', () => {
-      console.log('Received deleted event');
-      ipcRenderer.send('unnistallApp', appName, type);
+  getInstalledApps()
+    .then((apps) => {
+      if(appName in apps){
+        if (isRunning)
+          stopDockerProcess(appName, type);
+    
+        ipcRenderer.send('deleteProcess', appName, type);
+        ipcRenderer.on('deleted', () => {
+          console.log('Received deleted event');
+          ipcRenderer.send('unnistallApp', appName, type);
+        });
+      }
+    }).catch((error) => {
+        console.error('Error:', error);
     });
-  }
 }
 
 function createButton(text, clickHandler) {
