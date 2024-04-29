@@ -15,8 +15,8 @@ from flask_cors import CORS # type: ignore
 app = Flask(__name__)
 CORS(app)
 
-detector_port = os.getenv('MODEL_DETECTOR_PORT', '5001').split(':')[1]
-webcam_ip = os.getenv('WEBCAM_IP', 'INVALID_PORT')
+detector_port = os.getenv('MODEL_DETECTOR_PORT', '5001:5001').split(':')[1]
+webcam_ip = os.getenv('WEBCAM_IP', 'INVALID_IP')
 
 # Load the YOLOv5 model
 model = torch.hub.load('ultralytics/yolov5', 'custom', path='best.pt', force_reload=True)

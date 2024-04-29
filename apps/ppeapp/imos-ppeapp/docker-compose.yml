@@ -1,0 +1,23 @@
+---
+version: '1.0'
+
+services:
+  gui:
+    image: recyclingapp-gui
+    container_name: recyclingapp-gui
+    ports:
+      - "${GUI_PORT:-3000:3000}"
+    depends_on:
+      - model-detector
+    environment:
+      GUI_PORT: "${GUI_PORT:-3000:3000}"
+      MODEL_DETECTOR_PORT: "${MODEL_DETECTOR_PORT:-5001:5001}"
+
+  model-detector:
+    image: recyclingapp-model-detector
+    container_name: recyclingapp-model-detector
+    ports:
+      - "${MODEL_DETECTOR_PORT:-5001:5001}"
+    environment:
+      MODEL_DETECTOR_PORT: "${MODEL_DETECTOR_PORT:-5001:5001}"
+      WEBCAM_IP: "${WEBCAM_IP:-10.22.127.153:5000}"
