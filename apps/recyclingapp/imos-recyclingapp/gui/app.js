@@ -289,7 +289,7 @@ app.get('/', async (req, res) => {
       <body>
         <div class="title-container">
           <h1 class="title">Industrial Station for Waste Separation<span class="material-symbols-outlined">recycling</span></h1>
-          <h2>by IMOS</h2>
+          <h2>by imos</h2>
         </div>
         <div class="main-container">
           <div class="left-column">
@@ -304,7 +304,7 @@ app.get('/', async (req, res) => {
           </div>
           <div class="right-column">
             <div class="detections-table">
-              <h2>Detections</h2>
+              <h2>Detections History</h2>
               ${detectionsTable}
             </div>
           </div>
