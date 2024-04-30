@@ -288,7 +288,7 @@ app.get('/', async (req, res) => {
       </head>
       <body>
         <div class="title-container">
-          <h1 class="title">PPE Safety Detection in Industry<span class="material-symbols-outlined">industry</span></h1>
+          <h1 class="title">PPE Safety Detection in Industry<span class="material-symbols-outlined">factory</span></h1>
           <h2>by imos</h2>
         </div>
         <div class="main-container">
