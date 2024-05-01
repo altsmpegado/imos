@@ -1,0 +1,1 @@
+docker run -p 5002:5002 -v C:\IMOS\Apps:/tmp imos-roboflowapp
