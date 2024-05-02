@@ -277,14 +277,21 @@ async function getAllImagesFromMultiContainer(projectName) {
 
 function createDockerProcess(configData, interface=1) {
     const appName = configData.appName;
+    const projectDir = appName.split('-')[1];
     delete configData.appName;
+    const baseDir = process.env.IMOS_APPS_DIR || 'C:\\IMOS\\Apps';
+    const volumeDir = `${baseDir}\\${projectDir}\\Volume`;
 
     const dockerArgs = [
         'run',
         '-d',
-        '-p', configData.PORT,
+        '-v', `${volumeDir}:/tmp`,
         '--name', appName        
     ];
+    
+    if (configData.PORT) {
+        dockerArgs.push('-p', configData.PORT);
+    }
 
     for (const [key, value] of Object.entries(configData)) {
         dockerArgs.push('-e', `${key}=${value}`);
@@ -298,10 +305,21 @@ function createDockerProcess(configData, interface=1) {
     if (dockerProcess.status === 0) {
         console.log('Container created and started successfully.');
         // app could not have interface
-        if(interface==1)
-            openBrowser(`http://localhost:${configData.PORT.split(":")[1]}`);
     } else {
         console.error('Error creating or starting container:', dockerProcess.stderr);
+    }
+
+    if(interface==1){
+        getContainerPort(appName)
+            .then(ports => {
+                console.log('Ports:', ports);
+                ports.forEach(port => {
+                    openBrowser(`http://localhost:${port}`);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
 }
 

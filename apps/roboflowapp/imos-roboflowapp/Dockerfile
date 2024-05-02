@@ -15,5 +15,12 @@ COPY . .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+# define metadata variables
+LABEL com.available.configs="PORT, ROBOFLOW_API_URL, ROBOFLOW_API_KEY, \
+                             ROBOFLOW_PROJECT_ID, MODEL_VERSION, CONFIDENCE" \
+      com.required.configs="PORT, ROBOFLOW_API_URL, ROBOFLOW_API_KEY, \
+                            ROBOFLOW_PROJECT_ID, MODEL_VERSION" \
+      com.user.display="False"
+
 # Command to run the application
 CMD ["python", "app.py"]

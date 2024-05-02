@@ -1,6 +1,5 @@
 Outfile "IMOS-ExampleAppInstaller.exe"
-Name "ExampleApp Installer"
-; InstallDir $PROGRAMFILES\IMOS\Apps\ExampleApp
+# InstallDir $PROGRAMFILES\IMOS\Apps\ExampleApp
 InstallDir "C:\IMOS\Apps\ExampleApp"
 
 # Specify the icon file

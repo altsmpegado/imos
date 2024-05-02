@@ -1,9 +1,9 @@
-Outfile "IMOS-DataVisAppInstaller.exe"
-# InstallDir $PROGRAMFILES\IMOS\Apps\DataVisApp
-InstallDir "C:\IMOS\Apps\DataVisApp"
+Outfile "IMOS-RobogflowAppInstaller.exe"
+; InstallDir $PROGRAMFILES\IMOS\Apps\RoboflowApp
+InstallDir "C:\IMOS\Apps\RoboflowApp"
 
 # Specify the icon file
-#Icon ".\docker-app\3689119.ico"
+# Icon ".\imos-exampleapp\3689119.ico"
 
 # Request user agreement
 Page license
@@ -18,13 +18,13 @@ Section
     CreateDirectory $INSTDIR
 
     # Copy Docker container files to the installation directory
-    File /r /x *.gitignore "imos-datavisapp\*.*"
+    File /r /x *.dockerignore /x node_modules "imos-roboflowapp\*.*"
 
-    Push "$INSTDIR\imos-datavisapp"
+    # Change working directory to the Docker directory
+    Push "$INSTDIR\imos-roboflowapp"
 
     # Execute Docker build command
-    # ExecWait 'docker compose -p imos-datavisapp up --no-start'
-    ExecWait '"$INSTDIR\build_images.bat"'
+    ExecWait 'docker build -t imos-roboflowapp "$INSTDIR"'
 
 SectionEnd
 

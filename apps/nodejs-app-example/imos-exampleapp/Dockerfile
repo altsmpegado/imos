@@ -12,6 +12,6 @@ LABEL com.available.configs="PORT, WEBCAM_IP" \
       com.required.configs="PORT, WEBCAM_IP" \
       com.user.display="True"
 
-#EXPOSE 3000
+EXPOSE 3000
 
 CMD ["node", "app.js"]
