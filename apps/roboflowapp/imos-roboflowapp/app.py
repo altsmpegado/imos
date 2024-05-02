@@ -10,10 +10,10 @@ app = Flask(__name__)
 CORS(app)
 
 port = os.getenv('PORT', '5002:5002').split(':')[1]
-api_url = os.getenv('ROBOFLOW_API_URL')
-api_key = os.getenv('ROBOFLOW_API_KEY')
-project_id = os.getenv('ROBOFLOW_PROJECT_ID')
-model_version = os.getenv('MODEL_VERSION')
+api_url = os.getenv('ROBOFLOW_API_URL', 'INVALID_API_URL')
+api_key = os.getenv('ROBOFLOW_API_KEY', 'INVALID_API_KEY')
+project_id = os.getenv('ROBOFLOW_PROJECT_ID', 'INVALID_PROJECT_ID')
+model_version = os.getenv('MODEL_VERSION', '1')
 confidence_threshold = os.getenv('CONFIDENCE', '0.5')
 
 # Set up the client for inference
