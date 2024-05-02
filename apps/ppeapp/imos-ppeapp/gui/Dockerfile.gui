@@ -13,7 +13,7 @@ RUN npm install
 # Copy the rest of the application code to the working directory
 COPY . .
 
-LABEL com.main.multicontainer="imos-recyclingapp" \
+LABEL com.main.multicontainer="imos-ppeapp" \
       com.available.configs="GUI_PORT" \
       com.user.display="True"
 
