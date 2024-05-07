@@ -1,0 +1,20 @@
+services:
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+
+  express:
+    build: .
+    container_name: api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/imos-servers
+      - PORT=8000
+      - SESSION_SECRET=imos-Cvfa233fXRdHNrRU
