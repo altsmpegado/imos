@@ -38,6 +38,7 @@ function createAppWindow(appjson) {
       minWidth: 450,
       minHeight: 550,
       autoHideMenuBar: true,
+      icon: nativeImage.createFromDataURL(`data:image/png;base64,${appjson.logo}`),
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
