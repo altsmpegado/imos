@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, nativeImage } = require('electron');
 const { download } = require('electron-dl');
 const request = require('request');
 const fs = require('fs');
@@ -32,13 +32,15 @@ function createWindow() {
 
 function createAppWindow(appjson) {
   return new Promise((resolve, reject) => {
+    const logoImage = nativeImage.createFromDataURL(appjson.logo);
+    //console.log(appjson);
     appWindow = new BrowserWindow({
       width: 1200,
       height: 800,
       minWidth: 450,
       minHeight: 550,
       autoHideMenuBar: true,
-      icon: `${process.env.IMOS_APPS_DIR}/${appjson.name.split('-')[1]}/logo.ico`,
+      icon: logoImage,
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,

@@ -7,7 +7,7 @@ function clickApp(){
     item.addEventListener('click', (event) =>{
       event.preventDefault();
       const data = item.dataset.app;
-      console.log(data);
+      //console.log(data);
       ipcRenderer.send('openAppWindow', data)
     })
   })
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cardHtml = `
         <div class="product-card">
           <a href="0#" class="product" data-app="${JSON.stringify(app).replace(/"/g, '&quot;')}">
-            <img class="app-icon" src="C:\\imos-dev\\imos-app\\imostore\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
+            <img class="app-icon" src="data:image/png;base64,${app.logo}"></img>
             <div class="info-container">
               <p class="title">${app.name}</p>
               <div class="subtitle">

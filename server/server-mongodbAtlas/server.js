@@ -36,6 +36,9 @@ passport.deserializeUser(User.deserializeUser());
 app.use(passport.initialize());
 app.use(passport.session());
 
+
+
+
 // Check for MongoDB connection errors
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
@@ -44,38 +47,51 @@ db.once('open', () => {
   const storage = multer.memoryStorage();
   const upload = multer({ storage: storage });
 
-  app.post('/upload', upload.single('file'), async (req, res) => {
+  app.post('/upload', upload.fields([{ name: 'file', maxCount: 1 }, { name: 'logo', maxCount: 1 }]), async (req, res) => {
     try {
       const existingApp = await App.findOne({ name: req.body.name });
       if (existingApp) {
         return res.status(400).send('App with this name already exists.');
       }
 
-      const file = req.file;
-      const filename = file.originalname;
+      const file = req.files['file'][0];
+      const logo = req.files['logo'][0];
   
-      const uploadStream = bucket.openUploadStream(filename);
+      const uploadStream = bucket.openUploadStream(file.originalname);
       uploadStream.end(file.buffer);
   
       uploadStream.on('finish', async () => {
         const fileId = uploadStream.id;
-  
-        const new_app = new App({
-          name: req.body.name,
-          company: req.body.company,
-          version: req.body.version,
-          info: req.body.info,
-          files: fileId,
+        
+        const uploadLogoStream = bucket.openUploadStream(logo.originalname);
+        uploadLogoStream.end(logo.buffer);
+
+        uploadLogoStream.on('finish', async () => {
+          const logoFileId = uploadLogoStream.id;
+
+          const new_app = new App({
+              name: req.body.name,
+              company: req.body.company,
+              version: req.body.version,
+              info: req.body.info,
+              file: fileId,
+              logo: logoFileId,
+          });
+
+          await new_app.save();
+
+          res.status(200).send('Files uploaded successfully!');
         });
-  
-        await new_app.save();
-  
-        res.status(200).send('File uploaded successfully!');
+
+        uploadLogoStream.on('error', (error) => {
+            res.status(500).send('Error uploading logo file');
+        });
       });
   
       uploadStream.on('error', (error) => {
         res.status(500).send('Error uploading file');
       });
+
     } catch (error) {
       res.status(500).send('Server error');
     }
@@ -104,15 +120,49 @@ db.once('open', () => {
     }
   });
   
+  async function getAppLogo(logoId){
+    try {  
+        // Fetch the logo file from GridFS
+        const logoStream = bucket.openDownloadStream(new mongoose.Types.ObjectId(logoId));
+        
+        // Convert the stream to a buffer
+        const chunks = [];
+
+        logoStream.on('data', (chunk) => {
+          chunks.push(chunk);
+      });
+
+      return new Promise((resolve, reject) => {
+          logoStream.on('end', () => {
+              const buffer = Buffer.concat(chunks);
+              resolve(buffer);
+          });
+
+          logoStream.on('error', (error) => {
+              reject(error);
+          });
+      });
+    } catch (error) {
+        throw new Error('Error fetching logo file from GridFS');
+    }
+  };
+
   app.get('/apps', async (req, res) => {
     try {
-      const apps = await App.find();
-      res.json(apps);
+        const apps = await App.find();
+
+        for (let app of apps) {
+            const logoBuffer = await getAppLogo(app.logo);
+            app.logo = logoBuffer.toString('base64');
+        }
+
+        res.json(apps);
     } catch (error) {
-      console.error('Error fetching apps:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+        console.error('Error fetching apps:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
   });
+
 
   app.get('/apps/:user', async (req, res) => {
     try {
