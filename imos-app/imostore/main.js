@@ -31,8 +31,6 @@ function createWindow() {
 }
 
 function createAppWindow(appjson) {
-  return new Promise((resolve, reject) => {
-    const logoImage = nativeImage.createFromDataURL(appjson.logo);
     //console.log(appjson);
     appWindow = new BrowserWindow({
       width: 1200,
@@ -40,7 +38,6 @@ function createAppWindow(appjson) {
       minWidth: 450,
       minHeight: 550,
       autoHideMenuBar: true,
-      icon: logoImage,
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
@@ -52,7 +49,7 @@ function createAppWindow(appjson) {
     // Handle window closed
     appWindow.on('closed', () => {
       appWindow = null;
-      openApps[appjson.name].closed = true;
+      openApps[appjson.name.toString()].closed = true;
     });
 
     appWindow.loadFile('views/app.html');
@@ -61,7 +58,6 @@ function createAppWindow(appjson) {
       var { username } = JSON.parse(data);  
       appWindow.webContents.send('appInfo', appjson, username);
     });
-  });
 }
 
 function createDevForm() {
@@ -184,17 +180,18 @@ ipcMain.on('acquireApp', (event, user, name ) => {
 });
 
 ipcMain.on('openAppWindow', (event, app) => {
-  console.log(app);
+  console.log(openApps);
   const appjson = JSON.parse(app);
   if (!openApps[appjson.name] || openApps[appjson.name].closed){
     createAppWindow(appjson);
-    openApps[appjson.name] = {
+    openApps[appjson.name.toString()] = {
       closed: false    
     };
   }
 });
 
 ipcMain.on('openDevForm', (event) => {
+  console.log(openApps);
   if (!openApps['devform'] || openApps['devform'].closed){
     createDevForm();
     openApps['devform'] = {
