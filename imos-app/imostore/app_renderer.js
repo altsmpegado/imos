@@ -4,7 +4,7 @@ let isAppOwned = false;
 
 function myFunction(e) {
     if (e.matches) {
-        updateButton(owned);
+        updateButton(isAppOwned);
     }
 }
 
@@ -36,14 +36,14 @@ minWidth.addEventListener("change", function() {
 document.addEventListener('DOMContentLoaded', () => {
 
     ipcRenderer.on('appInfo', (event, appjson, user) => {
-        console.log(appjson);
+        //console.log(appjson);
         fetch(`http://localhost:8000/apps/${user}`)
         .then((response) => response.json())
         .then(data => {
         // Handle the data received from the server
-            console.log(data.ownedApps);
-            const isAppOwned = data.ownedApps.some(app => app.name === appjson.name);
-            console.log(isAppOwned);
+            //console.log(data.ownedApps);
+            isAppOwned = data.ownedApps.some(app => app.name === appjson.name);
+            //console.log(isAppOwned);
             updateButton(isAppOwned);
         })
             .catch(error => {

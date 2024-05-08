@@ -73,9 +73,14 @@
       .sidebtn:hover {
         background-color: #444;
       }
-
+      
       .selected {
         background-color: #555;
+      }
+
+      .selected .material-symbols-outlined {
+        color: #a35fe4; /* Change this to the desired color */
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
       }
 
       .btn-bot{
@@ -85,6 +90,10 @@
       .panel{
         width: 100%;
         overflow: hidden;
+      }
+
+      .swiper-pagination-bullet {
+        background: #a35fe4;
       }
 
       .slider {
@@ -277,7 +286,9 @@
           <button class="sidebtn" id="loadSubmitPage" title="Submission Portal"><i class="material-symbols-outlined">new_window</i></button>
         </div>
         <div class="btn-bot">
-          <button class="sidebtn"><i class="material-symbols-outlined">help</i></button>
+          <a href="https://github.com/altsmpegado/imos" target="_blank" style="text-decoration: none;">
+            <button class="sidebtn" ><i class="material-symbols-outlined">help</i></button>
+          </a>
         </div>
       </div>      
       <div class="panel">

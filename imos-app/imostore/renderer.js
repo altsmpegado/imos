@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const appListDiv = document.getElementById('apps-container');
       
       apps.forEach((app) => {
-        console.log(app);
+        //console.log(app);
         const cardHtml = `
         <div class="product-card">
           <a href="0#" class="product" data-app="${JSON.stringify(app).replace(/"/g, '&quot;')}">
