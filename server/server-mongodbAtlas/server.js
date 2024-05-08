@@ -183,11 +183,8 @@ db.once('open', () => {
         const app = await App.findOne({ name: appn });
         const logoBuffer = await getAppLogo(app.logo);
         const logoBase64 = logoBuffer.toString('base64');
-        const appDetails = {
-          name: app.name,
-          logo: logoBase64
-        };
-        apps.push(appDetails);
+        app.logo = logoBase64
+        apps.push(app);
       }
 
       res.status(200).json({ ownedApps: apps || [] });

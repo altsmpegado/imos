@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
                         <div class="price-container">
-                          <button class="more-button"><span class="material-symbols-outlined">cloud_download</span></button>
+                          <button id="download" class="download-button"><span class="material-symbols-outlined">cloud_download</span></button>
                         </div>
                     </div>
                 </div>
@@ -34,6 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           `
           appListDiv.innerHTML += cardHtml;
+
+          document.getElementById("download").addEventListener("click", function() {
+            ipcRenderer.send('downloadFile', { id: app.file.toString() });
+          });
+
         });
       })
       .catch((error) => {
