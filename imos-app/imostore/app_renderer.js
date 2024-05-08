@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
         // Handle the data received from the server
             console.log(data.ownedApps);
-            isAppOwned = data.ownedApps.includes(appjson.name);
+            const isAppOwned = data.ownedApps.some(app => app.name === appjson.name);
             console.log(isAppOwned);
             updateButton(isAppOwned);
         })

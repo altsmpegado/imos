@@ -3,30 +3,30 @@ const fs = require('fs');
 
 document.addEventListener('DOMContentLoaded', () => {
     const data = fs.readFileSync('userData/session.json', 'utf8');
-    console.log(JSON.parse(data).username);
+    //console.log(JSON.parse(data).username);
     // Fetch app information from the server
     fetch(`http://localhost:8000/apps/${JSON.parse(data).username}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        //console.log(data);
         const appListDiv = document.getElementById('apps-container');
         
         data.ownedApps.forEach((app) => {
-          console.log(app);
+          //console.log(app);
           const cardHtml = `
           <div class="product-card">
             <a class="product" data-app="${JSON.stringify(app).replace(/"/g, '&quot;')}">
                 <div>
                     <div style="display: flex; align-items: center; gap: 1rem;">
-                        <img class="app-icon" src="C:\\imos-dev\\imos-app\\imostore\\views\\apps.8985.13655054093851568.1c669dab-3716-40f6-9b59-de7483397c3a.png"></img>
+                        <img class="app-icon" src="data:image/png;base64,${app.logo}"></img>
                         <div class="info-container">
-                            <p class="title">${app}</p>
+                            <p class="title">${app.name}</p>
                             <div class="subtitle">
                                 <div class="text-ellipsis">Owned/Download</div>
                             </div>
                         </div>
                         <div class="price-container">
-                          <button class="more-button"><span class="material-symbols-outlined">play_circle</span></button>
+                          <button class="more-button"><span class="material-symbols-outlined">cloud_download</span></button>
                         </div>
                     </div>
                 </div>
