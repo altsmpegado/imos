@@ -163,18 +163,34 @@ db.once('open', () => {
     }
   });
 
-
+  // this could be done trough app id, instead of name, although name is also unique
   app.get('/apps/:user', async (req, res) => {
     try {
       const username = req.params.user;
   
       const user = await User.findOne({ username });
-  
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
-  
-      res.status(200).json({ ownedApps: user.ownedApps || [] });
+      const appsn = user.ownedApps;
+      const apps = [];
+
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      
+      for (let appn of appsn) {
+        const app = await App.findOne({ name: appn });
+        const logoBuffer = await getAppLogo(app.logo);
+        const logoBase64 = logoBuffer.toString('base64');
+        const appDetails = {
+          name: app.name,
+          logo: logoBase64
+        };
+        apps.push(appDetails);
+      }
+
+      res.status(200).json({ ownedApps: apps || [] });
     } catch (error) {
       console.error('Error fetching user owned apps:', error);
       res.status(500).json({ message: 'Internal Server Error' });
@@ -219,7 +235,7 @@ db.once('open', () => {
   
       res.status(200).json({ user });
     } catch (error) {
-      console.error('Error fetching user owned apps:', error);
+      console.error('Error fetching user:', error);
       res.status(500).json({ message: 'Internal Server Error' });
     }
   });
