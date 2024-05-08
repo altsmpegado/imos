@@ -8,6 +8,7 @@ const createWindow = () => {
       nodeIntegration: true,
     },
     autoHideMenuBar: true,
+    icon: 'imoshub/logo.ico',
   })
 
   win.loadFile('index.html')

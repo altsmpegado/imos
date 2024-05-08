@@ -11,6 +11,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    autoHideMenuBar: true,
+    icon: 'imoslink/logo.ico',
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -28,6 +30,7 @@ function createSetupWindow(appName, labels, type) {
       width: 400,
       height: 400,
       autoHideMenuBar: true,
+      icon: `${process.env.IMOS_APPS_DIR}/${appName.split('-')[1]}/logo.ico`,
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
