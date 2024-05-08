@@ -96,7 +96,7 @@ function circular() {
     let rotation = 0;
 
     circles.forEach((circle, i) => {
-        const value = `rotate(${rotation}deg) translate(${radius}px) rotate(-${rotation}deg)`;
+        const value = `rotate(${rotation}deg) translate(${radius}px) rotate(calc(-${rotation}deg + 90deg))`;
         rotation += 360 / 12;
         circle.style.transform = value;
     });
@@ -111,25 +111,35 @@ getInstalledApps().then((builtApps) => {
     const dynamicButtonsContainer = document.getElementById('dynamicButtonsContainer');
 
     // Dynamically generate buttons for installed apps
-    Object.keys(installedApps).forEach((appName, index) => {
-        const buttonId = `button_${appName}`;
-        const appType = installedApps[appName].type;
+    Object.keys(installedApps).forEach((app, index) => {
+        const appType = installedApps[app].type;
+        let appName = '';
+        let imageUrl = '';
+        if(appType == 'default'){
+            appName = app;
+            imageUrl = `${process.env.IMOS_ROOT}/${appName}/logo.png`;
+        }
+        else{
+            appName = app.split('-')[1];
+            imageUrl = `${process.env.IMOS_APPS_DIR}/${appName}/logo.png`;
+        }
+        const buttonId = `button-${appName}`;
         const appPath = appType.includes('default') ? `${appName}/main.js` : appName;
         
-        // Create a new button
-        const newButton = document.createElement('button');
-        newButton.setAttribute('class', 'button-component');
-        newButton.setAttribute('title', appName);
-        newButton.setAttribute('type', 'app');
-        newButton.setAttribute('id', buttonId);
-        newButton.innerHTML = `<span class='circle-info'>${index + 1}</span>`;
+        const newApp = document.createElement('button');
+        newApp.setAttribute('class', 'button-component');
+        newApp.setAttribute('title', appName);
+        newApp.setAttribute('type', 'app');
+        newApp.setAttribute('id', buttonId);
 
-        // Append the button to the dynamicButtonsContainer
-        dynamicButtonsContainer.appendChild(newButton);
-
-        // Set up the button click event
+        
+        newApp.style.backgroundImage = `url('${imageUrl}')`;
+        newApp.style.backgroundSize = 'cover';
+        newApp.style.backgroundPosition = 'center';
+        dynamicButtonsContainer.appendChild(newApp);
         setupButton(buttonId, appPath, appType);
     });
+
     circular();
 });
 

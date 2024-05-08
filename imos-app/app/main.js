@@ -20,6 +20,7 @@ function createWindow() {
         width: 1200,
         height: 800,
         autoHideMenuBar: true,
+        icon: 'assets/imoslogo.ico',
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -41,6 +42,7 @@ function createAuthWindow() {
       width: 400,
       height: 400,
       autoHideMenuBar: true,
+      icon: 'assets/imoslogo.ico',
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
@@ -64,6 +66,7 @@ function createLoginWindow() {
       width: 400,
       height: 400,
       autoHideMenuBar: true,
+      icon: 'assets/imoslogo.ico',
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
@@ -87,6 +90,7 @@ function createRegisterWindow() {
       width: 400,
       height: 400,
       autoHideMenuBar: true,
+      icon: 'assets/imoslogo.ico',
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
@@ -110,6 +114,7 @@ function createSetupWindow(appName, labels, type) {
       width: 400,
       height: 400,
       autoHideMenuBar: true,
+      icon: 'assets/imoslogo.ico',
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,

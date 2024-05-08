@@ -1,8 +1,9 @@
-Outfile "IMOS-RecyclingAppInstaller.exe"
-InstallDir "C:\IMOS\Apps\RecyclingApp"
+Outfile "imos-recycling-app-installer.exe"
+InstallDir "C:\imos\Apps\RecyclingApp"
+Name "Recycling App"
 
 # Specify the icon file
-# Icon ".\imos-example-app\3689119.ico"
+Icon ".\imos-recyclingapp\logo.ico"
 
 # Request user agreement
 Page license
