@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: imos-local-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: imos-local
+  template:
+    metadata:
+      labels:
+        app: imos-local
+    spec:
+      containers:
+      - name: imos-local-container
+        image: altsmpegado/imos-local:latest
+        ports:
+        - containerPort: 80

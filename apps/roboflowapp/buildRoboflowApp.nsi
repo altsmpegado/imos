@@ -1,9 +1,10 @@
-Outfile "IMOS-RobogflowAppInstaller.exe"
+Outfile "imos-roboflow-app-installer.exe"
 ; InstallDir $PROGRAMFILES\IMOS\Apps\RoboflowApp
-InstallDir "C:\IMOS\Apps\RoboflowApp"
+InstallDir "C:\imos\Apps\RoboflowApp"
+Name "Roboflow App"
 
 # Specify the icon file
-# Icon ".\imos-exampleapp\3689119.ico"
+Icon ".\imos-roboflowapp\logo.ico"
 
 # Request user agreement
 Page license

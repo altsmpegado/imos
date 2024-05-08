@@ -1,9 +1,10 @@
-Outfile "IMOS-DataVisAppInstaller.exe"
+Outfile "imos-datavis-app-installer.exe"
 # InstallDir $PROGRAMFILES\IMOS\Apps\DataVisApp
-InstallDir "C:\IMOS\Apps\DataVisApp"
+InstallDir "C:\imos\Apps\DataVisApp"
+Name "Data Vision App"
 
 # Specify the icon file
-#Icon ".\docker-app\3689119.ico"
+Icon ".\imos-datavisapp\logo.ico"
 
 # Request user agreement
 Page license

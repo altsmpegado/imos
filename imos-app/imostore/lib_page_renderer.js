@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch((error) => {
         console.error('Error fetching app information:', error);
       });
-  });
+ });
 
 document.getElementById("loadAppsPage").addEventListener("click", function() {
     var newPageUrl = "C:\\imos-dev\\imos-app\\imostore\\views\\apps_page.html";
