@@ -51,35 +51,41 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch((error) => {
       console.error('Error fetching app information:', error);
     });
-    /*
+    
     if (type == 'developer') {
       const moreFuncDiv = document.getElementById('btn-top');
       const devButton = document.createElement('button');
       devButton.classList.add('sidebtn');
-  
+      
       // Create the icon element and add it to the button
-      const icon = document.createElement('i');
-      icon.classList.add('material-symbols-outlined');
-      icon.textContent = 'new_window'; // Set the icon's text content to the desired material icon identifier
+      const icon1 = document.createElement('i');
+      icon1.classList.add('material-symbols-outlined');
+      icon1.textContent = 'new_window'; // Set the icon's text content to the desired material icon identifier
   
-      devButton.appendChild(icon); // Add the icon to the button
+      devButton.appendChild(icon1); // Add the icon to the button
   
       devButton.addEventListener('click', () => {
         ipcRenderer.send('openDevForm');
       });
   
       moreFuncDiv.appendChild(devButton);
-    
+      
       const subStateButton = document.createElement('button');
-      subStateButton.textContent = 'Submissions';
-      subStateButton.classList.add('btn-bot'); 
+      subStateButton.classList.add('sidebtn');
+
+      // Create the icon element and add it to the button
+      const icon2 = document.createElement('i');
+      icon2.classList.add('material-symbols-outlined');
+      icon2.textContent = 'timeline'; // Set the icon's text content to the desired material icon identifier
+  
+      subStateButton.appendChild(icon2); // Add the icon to the button
+
       subStateButton.addEventListener('click', () => {
         ipcRenderer.send('openSubmissions');
       });
       
       moreFuncDiv.appendChild(subStateButton);
-    
-    }*/
+    }
 });
 
 document.getElementById("loadAppsPage").addEventListener("click", function() {
@@ -95,8 +101,4 @@ document.getElementById("loadAppsPage").addEventListener("click", function() {
 document.getElementById("loadLibPage").addEventListener("click", function() {
   var newPageUrl = "C:\\imos-dev\\imos-app\\imostore\\views\\lib_page.html";
   window.location.href = newPageUrl;
-});
-
-document.getElementById("loadSubmitPage").addEventListener("click", function() {
-  ipcRenderer.send('openDevForm');
 });
