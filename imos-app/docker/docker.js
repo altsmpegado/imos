@@ -1,6 +1,5 @@
 const { execSync , spawnSync } = require('child_process');
 const Docker = require('dockerode');
-const { KubeConfig, AppsV1Api } = require('@kubernetes/client-node');
 
 function openBrowser(url) {
     const { status, error } = spawnSync('start', [url], { shell: true });
@@ -32,33 +31,6 @@ async function getInstalledApps() {
                 return acc;
             }, []);
         //console.log(imosMultiImages);
-
-        // Fetch Docker containers - for multi containers/services in compose file
-        /*const dockerContainers = await docker.listContainers({ all: true });
-        //console.log(dockerContainers);
-        const imosContainers = dockerContainers
-            .reduce((acc, container) => {
-                const labels = container.Labels || {};
-                const projectName = labels['com.docker.compose.project'];
-                if (projectName && projectName.startsWith('imos') && !acc.find(app => app.name === projectName)) {
-                    acc.push({ name: projectName, type: 'multicontainer' });
-                }
-                return acc;
-            }, []);*/
-        
-        //console.log(imosContainers);
-
-        // Fetch Kubernetes deployments - for kubernetes deployment files
-        /*const kubeconfig = new KubeConfig();
-        kubeconfig.loadFromDefault();
-        const k8sApi = kubeconfig.makeApiClient(AppsV1Api);
-        const response = await k8sApi.listNamespacedDeployment('default');
-        const deployedApps = response.body.items
-            .filter((deployment) => deployment.metadata.name.includes('imos'))
-            .map((deployment) => deployment.metadata.name);
-        */
-        // Merge Docker images and Kubernetes deployments into one list
-        //const installedApps = [...builtImages, ...deployedApps];
 
         const installedApps = [...imosImages,  ...imosMultiImages]
 
@@ -279,7 +251,7 @@ function createDockerProcess(configData, interface=1) {
     const appName = configData.appName;
     const projectDir = appName.split('-')[1];
     delete configData.appName;
-    const baseDir = process.env.IMOS_APPS_DIR || 'C:\\IMOS\\Apps';
+    const baseDir = process.env.IMOS_APPS_DIR || 'C:\\imos\\Apps';
     const volumeDir = `${baseDir}\\${projectDir}\\Volume`;
 
     const dockerArgs = [
@@ -365,7 +337,6 @@ function createMultiDockerProcess(configData, interface=1) {
 }
 
 function startDockerProcess(containerName, type, interface=1) {
-
     console.log(containerName);
     if(type == 'image'){
         if (!isContainerRunning(containerName)) {

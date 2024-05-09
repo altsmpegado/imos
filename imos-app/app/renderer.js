@@ -113,22 +113,19 @@ getInstalledApps().then((builtApps) => {
     // Dynamically generate buttons for installed apps
     Object.keys(installedApps).forEach((app, index) => {
         const appType = installedApps[app].type;
-        let appName = '';
         let imageUrl = '';
         if(appType == 'default'){
-            appName = app;
-            imageUrl = `${process.env.IMOS_ROOT}/${appName}/logo.png`;
+            imageUrl = `${process.env.IMOS_ROOT}/${app}/logo.png`;
         }
         else{
-            appName = app.split('-')[1];
-            imageUrl = `${process.env.IMOS_APPS_DIR}/${appName}/logo.png`;
+            imageUrl = `${process.env.IMOS_APPS_DIR}/${app.split('-')[1]}/logo.png`;
         }
-        const buttonId = `button-${appName}`;
-        const appPath = appType.includes('default') ? `${appName}/main.js` : appName;
+        const buttonId = `button-${app}`;
+        const appPath = appType.includes('default') ? `${app}/main.js` : app;
         
         const newApp = document.createElement('button');
         newApp.setAttribute('class', 'button-component');
-        newApp.setAttribute('title', appName);
+        newApp.setAttribute('title', app);
         newApp.setAttribute('type', 'app');
         newApp.setAttribute('id', buttonId);
 
