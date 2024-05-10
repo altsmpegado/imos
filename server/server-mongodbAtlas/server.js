@@ -36,9 +36,6 @@ passport.deserializeUser(User.deserializeUser());
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-
-
 // Check for MongoDB connection errors
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
