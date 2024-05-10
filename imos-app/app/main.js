@@ -134,10 +134,9 @@ function createSetupWindow(appName, labels, type) {
 }
 
 app.whenReady().then(() => {
-  const data = fs.readFileSync('userData/loginSettings.json', 'utf8');
-  var { username, password } = JSON.parse(data);
-
-  if(username == '' && password == ''){
+  const data = fs.readFileSync('userData/session.json', 'utf8');
+  var { username, password, save } = JSON.parse(data);
+  if(save == "false"){
     createAuthWindow()
     .catch(error => {
       console.error('Error creating Auth window:', error);
@@ -165,7 +164,7 @@ app.whenReady().then(() => {
             
             .then((data) => {
               const type = data.user.type;
-              fs.writeFileSync('userData/session.json', JSON.stringify({ username, type }));
+              fs.writeFileSync('userData/session.json', JSON.stringify({ username, type , password, save}));
             })
             .catch((error) => {
               console.error('Error fetching app information:', error);
@@ -267,6 +266,8 @@ ipcMain.on('login', (event, userData) => {
   
   var username = userData.username;
   var password = userData.password;
+  var type = "";
+  var save = "false";
 
   request(options, function (error, response) {
       if (error) throw new Error(error);
@@ -275,17 +276,20 @@ ipcMain.on('login', (event, userData) => {
         fetch(`http://localhost:8000/user/${username}`)
           .then((response) => response.json())
           .then((data) => {
-            const type = data.user.type;
-            fs.writeFileSync('userData/session.json', JSON.stringify({ username, type }));
+            type = data.user.type;
+            fs.writeFileSync('userData/session.json', JSON.stringify({ username, type , password, save}));
           })
           .catch((error) => {
             console.error('Error fetching app information:', error);
           });
 
-        if(remcheck)
-          fs.writeFileSync('userData/loginSettings.json', JSON.stringify({ username, password }));
+        if(remcheck){
+          save = "true";
+          fs.writeFileSync('userData/session.json', JSON.stringify({ username, type, password, save}));
+        }
         else {
-          fs.writeFileSync('userData/loginSettings.json', JSON.stringify({ username:'', password:'' }));
+          save = "false"
+          fs.writeFileSync('userData/session.json', JSON.stringify({ username:'', type:'', password:'', save}));
         }
         if (logWindow) {
           logWindow.close();
@@ -299,7 +303,7 @@ ipcMain.on('login', (event, userData) => {
 
 });
 
-ipcMain.on('saveLoginSettings', (event) => {
+ipcMain.on('saveSession', (event) => {
   if(!remcheck)
     remcheck = true;
   else
@@ -309,8 +313,7 @@ ipcMain.on('saveLoginSettings', (event) => {
 ipcMain.on('logout', (event) => {
   mainWindow.close();
   createAuthWindow();
-  fs.writeFileSync('userData/loginSettings.json', JSON.stringify({ username:'', password:'' }));
-  fs.writeFileSync('userData/session.json', JSON.stringify({ username:'', type:'' }));
+  fs.writeFileSync('userData/session.json', JSON.stringify({ username:'', type:'', password:'', save:'false' }));
 });
 
 ipcMain.on('back', (event) => {

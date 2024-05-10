@@ -34,7 +34,7 @@
 
         document.getElementById('rememberCheckbox').addEventListener('change', () => {
             //const isChecked = document.getElementById('rememberCheckbox').checked;
-            ipcRenderer.send('saveLoginSettings');
+            ipcRenderer.send('saveSession');
         });
 
         document.getElementById('back').addEventListener('click', () => {
