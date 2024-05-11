@@ -76,32 +76,10 @@ async function createAppCards() {
       card.className = 'card';
       card.innerHTML = `<h3>${app}</h3>`;
 
-      const startStopBtn = document.createElement('button');
-      startStopBtn.className = 'button';
-      startStopBtn.innerText = isRunning ? 'Stop' : 'Start';
-
-      startStopBtn.addEventListener('click', () => {
-
-        if(appData.type == 'image' && !doesContainerExist(app))
-          ipcRenderer.send('restartApp', app, appData.type);
-
-        else if(appData.type == 'multicontainer' && !doesMultiContainerExist(app))
-          ipcRenderer.send('restartApp', app, appData.type);
-        
-        else if (isRunning) {
-            stopDockerProcess(app, appData.type);
-            location.reload();
-        } 
-        
-        else {
-            startDockerProcess(app, appData.type, 0);
-            location.reload();
-        }
-      });
-
-      const resetBtn = createButton('Reset', () => resetApp(app, appData.type, isRunning));
-      const deleteBtn = createButton('Delete', () => deleteApp(app, appData.type, isRunning));
-      const settingsBtn = createButton('Settings', () => openSettings(app));
+      const startStopBtn = createButton(isRunning ? 'pause' : 'play_arrow', () => startstopApp(app, appData.type, isRunning));
+      const resetBtn = createButton('stop', () => resetApp(app, appData.type, isRunning));
+      const deleteBtn = createButton('delete', () => deleteApp(app, appData.type, isRunning));
+      const settingsBtn = createButton('settings', () => openSettings(app));
       const statusLED = createStatusLED(isRunning);
       card.appendChild(statusLED);
       card.appendChild(startStopBtn);
@@ -113,6 +91,24 @@ async function createAppCards() {
     }
   } catch (error) {
       console.error('Error creating app cards:', error);
+  }
+}
+
+function startstopApp(app, type, isRunning){
+  if(type == 'image' && !doesContainerExist(app))
+    ipcRenderer.send('restartApp', app, type);
+
+  else if(type == 'multicontainer' && !doesMultiContainerExist(app))
+    ipcRenderer.send('restartApp', app, type);
+  
+  else if (isRunning) {
+      stopDockerProcess(app, type);
+      location.reload();
+  } 
+  
+  else {
+      startDockerProcess(app, type, 0);
+      location.reload();
   }
 }
 
@@ -150,7 +146,10 @@ function deleteApp(appName, type, isRunning) {
 function createButton(text, clickHandler) {
     const button = document.createElement('button');
     button.className = 'button';
-    button.innerText = text;
+    const icon = document.createElement('i');
+    icon.classList.add('material-symbols-outlined');
+    icon.textContent = text;
+    button.append(icon);
     button.addEventListener('click', clickHandler);
     return button;
 }
