@@ -55,16 +55,13 @@ function createStatusLED(isRunning) {
 }
 
 async function createAppCards() {
-  const appContainer = document.getElementById('appContainer');
+  const appListDiv = document.getElementById('appContainer');
   
   try {
-    
     const installedApps = await getInstalledApps();
-    //console.log(installedApps);
     
     for (const app in installedApps) {
       const appData = installedApps[app];
-      //console.log(app);
       let isRunning = false;
       if (appData.type == 'image') {
         isRunning = isContainerRunning(app);
@@ -72,25 +69,43 @@ async function createAppCards() {
         isRunning = isMultiContainerRunning(app);
       }
       
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `<h3>${app}</h3>`;
+      const imageUrl = `${process.env.IMOS_APPS_DIR}/${app.split('-')[1]}/logo.png`;
 
+      const cardHtml = `
+      <div class="product-card">
+        <a class="product">
+            <div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <img class="app-icon" src="${imageUrl}"></img>
+                    <div>
+                        <p class="title">${app}</p>
+                    </div>
+                    <div id="buttonsdiv-${app}" class="price-container">
+                      <!-- Buttons will be appended here -->
+                    </div>
+                </div>
+            </div>
+        </a>
+      </div>
+      `;
+      
+      appListDiv.innerHTML += cardHtml;
+
+      const buttonsDiv = document.getElementById(`buttonsdiv-${app}`);
       const startStopBtn = createButton(isRunning ? 'pause' : 'play_arrow', () => startstopApp(app, appData.type, isRunning));
       const resetBtn = createButton('stop', () => resetApp(app, appData.type, isRunning));
       const deleteBtn = createButton('delete', () => deleteApp(app, appData.type, isRunning));
       const settingsBtn = createButton('settings', () => openSettings(app));
       const statusLED = createStatusLED(isRunning);
-      card.appendChild(statusLED);
-      card.appendChild(startStopBtn);
-      card.appendChild(resetBtn);
-      card.appendChild(deleteBtn);
-      card.appendChild(settingsBtn);
-
-      appContainer.appendChild(card);
+      
+      buttonsDiv.appendChild(startStopBtn);
+      buttonsDiv.appendChild(resetBtn);
+      buttonsDiv.appendChild(deleteBtn);
+      buttonsDiv.appendChild(settingsBtn);
+      buttonsDiv.appendChild(statusLED);
     }
   } catch (error) {
-      console.error('Error creating app cards:', error);
+    console.error('Error creating app cards:', error);
   }
 }
 
