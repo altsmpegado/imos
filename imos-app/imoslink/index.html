@@ -35,13 +35,39 @@
         background-color: #e8ecec;
       }
 
+      .search-container{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      .reload-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+
+      .reload-button{
+        border-radius: 50%;
+        height: 40px;
+        width: 40px;
+        background-color: #a35fe46b;
+        margin-top: 10px;
+        margin-right: 10px;
+        border-color: #ffffff00;
+      }
+
+      .reload-button:hover{
+        background-color: #a35fe4;
+      }
+
       .huge-title {
         font-weight: bold;
         font-size: 3rem;
         font-family: verdana;
         color: #a35fe4;
-        margin-top: auto;
-        margin-bottom: auto;
+        margin-top: 5px;
+        margin-bottom: 25px;
         display: flex;
         justify-content: center;
       }
@@ -116,11 +142,11 @@
       }
 
       .green {
-        background-color: green;
+        background-color: rgb(6, 110, 6);
       }
 
       .red {
-        background-color: red;
+        background-color: rgb(180, 10, 10);
       }
 
       .material-symbols-outlined {
@@ -134,15 +160,19 @@
     </style>
   </head>
   <body>
-    <p class="huge-title">imoslink</p>
-    <button id="reloadButton">Reload</button>
-    <div class="deployment-info">
-      <label for="app-name"></label>
-      <input type="text" id="app-name" placeholder="Enter application name">
-      <button onclick="startDeployment()">Start App</button>
-      <button onclick="stopDeployment()">Stop App</button>
+    <div class="reload-container">
+      <button id="reloadButton" class="reload-button" title="Reload"><i class="material-symbols-outlined">refresh</i></button>
     </div>
-    <div id="appContainer"></div>
+    <p class="huge-title">imoslink</p>
+    <div class="main-container">
+      <div class="search-container">
+        <label for="app-name"></label>
+        <input style="border-radius: 17px; width: 100%; margin-left: 25px;" type="text" id="app-name" placeholder="Enter application name">
+        <button style="background-color: #ffffff00; border-color: #ffffff00;" onclick="startDeployment()"><i class="material-symbols-outlined">play_arrow</i></button>
+        <button style="background-color: #ffffff00; border-color: #ffffff00; margin-right: 25px" onclick="stopDeployment()"><i class="material-symbols-outlined">pause</i></button>
+      </div>
+      <div id="appContainer"></div>
+    </div>
     <script type="text/javascript" src="renderer.js"></script>
   </body>
 </html>
