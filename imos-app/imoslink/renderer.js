@@ -54,62 +54,8 @@ function createStatusLED(isRunning) {
   return statusLED;
 }
 
-async function createAppCards() {
-  const appListDiv = document.getElementById('appContainer');
-  
-  try {
-    const installedApps = await getInstalledApps();
-    
-    for (const app in installedApps) {
-      const appData = installedApps[app];
-      let isRunning = false;
-      if (appData.type == 'image') {
-        isRunning = isContainerRunning(app);
-      } else if (appData.type == 'multicontainer') {
-        isRunning = isMultiContainerRunning(app);
-      }
-      
-      const imageUrl = `${process.env.IMOS_APPS_DIR}/${app.split('-')[1]}/logo.png`;
-
-      const cardHtml = `
-      <div class="product-card">
-        <a class="product">
-            <div>
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <img class="app-icon" src="${imageUrl}"></img>
-                    <div>
-                        <p class="title">${app}</p>
-                    </div>
-                    <div id="buttonsdiv-${app}" class="price-container">
-                      <!-- Buttons will be appended here -->
-                    </div>
-                </div>
-            </div>
-        </a>
-      </div>
-      `;
-      
-      appListDiv.innerHTML += cardHtml;
-
-      const buttonsDiv = document.getElementById(`buttonsdiv-${app}`);
-      const startStopBtn = createButton(isRunning ? 'pause' : 'play_arrow', () => startstopApp(app, appData.type, isRunning));
-      const resetBtn = createButton('stop', () => resetApp(app, appData.type, isRunning));
-      const deleteBtn = createButton('delete', () => deleteApp(app, appData.type, isRunning));
-      const settingsBtn = createButton('settings', () => openSettings(app));
-      const statusLED = createStatusLED(isRunning);
-      
-      buttonsDiv.appendChild(startStopBtn);
-      buttonsDiv.appendChild(resetBtn);
-      buttonsDiv.appendChild(deleteBtn);
-      buttonsDiv.appendChild(settingsBtn);
-      buttonsDiv.appendChild(statusLED);
-    }
-  } catch (error) {
-    console.error('Error creating app cards:', error);
-  }
-}
-
 function startstopApp(app, type, isRunning){
+  console.log("OLA");
   if(type == 'image' && !doesContainerExist(app))
     ipcRenderer.send('restartApp', app, type);
 
@@ -169,19 +115,73 @@ function createButton(text, clickHandler) {
     return button;
 }
 
+document.addEventListener('DOMContentLoaded', async () => {
+  const appListDiv = document.getElementById('appContainer');
+  
+  try {
+
+    const installedApps = await getInstalledApps();
+    const reloadButton = document.getElementById('reloadButton');
+
+    reloadButton.addEventListener('click', () => {
+        location.reload();
+    });
+
+    for (const app in installedApps) {
+      const appData = installedApps[app];
+      let isRunning = false;
+      if (appData.type == 'image') {
+        isRunning = isContainerRunning(app);
+      } else if (appData.type == 'multicontainer') {
+        isRunning = isMultiContainerRunning(app);
+      }
+      
+      const imageUrl = `${process.env.IMOS_APPS_DIR}/${app.split('-')[1]}/logo.png`;
+
+      const cardHtml = `
+      <div class="product-card">
+        <a class="product">
+            <div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <img class="app-icon" src="${imageUrl}"></img>
+                    <div>
+                        <p class="title">${app}</p>
+                    </div>
+                    <div id="buttonsdiv-${app}" class="price-container">
+                      <!-- Buttons will be appended here -->
+                    </div>
+                </div>
+            </div>
+        </a>
+      </div>
+      `;
+      
+      appListDiv.innerHTML += cardHtml;
+
+      const buttonsDiv = document.getElementById(`buttonsdiv-${app}`);
+      const startStopBtn = createButton(isRunning ? 'pause' : 'play_arrow', () => startstopApp(app, appData.type, isRunning));
+      const resetBtn = createButton('stop', () => resetApp(app, appData.type, isRunning));
+      const deleteBtn = createButton('delete', () => deleteApp(app, appData.type, isRunning));
+      const settingsBtn = createButton('settings', () => openSettings(app));
+      const statusLED = createStatusLED(isRunning);
+      
+      buttonsDiv.appendChild(startStopBtn);
+      buttonsDiv.appendChild(resetBtn);
+      buttonsDiv.appendChild(deleteBtn);
+      buttonsDiv.appendChild(settingsBtn);
+      buttonsDiv.appendChild(statusLED);
+    }
+  } catch (error) {
+    console.error('Error creating app cards:', error);
+  }
+});
+
 // NOT RECEIVING RESTAR CONFIRMATION, CANT RELOAD PAGE
 ipcRenderer.on('all-set', () => {
   console.log('Received all-set event');
   location.reload();
 });
 
-window.onload = createAppCards;
-
-const reloadButton = document.getElementById('reloadButton');
-
-reloadButton.addEventListener('click', () => {
-    location.reload();
-});
 
 /*
 setInterval(() => {
