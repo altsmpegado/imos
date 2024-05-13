@@ -8,8 +8,8 @@ let setWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 900,
+    height: 700,
     autoHideMenuBar: true,
     icon: 'imoslink/logo.ico',
     webPreferences: {
@@ -54,7 +54,7 @@ ipcMain.on('start-appbysearch', (event, name, installedApps) => {
   if (!name.startsWith('imos-')) {
     name = 'imos-' + name;
   }
-  
+
   console.log(`Starting application: ${name}`);
   if(doesContainerExist(name)){
     startDockerProcess(name, "image", interface=0);
