@@ -2,45 +2,26 @@ const { ipcRenderer  } = require('electron');
 const { getInstalledApps ,  isContainerRunning, isMultiContainerRunning, 
         startDockerProcess, stopDockerProcess, doesContainerExist, doesMultiContainerExist } = require('../docker/docker');
 
-function startDeployment() {
-  const deploymentName = document.getElementById('app-name').value.trim();
-  if (!deploymentName) {
+let installedApps;
+
+function startApp() {
+  const appName = document.getElementById('app-name').value.trim();
+  console.log(appName);
+  if (!appName) {
     displayMessage('Please enter a valid application name.', 'error');
     return;
   }
-
-  if(deploymentName.includes("deployment")){
-    // Instead of picking deployment file we can just assume the path
-    const deploymentFileInput = document.createElement('input');
-    deploymentFileInput.type = 'file';
-    deploymentFileInput.accept = '.yaml';
-    // Trigger click event to open file dialog
-    deploymentFileInput.click();
-
-    // Listen for change event when user selects a file
-    deploymentFileInput.addEventListener('change', () => {
-      const file = deploymentFileInput.files[0];
-      if (file) {
-        //console.log(file.path);
-        ipcRenderer.send('start-deployment', { name: file.name, path: file.path });
-      }
-    });
-  }
-
-  else{
-    //console.log(deploymentName);
-    ipcRenderer.send('start-deployment', { name: deploymentName, path: "" });
-  }
+  ipcRenderer.send('start-appbysearch', appName, installedApps);
 }
 
-function stopDeployment() {
-  const deploymentName = document.getElementById('app-name').value.trim();
-  if (!deploymentName) {
-    displayMessage('Please enter a deployment name.', 'error');
+function stopApp() {
+  const appName = document.getElementById('app-name').value.trim();
+  console.log(appName);
+  if (!appName) {
+    displayMessage('Please enter a valid application name.', 'error');
     return;
   }
-
-  ipcRenderer.send('stop-deployment', deploymentName);
+  ipcRenderer.send('stop-appbysearch', appName);
 }
 
 function createStatusLED(isRunning) {
@@ -55,7 +36,6 @@ function createStatusLED(isRunning) {
 }
 
 function startstopApp(app, type, isRunning){
-  console.log("OLA");
   if(type == 'image' && !doesContainerExist(app))
     ipcRenderer.send('restartApp', app, type);
 
@@ -86,25 +66,23 @@ function resetApp(appName, type, isRunning) {
   }
 }
 
-function deleteApp(appName, type, isRunning) {
-  getInstalledApps()
-    .then((apps) => {
-      if(appName in apps){
-        if (isRunning)
-          stopDockerProcess(appName, type);
-    
-        ipcRenderer.send('deleteProcess', appName, type);
-        ipcRenderer.on('deleted', () => {
-          console.log('Received deleted event');
-          ipcRenderer.send('unnistallApp', appName, type);
-        });
-      }
-    }).catch((error) => {
-        console.error('Error:', error);
+function deleteApp(appName, type, isRunning, installedApps) {
+  if(appName in installedApps){
+    if (isRunning)
+      stopDockerProcess(appName, type);
+
+    ipcRenderer.send('deleteProcess', appName, type);
+    ipcRenderer.on('deleted', () => {
+      console.log('Received deleted event');
+      ipcRenderer.send('unnistallApp', appName, type);
     });
+  }
+  else{
+    console.log("This app does not exist or cannot be deleted:", appName);
+  }
 }
 
-function createButton(text, clickHandler) {
+function createButton(text, clickHandler=null) {
     const button = document.createElement('button');
     button.className = 'button';
     const icon = document.createElement('i');
@@ -116,11 +94,10 @@ function createButton(text, clickHandler) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const appListDiv = document.getElementById('appContainer');
-  
+  const appContainer = document.getElementById('appContainer');
+  installedApps = await getInstalledApps();
   try {
 
-    const installedApps = await getInstalledApps();
     const reloadButton = document.getElementById('reloadButton');
 
     reloadButton.addEventListener('click', () => {
@@ -136,33 +113,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         isRunning = isMultiContainerRunning(app);
       }
       
-      const imageUrl = `${process.env.IMOS_APPS_DIR}/${app.split('-')[1]}/logo.png`;
+      const card = document.createElement('div');
+      card.className = 'product-card';
 
-      const cardHtml = `
-      <div class="product-card">
-        <a class="product">
-            <div>
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <img class="app-icon" src="${imageUrl}"></img>
-                    <div>
-                        <p class="title">${app}</p>
-                    </div>
-                    <div id="buttonsdiv-${app}" class="price-container">
-                      <!-- Buttons will be appended here -->
-                    </div>
-                </div>
-            </div>
-        </a>
-      </div>
-      `;
-      
-      appListDiv.innerHTML += cardHtml;
+      const product = document.createElement('a');
+      product.className = 'product';
 
-      const buttonsDiv = document.getElementById(`buttonsdiv-${app}`);
+      const appInfo = document.createElement('div');
+      appInfo.style.display = 'flex';
+      appInfo.style.alignItems = 'center';
+      appInfo.style.gap = '1rem';
+
+      const icon = document.createElement('img');
+      icon.className = 'app-icon';
+      icon.src = `${process.env.IMOS_APPS_DIR}/${app.split('-')[1]}/logo.png`;
+
+      const title = document.createElement('div');
+      title.innerHTML = `<p class="title">${app}</p>`;
+
+      const buttonsDiv = document.createElement('div');
+      buttonsDiv.id = `buttonsdiv-${app}`;
+      buttonsDiv.className = 'price-container';
+
       const startStopBtn = createButton(isRunning ? 'pause' : 'play_arrow', () => startstopApp(app, appData.type, isRunning));
       const resetBtn = createButton('stop', () => resetApp(app, appData.type, isRunning));
-      const deleteBtn = createButton('delete', () => deleteApp(app, appData.type, isRunning));
-      const settingsBtn = createButton('settings', () => openSettings(app));
+      const deleteBtn = createButton('delete', () => deleteApp(app, appData.type, isRunning, installedApps));
+      const settingsBtn = createButton('settings');
       const statusLED = createStatusLED(isRunning);
       
       buttonsDiv.appendChild(startStopBtn);
@@ -170,6 +146,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       buttonsDiv.appendChild(deleteBtn);
       buttonsDiv.appendChild(settingsBtn);
       buttonsDiv.appendChild(statusLED);
+
+      appInfo.appendChild(icon);
+      appInfo.appendChild(title);
+      appInfo.appendChild(buttonsDiv);
+
+      product.appendChild(appInfo);
+      card.appendChild(product);
+
+      appContainer.appendChild(card);
     }
   } catch (error) {
     console.error('Error creating app cards:', error);
@@ -181,7 +166,6 @@ ipcRenderer.on('all-set', () => {
   console.log('Received all-set event');
   location.reload();
 });
-
 
 /*
 setInterval(() => {

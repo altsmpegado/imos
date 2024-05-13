@@ -127,13 +127,12 @@ getInstalledApps().then((builtApps) => {
         newApp.setAttribute('class', 'button-component');
         newApp.setAttribute('title', app);
         newApp.setAttribute('type', 'app');
-        newApp.setAttribute('id', buttonId);
-
-        
+        newApp.setAttribute('id', buttonId);       
         newApp.style.backgroundImage = `url('${imageUrl}')`;
         newApp.style.backgroundSize = 'cover';
         newApp.style.backgroundPosition = 'center';
         dynamicButtonsContainer.appendChild(newApp);
+        
         setupButton(buttonId, appPath, appType);
     });
 
