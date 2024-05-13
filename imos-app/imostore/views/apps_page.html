@@ -86,7 +86,7 @@
         margin-top: 10px;
       }
 
-      .sidebtn:hover {
+      .sidebtn:hover:not(.selected) {
         background-color: #444;
       }
 
@@ -124,6 +124,7 @@
         user-select: none;
         border: 1px solid hsl(240, 5.9%, 11%);
         border-radius: 0.5rem;
+        border-color: transparent;
         background-color: #444;       
         display: flex;
         text-decoration: none;
