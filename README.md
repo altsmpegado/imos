@@ -1,5 +1,5 @@
 <div style="text-align: center;">
-    <a href="https://github.com/altsmpegado/imos"><img src="utils/images/imos_banner.svg" style="border-radius:30px; width:100%;"></a>
+    <a href="https://github.com/altsmpegado/imos"><img src="utils/images/imos_banner.svg" style="width:100%;"></a>
 </div>
 <br>
 <p align="center">Welcome to the Industry Modular Operating System built on top of <a href="https://www.docker.com/" target="_blank">Docker</a> and powered by <a href="http://electron.atom.io" target="_blank">Electron</a>. Offering integration and deploymenty tools (imoslink), an industry-oriented marketplace (imostore) and a collaborative hub (imoshub).</p>
