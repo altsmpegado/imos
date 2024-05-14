@@ -9,6 +9,26 @@
         body{
             background-color: #24292e;
         }
+
+        ::-webkit-scrollbar {
+            width: 15px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #acacac;
+            border-radius: 15px;
+            border: 6px solid transparent;
+            background-clip: content-box;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #e8ecec;
+        }
+
         .title{
             color: white;
             margin-top: 20px;
@@ -32,7 +52,7 @@
             height:36px;
         }
 
-        .nice-form-group > input[type=text]:focus {
+        .nice-form-group > input[type=text]:focus, .nice-form-group > textarea:focus{
             outline: none;
             border-color: #a35fe4;
         }
@@ -47,64 +67,28 @@
             height: var(--button-height);
             border-radius: 6px;
             margin-left: 20px;
-            margin-top: 25px;
-        }
-
-        .button-component[type=submit] {
             background-color: #a35fe4;
             color: #fff;
             border: 1px solid #a35fe4;
+            margin-left: calc(50% - (115px/2));
+            width: 115px;
+            margin-bottom: 10px;;
         }
 
         .button-component:hover {
             background-color: #ca99f8;
         }
+
+        .nice-form-group > input[type=file]:hover {
+            border-color: #a35fe4;
+        }
+
     </style>
 </head>
 <body>
     <h1 class="title" id ="header">Software Submission Form</h1> 
-    <button id="button_doc">Documentation</button>
-    <br>
-    <form id="configForm"></form>
-    
-    <form id="submissionForm" enctype="multipart/form-data">
-        <label for="name">Application Name</label>
-        <br>
-        <input type="text" placeholder="Insert app name" id="name" required>
-        <br>
-        <br>
-        <label for="name">Dev Company</label>
-        <br>
-        <input type="text" placeholder="Insert company name" id="company" required>
-        <br>
-        <br>
-        <label for="ver">Version</label>
-        <br>
-        <input type="text" placeholder="Insert app version" id="ver" required>
-        <br>
-        <br>
-        <label for="about">About</label>
-        <br>
-        <input type="text" placeholder="About section of the app" id="about" required>
-        <br>
-        <br>
-        <label for="update">Update</label>
-        <br>
-        <input type="text" placeholder="About the update" id="update">
-        <br>
-        <br>
-        <label for="info">Info</label>
-        <br>
-        <input type="text" placeholder="Submission info describing any extra details or issues dev related" id="info">
-        <br>
-        <br>
-        <label for="exeFile">Upload exe File</label>
-        <br>
-        <input type="file" id="exeFile" name="exeFile" accept=".exe" required>
-        <br>
-        <br>
-        <button type="submit">Submit for Review</button>
-    </form>
+    <br>    
+    <form id="configForm" enctype="multipart/form-data"></form>
     <script type="text/javascript" src="../form_renderer.js"></script>
 </body>
 </html>

@@ -63,8 +63,9 @@ function createAppWindow(appjson) {
 
 function createDevForm() {
   devForm = new BrowserWindow({
-    width: 400,
-    height: 600,
+    width: 500,
+    height: 700,
+    icon: 'imoslink/logo.ico',
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false, // Set to false to allow the use of preload scripts
@@ -226,15 +227,6 @@ ipcMain.on('openSubmissions', (event) => {
   if (!openApps['subs'] || openApps['subs'].closed){
     createSubsWindow();
     openApps['subs'] = {
-      closed: false    
-    };
-  }
-});
-
-ipcMain.on('openSubDoc', (event) => {
-  if (!openApps['subdoc'] || openApps['subdoc'].closed){
-    createSubDocWindow();
-    openApps['subdoc'] = {
       closed: false    
     };
   }

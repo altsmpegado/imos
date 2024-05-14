@@ -2,12 +2,123 @@ const { ipcRenderer } = require('electron');
 var request = require('request');
 const fs = require('fs');
 
-document.getElementById('submissionForm').addEventListener('submit', async (event) => {
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('configForm');
+    
+    const docButton = document.createElement('button');
+    docButton.setAttribute('class', 'button-component');
+    docButton.setAttribute('id', 'docButton');
+    docButton.addEventListener('click', () => {
+        window.open('https://github.com/altsmpegado/imos', '_blank');
+    });
+    docButton.innerText = 'Documentation';
+    form.appendChild(docButton);
+
+    var div = document.createElement('div');
+    div.setAttribute('class', 'nice-form-group');
+    var labelElement = document.createElement('label');
+    labelElement.innerText = 'Application name';
+    var inputElement = document.createElement('input');
+    inputElement.setAttribute('id', 'appname');
+    inputElement.setAttribute('type', 'text');
+    inputElement.setAttribute('placeholder', 'Insert app name here');
+    div.appendChild(labelElement);
+    div.appendChild(inputElement);
+    div.appendChild(document.createElement('br'));
+    form.appendChild(div);
+    
+    div = document.createElement('div');
+    div.setAttribute('class', 'nice-form-group');
+    labelElement = document.createElement('label');
+    labelElement.innerText = 'Company/Developer name';
+    inputElement = document.createElement('input');
+    inputElement.setAttribute('id', 'company');
+    inputElement.setAttribute('type', 'text');
+    inputElement.setAttribute('placeholder', 'Insert company name here');
+    div.appendChild(labelElement);
+    div.appendChild(inputElement);
+    div.appendChild(document.createElement('br'));
+    form.appendChild(div);
+
+    div = document.createElement('div');
+    div.setAttribute('class', 'nice-form-group');
+    labelElement = document.createElement('label');
+    labelElement.innerText = 'Version';
+    inputElement = document.createElement('input');
+    inputElement.setAttribute('id', 'version');
+    inputElement.setAttribute('type', 'text');
+    inputElement.setAttribute('placeholder', 'Insert app version info');
+    div.appendChild(labelElement);
+    div.appendChild(inputElement);
+    div.appendChild(document.createElement('br'));
+    form.appendChild(div);
+
+    div = document.createElement('div');
+    div.setAttribute('class', 'nice-form-group');
+    labelElement = document.createElement('label');
+    labelElement.innerText = 'About';
+    inputElement = document.createElement('textarea');
+    inputElement.setAttribute('id', 'about');
+    inputElement.setAttribute('rows', '5');
+    inputElement.setAttribute('placeholder', 'Insert app about info and description');
+    div.appendChild(labelElement);
+    div.appendChild(inputElement);
+    div.appendChild(document.createElement('br'));
+    form.appendChild(div);
+
+    div = document.createElement('div');
+    div.setAttribute('class', 'nice-form-group');
+    labelElement = document.createElement('label');
+    labelElement.innerText = 'Update info';
+    inputElement = document.createElement('textarea');
+    inputElement.setAttribute('id', 'update');
+    inputElement.setAttribute('rows', '5');
+    inputElement.setAttribute('placeholder', 'Insert update info');
+    div.appendChild(labelElement);
+    div.appendChild(inputElement);
+    div.appendChild(document.createElement('br'));
+    form.appendChild(div);
+
+    div = document.createElement('div');
+    div.setAttribute('class', 'nice-form-group');
+    labelElement = document.createElement('label');
+    labelElement.innerText = 'Extra info';
+    inputElement = document.createElement('textarea');
+    inputElement.setAttribute('id', 'info');
+    inputElement.setAttribute('rows', '5');
+    inputElement.setAttribute('placeholder', 'Insert extra info or notes for our devs');
+    div.appendChild(labelElement);
+    div.appendChild(inputElement);
+    div.appendChild(document.createElement('br'));
+    form.appendChild(div);
+
+    div = document.createElement('div');
+    div.setAttribute('class', 'nice-form-group');
+    labelElement = document.createElement('label');
+    labelElement.innerText = 'File upload';
+    inputElement = document.createElement('input');
+    inputElement.setAttribute('id', 'exeFile');
+    inputElement.setAttribute('rows', '5');
+    inputElement.setAttribute('type', 'file');
+    div.appendChild(labelElement);
+    div.appendChild(inputElement);
+    div.appendChild(document.createElement('br'));
+    form.appendChild(div);
+
+    const submitButton = document.createElement('button');
+    submitButton.setAttribute('type', 'submit');
+    submitButton.setAttribute('class', 'button-component');
+    submitButton.innerText = 'Submit';
+    form.appendChild(submitButton);
+});
+
+
+document.getElementById('configForm').addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const appname = document.getElementById('name').value;
+    const appname = document.getElementById('appname').value;
     const company = document.getElementById('company').value;
-    const version = document.getElementById('ver').value;
+    const version = document.getElementById('version').value;
     const about = document.getElementById('about').value;
     const update = document.getElementById('update').value;
     const info = document.getElementById('info').value;
@@ -51,52 +162,4 @@ document.getElementById('submissionForm').addEventListener('submit', async (even
             }
         });
     }
-});
-
-document.getElementById('button_doc').addEventListener('click', () => {
-    ipcRenderer.send('openSubDoc');
-});
-
-
-
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('configForm');
-    
-    const div = document.createElement('div');
-    div.setAttribute('class', 'nice-form-group');
-
-    const labelElement = document.createElement('label');
-    labelElement.innerText = 'Application name' + ': ';
-    
-    const inputElement = document.createElement('input');
-    inputElement.setAttribute('type', 'appname');
-    inputElement.setAttribute('type', 'text');
-    inputElement.setAttribute('placeholder', 'insert app name');
-
-    div.appendChild(labelElement);
-    div.appendChild(inputElement);
-    div.appendChild(document.createElement('br'));
-    form.appendChild(div);
-    
-
-    const submitButton = document.createElement('button');
-    submitButton.setAttribute('type', 'submit');
-    submitButton.setAttribute('class', 'button-component');
-    submitButton.innerText = 'Submit';
-    form.appendChild(submitButton);
-});
-
-
-document.getElementById('configForm').addEventListener('submit', (event) => {
-    event.preventDefault();
-
-    const configData = {};
-    const inputs = document.querySelectorAll('input');
-    inputs.forEach(input => {
-        configData[input.id] = input.value;
-    });
-    ipcRenderer.send('set', { appName, type, ...configData });
 });
