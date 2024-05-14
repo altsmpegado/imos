@@ -1,5 +1,5 @@
 <div style="text-align: center;">
-    <a href="https://github.com/altsmpegado/imos" style="display: inline-block; margin: 0 auto; max-width: 100%;"><img src="utils/images/imos_banner.svg" style="border-radius: 10px; width: 100%;"></a>
+    <a href="https://github.com/altsmpegado/imos" style="display: inline-block; margin: 0 auto; max-width: 100%;"><img src="utils/images/imos_banner.svg" style="border-radius: 30px; width: 100%;"></a>
 </div>
 
 <p align="center">Welcome to the Industry Modular Operating System built on top of <a href="https://www.docker.com/" target="_blank">Docker</a> and powered by <a href="http://electron.atom.io" target="_blank">Electron</a>. Offering integration and deploymenty tools (imoslink), an industry-oriented marketplace (imostore) and a collaborative hub (imoshub).</p>
@@ -46,8 +46,29 @@ Through IMOS and the IMOSlink app, users seamlessly integrate their software app
 IMOS, built on Docker and NodeJS with Electron, facilitates backend and frontend development and modularity, serving as the central orchestrating component for interconnected containers, communicating with and launching other applications based on user input.
 
 <div style="text-align: center;">
-    <a href="https://github.com/altsmpegado/imos" style="display: inline-block; margin: 0 auto; max-width: 100%;"><img src="utils/images/platform.svg" style="border-radius: 10px; width: 100%;"></a>
+    <a style="display: inline-block; margin: 0 auto; max-width: 70%;">
+      <img src="utils/images/platform-light.svg" class="theme-light" style="border-radius: 10px; width: 70%;">
+      <img src="utils/images/platform-dark.png" class="theme-dark" style="border-radius: 10px; width: 70%; display: none;">
+    </a>
 </div>
+
+<style>
+/* Show light theme image by default */
+.theme-light {
+    display: block;
+}
+
+/* Show dark theme image if user prefers dark theme */
+@media (prefers-color-scheme: dark) {
+    .theme-dark {
+        display: block;
+    }
+    .theme-light {
+        display: none;
+    }
+}
+</style>
+
 <br>
 The IMOSlink app serves as a bridge between Docker and the user, orchestrating installed applications and connecting hardware endpoints to software applications. Docker's integration, distribution, and modularity capabilities make it ideal for IMOS, ensuring seamless compatibility and efficient management of containerized applications. 
 
