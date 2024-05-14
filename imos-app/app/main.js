@@ -114,7 +114,7 @@ function createSetupWindow(appName, labels, type) {
       width: 400,
       height: 400,
       autoHideMenuBar: true,
-      icon: 'assets/imoslogo.ico',
+      icon: `${process.env.IMOS_APPS_DIR}/${appName.split('-')[1]}/logo.ico`,
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
