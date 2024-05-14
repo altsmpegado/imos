@@ -45,7 +45,7 @@ Through IMOS and the IMOSlink app, users seamlessly integrate their software app
 
 IMOS, built on Docker and NodeJS with Electron, facilitates backend and frontend development and modularity, serving as the central orchestrating component for interconnected containers, communicating with and launching other applications based on user input.
 
-<picture>
+<picture align="center">
   <source media="(prefers-color-scheme: dark)" srcset="utils/images/platform-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="utils/images/platform-light.svg">
   <img alt="Shows an illustrated sun in light mode and a moon with stars in dark mode." src="utils/images/platform-light.svg">
