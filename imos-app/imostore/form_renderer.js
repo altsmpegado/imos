@@ -56,3 +56,47 @@ document.getElementById('submissionForm').addEventListener('submit', async (even
 document.getElementById('button_doc').addEventListener('click', () => {
     ipcRenderer.send('openSubDoc');
 });
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('configForm');
+    
+    const div = document.createElement('div');
+    div.setAttribute('class', 'nice-form-group');
+
+    const labelElement = document.createElement('label');
+    labelElement.innerText = 'Application name' + ': ';
+    
+    const inputElement = document.createElement('input');
+    inputElement.setAttribute('type', 'appname');
+    inputElement.setAttribute('type', 'text');
+    inputElement.setAttribute('placeholder', 'insert app name');
+
+    div.appendChild(labelElement);
+    div.appendChild(inputElement);
+    div.appendChild(document.createElement('br'));
+    form.appendChild(div);
+    
+
+    const submitButton = document.createElement('button');
+    submitButton.setAttribute('type', 'submit');
+    submitButton.setAttribute('class', 'button-component');
+    submitButton.innerText = 'Submit';
+    form.appendChild(submitButton);
+});
+
+
+document.getElementById('configForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const configData = {};
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+        configData[input.id] = input.value;
+    });
+    ipcRenderer.send('set', { appName, type, ...configData });
+});

@@ -2,23 +2,71 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Software Submission Form</title>
+    <link rel="stylesheet" href="../../styles/form.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #1e1e1e;
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
+        body{
+            background-color: #24292e;
+        }
+        .title{
+            color: white;
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: normal;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nice-form-group {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        .nice-form-group > label{
+            color:white;
+            font-weight: normal;
+        }
+
+        .nice-form-group > input[type=text] {
+            height:36px;
+        }
+
+        .nice-form-group > input[type=text]:focus {
+            outline: none;
+            border-color: #a35fe4;
+        }
+
+        .button-component {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-family: system-ui, sans-serif, Apple Color Emoji, Segoe UI, Segoe UI Emoji, Segoe UI Symbol;
+            font-size: 13px;
+            padding: 4px 12px;
+            height: var(--button-height);
+            border-radius: 6px;
+            margin-left: 20px;
+            margin-top: 25px;
+        }
+
+        .button-component[type=submit] {
+            background-color: #a35fe4;
+            color: #fff;
+            border: 1px solid #a35fe4;
+        }
+
+        .button-component:hover {
+            background-color: #ca99f8;
         }
     </style>
 </head>
 <body>
-    <h2>Software Submission Form</h2>
+    <h1 class="title" id ="header">Software Submission Form</h1> 
     <button id="button_doc">Documentation</button>
     <br>
+    <form id="configForm"></form>
+    
     <form id="submissionForm" enctype="multipart/form-data">
         <label for="name">Application Name</label>
         <br>
