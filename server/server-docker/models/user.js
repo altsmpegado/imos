@@ -8,7 +8,7 @@ const UserSchema = new Schema({
     type: String,
     required: true,
     unique: false,
-    enum: ['admin', 'client', 'developer']
+    enum: ['client', 'developer']
   },
   username: {
     type: String,
