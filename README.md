@@ -52,20 +52,11 @@ IMOS, built on Docker and NodeJS with Electron, facilitates backend and frontend
     </a>
 </div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-      const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      const images = document.querySelectorAll('img[data-theme]');
-      images.forEach(img => {
-          const theme = img.getAttribute('data-theme');
-          if (theme === 'dark' && prefersDarkScheme) {
-              img.style.display = 'block';
-          } else if (theme === 'light' && !prefersDarkScheme) {
-              img.style.display = 'block';
-          }
-      });
-  });
-</script>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/25423296/163456776-7f95b81a-f1ed-45f7-b7ab-8fa810d529fa.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://user-images.githubusercontent.com/25423296/163456779-a8556205-d0a5-45e2-ac17-42d089e3c3f8.png">
+  <img alt="Shows an illustrated sun in light mode and a moon with stars in dark mode." src="https://user-images.githubusercontent.com/25423296/163456779-a8556205-d0a5-45e2-ac17-42d089e3c3f8.png">
+</picture>
 
 <br>
 The IMOSlink app serves as a bridge between Docker and the user, orchestrating installed applications and connecting hardware endpoints to software applications. Docker's integration, distribution, and modularity capabilities make it ideal for IMOS, ensuring seamless compatibility and efficient management of containerized applications. 
