@@ -105,11 +105,14 @@ document.addEventListener('DOMContentLoaded', () => {
     div.appendChild(document.createElement('br'));
     form.appendChild(div);
 
+    div = document.createElement('div');
+    div.setAttribute('id', 'statusMessage');
     const submitButton = document.createElement('button');
     submitButton.setAttribute('type', 'submit');
     submitButton.setAttribute('class', 'button-component');
     submitButton.innerText = 'Submit';
-    form.appendChild(submitButton);
+    div.append(submitButton);
+    form.appendChild(div);
 });
 
 
@@ -123,7 +126,8 @@ document.getElementById('configForm').addEventListener('submit', async (event) =
     const update = document.getElementById('update').value;
     const info = document.getElementById('info').value;
     const fileInput = document.getElementById('exeFile');
-    
+    const statusMessage = document.getElementById('statusMessage');
+
     if (fileInput.files.length > 0) {
         const file = fileInput.files[0];
         const fileStream = fs.createReadStream(file.path);
@@ -157,7 +161,12 @@ document.getElementById('configForm').addEventListener('submit', async (event) =
             var { username } = JSON.parse(data);
             //console.log(responseBody);
             if(responseBody.string.includes("submited")){
-                console.log(responseBody.objectid);
+                //console.log(responseBody.objectid);
+                const checkMark = document.createElement('span');
+                checkMark.innerHTML = '&#10004;';
+                checkMark.style.color = '#5fb15f';
+                checkMark.style.marginLeft = '10px';
+                statusMessage.appendChild(checkMark);
                 ipcRenderer.send('submited', username, responseBody.objectid);
             }
         });

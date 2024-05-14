@@ -218,9 +218,9 @@ ipcMain.on('submited', (event, user, id) => {
         console.log("New App Submited");
       }
   });
-  if (devForm) {
+  /*if (devForm) {
     devForm.close();
-  }
+  }*/
 });
 
 ipcMain.on('openSubmissions', (event) => {
