@@ -1,7 +1,7 @@
 <div style="text-align: center;">
     <a href="https://github.com/altsmpegado/imos"><img src="utils/images/imos_banner.svg" style="border-radius:30px; width:100%;"></a>
 </div>
-
+<br>
 <p align="center">Welcome to the Industry Modular Operating System built on top of <a href="https://www.docker.com/" target="_blank">Docker</a> and powered by <a href="http://electron.atom.io" target="_blank">Electron</a>. Offering integration and deploymenty tools (imoslink), an industry-oriented marketplace (imostore) and a collaborative hub (imoshub).</p>
 
 <p align="center">
@@ -42,22 +42,29 @@
 
 ## Platform
 Through IMOS and the IMOSlink app, users seamlessly integrate their software applications or acquire solutions from IMOStore within the platform. This integration enables configuration of applications and connection of their execution with intended endpoints. Users can open each application from the home screen and manage their execution with IMOSlink. 
-
+<br>
+<br>
 IMOS, built on Docker and NodeJS with Electron, facilitates backend and frontend development and modularity, serving as the central orchestrating component for interconnected containers, communicating with and launching other applications based on user input.
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="utils/images/platform-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="utils/images/platform-light.svg">
-  <img alt="Shows an illustrated sun in light mode and a moon with stars in dark mode." src="utils/images/platform-light.svg">
-</picture>
-
+<br>
+<br>
+<div style="text-align: center;">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="utils/images/platform-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="utils/images/platform-light.png">
+    <img src="utils/images/platform-light.png">
+  </picture>
+</div>
+<br>
 <br>
 The IMOSlink app serves as a bridge between Docker and the user, orchestrating installed applications and connecting hardware endpoints to software applications. Docker's integration, distribution, and modularity capabilities make it ideal for IMOS, ensuring seamless compatibility and efficient management of containerized applications. 
-
+<br>
+<br>
 IMOStore and IMOShub are the other two modules within the IMOS platform, forming its core. IMOStore allows users to explore and acquire applications or submit their own for review and distribution. IMOShub facilitates collaboration, knowledge sharing, and resource exchange among users from different backgrounds and roles. 
-
+<br>
+<br>
 These apps are hosted on IMOS servers, using Express microservices for managing user information, authentication, marketplace functionalities, and community posts. Data generated from user profiles, marketplace application distribution, and community interactions is stored in separate MongoDB clusters.
 
+## Requirements
 
 ## How To Use
 
@@ -84,10 +91,6 @@ $ npm start
 ## Download
 
 You can [download](https://github.com/amitmerchant1990/electron-markdownify/releases/tag/v1.2.0) the latest installable version of Markdownify for Windows, macOS and Linux.
-
-## Emailware
-
-Markdownify is an [emailware](https://en.wiktionary.org/wiki/emailware). Meaning, if you liked using this app or it has helped you in any way, I'd like you send me an email at <bullredeyes@gmail.com> about anything you'd want to say about this software. I'd really appreciate it!
 
 ## Credits
 
@@ -126,7 +129,6 @@ MIT
 
 ---
 
-> [amitmerchant.com](https://www.amitmerchant.com) &nbsp;&middot;&nbsp;
-> GitHub [@amitmerchant1990](https://github.com/amitmerchant1990) &nbsp;&middot;&nbsp;
+> GitHub [@amitmerchant1990](https://github.com/altsmpegado) &nbsp;&middot;&nbsp;
 > Twitter [@amit_merchant](https://twitter.com/amit_merchant)
 
