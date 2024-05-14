@@ -47,13 +47,13 @@ Through IMOS and the IMOSlink app, users seamlessly integrate their software app
 IMOS, built on Docker and NodeJS with Electron, facilitates backend and frontend development and modularity, serving as the central orchestrating component for interconnected containers, communicating with and launching other applications based on user input.
 <br>
 <br>
-<div style="text-align: center;">
+<p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="utils/images/platform-dark.png">
     <source media="(prefers-color-scheme: light)" srcset="utils/images/platform-light.png">
     <img src="utils/images/platform-light.png">
   </picture>
-</div>
+</p>
 <br>
 <br>
 The IMOSlink app serves as a bridge between Docker and the user, orchestrating installed applications and connecting hardware endpoints to software applications. Docker's integration, distribution, and modularity capabilities make it ideal for IMOS, ensuring seamless compatibility and efficient management of containerized applications. 
