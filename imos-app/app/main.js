@@ -136,7 +136,10 @@ function createSetupWindow(appName, labels, type) {
 app.whenReady().then(() => {
   const data = fs.readFileSync('userData/session.json', 'utf8');
   var { username, password, save } = JSON.parse(data);
-  if(save == "false"){
+  if(process.argv[2] == 'local'){
+    createWindow();
+  }
+  else if(save == "false"){
     createAuthWindow()
     .catch(error => {
       console.error('Error creating Auth window:', error);
