@@ -2,14 +2,88 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self' http://localhost:8000; script-src 'self'"
-    />
-    <title>Submissions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Submissions</title>
+    <link rel="stylesheet" href="../../styles/form.css">
+    <style>
+      body{
+          background-color: #24292e;
+      }
+
+      ::-webkit-scrollbar {
+          width: 15px;
+      }
+
+      ::-webkit-scrollbar-track {
+          background-color: transparent;
+      }
+
+      ::-webkit-scrollbar-thumb {
+          background-color: #acacac;
+          border-radius: 15px;
+          border: 6px solid transparent;
+          background-clip: content-box;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+          background-color: #e8ecec;
+      }
+
+      .title {
+        font-weight: 5;
+        font-size: 1rem;
+        color: #b382e1;
+        margin: 0;
+        width: 105px;
+      }
+
+      .subtitle {
+        font-size: 0.75rem;
+        color: #D1D1D1;
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .panel{
+        width: 100%;
+        overflow: hidden;
+      }
+
+      .products-container {
+        display: grid;
+        overflow-y: auto;
+        padding-left: 40px;
+        padding-right: 40px; 
+        overflow: hidden;
+      }
+
+      .product {
+        box-shadow: 0 1px 2px rgb(0 0 0 / 24%);
+        transition: background-color 0.3s ease;
+        height: 90px;
+        user-select: none;
+        border: 1px solid hsl(240, 5.9%, 11%);
+        border-radius: 0.5rem;
+        border-color: transparent;
+        background-color: #444;       
+        display: flex;
+        text-decoration: none;
+        padding: 14px;
+      }
+
+      .product-card {
+        width: var(--card-width);
+        margin-top: 20px;
+      }
+
+    </style>
   </head>
   <body>
-    <div id="subInfo"></div>
+    <div class="panel">
+      <div class="products-container direction-column" id="subs-container"></div>
+    </div>
     <script type="text/javascript" src="../subs_renderer.js"></script>
   </body>
 </html>
