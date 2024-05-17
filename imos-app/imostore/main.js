@@ -86,8 +86,9 @@ function createDevForm() {
 function createSubsWindow() {
   return new Promise((resolve, reject) => {
     subsWindow = new BrowserWindow({
-      width: 400,
-      height: 400,
+      width: 500,
+      height: 700,
+      icon: 'imoslink/logo.ico',
       autoHideMenuBar: true,
       webPreferences: {
         nodeIntegration: true,
