@@ -37,7 +37,11 @@ const UserSchema = new Schema({
   },
   ownedApps: [{
     type: String,
-    unique: false
+    unique: true
+  }],
+  cloudApps: [{
+    type: String,
+    unique: true
   }],
   subApps: [{
     type: String,
