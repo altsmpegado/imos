@@ -132,3 +132,14 @@ MIT
 > GitHub [@amitmerchant1990](https://github.com/altsmpegado) &nbsp;&middot;&nbsp;
 > Twitter [@amit_merchant](https://twitter.com/amit_merchant)
 
+export GRAFANA_PORT="3001:3000"
+export KSQLDBSERVER_PORT="8088:8088"
+export SCHEMAREG_PORT="8081:8081"
+export CONTROLCENTER_PORT="9021:9021"
+export KAFKACNCT_PORT="8083:8083"
+export BROKER_PORT1="9092:9092"
+export BROKER_PORT2="9101:9101"
+export ZOOKEEPER_PORT="2181:2181"
+export RESTPROXY_PORT="8082:8082"
+export CONNECT_PORT="8020:8020"
+docker compose -p imos-datavisapp up -d
