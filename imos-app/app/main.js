@@ -148,7 +148,11 @@ app.whenReady().then(() => {
   else{
     var options = {
       'method': 'POST',
-      'url': 'http://localhost:8000/login',
+      'url': `http://${process.env.IMOS_SERVER_CON}/login`,
+      'headers': {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Cookie': 'connect.sid=s%3ANH1jhVRVXwUs5YVuF7s--d4HSGu7vN-v.z3tEKLRjcMQ0pS4fLQKBm9MfCMCcD1y7G%2FOckJk99k4'
+      },
       form: {
           'password': password,
           'username': username
@@ -156,26 +160,25 @@ app.whenReady().then(() => {
     };
   
     request(options, function (error, response) {
-        if (error) throw new Error(error);
-        if(response.body.includes("/login-success")){
-          if (!mainWindow) {
-            createWindow();
-          }
+      if (error) throw new Error(error);
+      if(response.body.includes("/login-success")){
+        if (!mainWindow) {
+          createWindow();
+        }
 
-          fetch(`http://localhost:8000/user/${username}`)
-            .then((response) => response.json())
-            
-            .then((data) => {
-              const type = data.user.type;
-              fs.writeFileSync('userData/session.json', JSON.stringify({ username, type , password, save}));
-            })
-            .catch((error) => {
-              console.error('Error fetching app information:', error);
-            });
+        fetch(`http://${process.env.IMOS_SERVER_CON}/user/${username}`)
+          .then((response) => response.json())
+          
+          .then((data) => {
+            const type = data.user.type;
+            fs.writeFileSync('userData/session.json', JSON.stringify({ username, type , password, save}));
+          })
+          .catch((error) => {
+            console.error('Error fetching app information:', error);
+          });
         }
     });
   }
-    
 });
 
 app.on('window-all-closed', () => {
@@ -229,7 +232,7 @@ ipcMain.on('register', (event, userData) => {
   
   var options = {
       'method': 'POST',
-      'url': 'http://localhost:8000/register',
+      'url': `http://${process.env.IMOS_SERVER_CON}/register`,
       form: {
           'type': userData.type,
           'password': userData.password,
@@ -260,7 +263,7 @@ ipcMain.on('login', (event, userData) => {
   
   var options = {
       'method': 'POST',
-      'url': 'http://localhost:8000/login',
+      'url': `http://${process.env.IMOS_SERVER_CON}/login`,
       form: {
           'password': userData.password,
           'username': userData.username
@@ -276,7 +279,7 @@ ipcMain.on('login', (event, userData) => {
       if (error) throw new Error(error);
       if(response.body.includes("/login-success")){
 
-        fetch(`http://localhost:8000/user/${username}`)
+        fetch(`http://${process.env.IMOS_SERVER_CON}/user/${username}`)
           .then((response) => response.json())
           .then((data) => {
             type = data.user.type;

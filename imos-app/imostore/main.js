@@ -150,7 +150,7 @@ ipcMain.on('downloadFile', (event, { id }) => {
     saveAs: true, // Show "Save As" dialog
   };
 
-  const url = `http://localhost:8000/download/${id}`;
+  const url = `http://${process.env.IMOS_SERVER_CON}/download/${id}`;
 
   // Trigger the download using electron-dl
   download(BrowserWindow.getFocusedWindow(), url, options)
@@ -167,7 +167,7 @@ ipcMain.on('downloadFile', (event, { id }) => {
 ipcMain.on('acquireApp', (event, user, name ) => {
   var options = {
     'method': 'POST',
-    'url': `http://localhost:8000/apps/${user}`,
+    'url': `http://${process.env.IMOS_SERVER_CON}/apps/${user}`,
     form: {
         'appName': name
     }
@@ -206,7 +206,7 @@ ipcMain.on('openDevForm', (event) => {
 ipcMain.on('submited', (event, user, id) => {
   var options = {
     'method': 'POST',
-    'url': `http://localhost:8000/subs/${user}`,
+    'url': `http://${process.env.IMOS_SERVER_CON}/subs/${user}`,
     form: {
         'subId': id
     }

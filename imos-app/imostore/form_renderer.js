@@ -134,7 +134,7 @@ document.getElementById('configForm').addEventListener('submit', async (event) =
 
         var options = {
             'method': 'POST',
-            'url': 'http://localhost:8000/submit',
+            'url': `http://${process.env.IMOS_SERVER_CON}/submit`,
             formData: {
                 'appname': appname,
                 'company': company,

@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var { type } = JSON.parse(data);
     //console.log(JSON.parse(data).username);
     // Fetch app information from the server
-    fetch(`http://localhost:8000/apps/${JSON.parse(data).username}`)
+    fetch(`http://${process.env.IMOS_SERVER_CON}/apps/${JSON.parse(data).username}`)
       .then((response) => response.json())
       .then((data) => {
         //console.log(data);

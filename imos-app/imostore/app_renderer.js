@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     ipcRenderer.on('appInfo', (event, appjson, user) => {
         //console.log(appjson);
-        fetch(`http://localhost:8000/apps/${user}`)
+        fetch(`http://${process.env.IMOS_SERVER_CON}/apps/${user}`)
         .then((response) => response.json())
         .then(data => {
         // Handle the data received from the server

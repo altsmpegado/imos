@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const data = fs.readFileSync('userData/session.json', 'utf8');
   var { type } = JSON.parse(data);
   // Fetch app information from the server
-  fetch('http://localhost:8000/apps')
+  fetch(`http://${process.env.IMOS_SERVER_CON}/apps`)
     .then((response) => response.json())
     .then((apps) => {
       const appListDiv = document.getElementById('apps-container');

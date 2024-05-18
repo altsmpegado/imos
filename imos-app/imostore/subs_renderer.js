@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   ipcRenderer.on('subsInfo', async (event, user) => {
     try {
       const subInfoDiv = document.getElementById('subs-container');
-      const data = await fetch(`http://localhost:8000/subs/${user}`).then(response => response.json());
+      const data = await fetch(`http://${process.env.IMOS_SERVER_CON}/subs/${user}`).then(response => response.json());
       const subAppsData = await Promise.all(data.subApps.map(async (id) => {
-        const subApp = await fetch(`http://localhost:8000/sub/${id}`).then(response => response.json());
+        const subApp = await fetch(`http://${process.env.IMOS_SERVER_CON}/sub/${id}`).then(response => response.json());
         return subApp.sub;
       }));
 
