@@ -1,0 +1,18 @@
+services:
+  gui:
+    image: ppeapp-gui
+    ports:
+      - "${GUI_PORT:-3001:3001}"
+    depends_on:
+      - model-detector
+    environment:
+      GUI_PORT: "${GUI_PORT:-3001:3001}"
+      MODEL_DETECTOR_PORT: "${MODEL_DETECTOR_PORT:-5003:5003}"
+
+  model-detector:
+    image: ppeapp-model-detector
+    ports:
+      - "${MODEL_DETECTOR_PORT:-5003:5003}"
+    environment:
+      MODEL_DETECTOR_PORT: "${MODEL_DETECTOR_PORT:-5003:5003}"
+      WEBCAM_IP: "${WEBCAM_IP:-127.0.0.1:5000}"
