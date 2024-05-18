@@ -14,7 +14,7 @@ const UserSchema = new Schema({
     type: String,
     required: true,
     unique: true,
-    minlength: [4, 'Username must be at least 4 characters long'],
+    minlength: [3, 'Username must be at least 4 characters long'],
     maxlength: [20, 'Username must not exceed 20 characters'],
     validate: [
         {
@@ -36,6 +36,10 @@ const UserSchema = new Schema({
     ]
   },
   ownedApps: [{
+    type: String,
+    unique: false
+  }],
+  cloudApps: [{
     type: String,
     unique: false
   }],

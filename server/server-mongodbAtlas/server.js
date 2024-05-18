@@ -68,6 +68,8 @@ db.once('open', () => {
 
           const new_app = new App({
               name: req.body.name,
+              image: req.body.image,
+              type: req.body.type,
               company: req.body.company,
               version: req.body.version,
               info: req.body.info,
