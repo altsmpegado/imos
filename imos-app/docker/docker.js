@@ -271,6 +271,8 @@ function createDockerProcess(configData, interface=1) {
 
     // add iamge name to the end, which is the same as the container name
     dockerArgs.push(appName);
+    
+    console.log('Executing command:', 'docker', dockerArgs);
 
     const dockerProcess = spawnSync('docker', dockerArgs);
 
