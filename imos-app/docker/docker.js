@@ -269,7 +269,7 @@ function createDockerProcess(configData, interface=1) {
         dockerArgs.push('-e', `${key}=${value}`);
     }
 
-    // add iamge name to the end, which is the same as the container name
+    // add image name to the end, which is the same as the container name
     dockerArgs.push(appName);
     
     console.log('Executing command:', 'docker', dockerArgs);
@@ -278,7 +278,6 @@ function createDockerProcess(configData, interface=1) {
 
     if (dockerProcess.status === 0) {
         console.log('Container created and started successfully.');
-        // app could not have interface
     } else {
         console.error('Error creating or starting container:', dockerProcess.stderr);
     }
