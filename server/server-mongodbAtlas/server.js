@@ -367,4 +367,76 @@ db.once('open', () => {
     }
   });
 
+  app.get('/cloudapps/:user', async (req, res) => {
+    try {
+      const username = req.params.user;
+  
+      const user = await User.findOne({ username });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      const apps = user.cloudApps;
+
+      res.status(200).json({ cloudApps: apps || [] });
+    } catch (error) {
+      console.error('Error fetching user owned apps:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  });
+
+  app.put('/startapp', async (req, res) => {
+    try {
+      const user = req.body.user;
+      const app = req.body.app;
+      const command = req.body.command;
+
+      const existingUser = await User.findOne({ username: user });
+      if (!existingUser) {
+        return res.status(404).send('User not found');
+      }
+
+      const existingApp = await App.findOne({ name: app });
+      if (!existingApp) {
+        return res.status(404).send('App not found');
+      }
+      
+      if (existingUser.ownedApps.includes(app)) {
+        if (!existingUser.cloudApps.some(cloudApp => cloudApp.app === app)) {
+          existingUser.cloudApps.push({ app, state: 'running', image: existingApp.image, p:`${user}-${existingApp.image}`, configs: 'configurations'});
+          await existingUser.save();
+          return res.status(200).send('App added to cloudApps');
+        }
+        return res.status(400).send('App already in cloudApps');
+      }
+
+      return res.status(403).send('User does not own this app');
+    } catch (error) {
+      return res.status(500).send('Internal server error');
+    }
+  });
+
+  app.put('/stopapp', async (req, res) => {
+    try {
+      const { user, app } = req.body;
+      
+      const existingUser = await User.findOne({ username: user });
+      if (!existingUser) {
+        return res.status(404).json({ message: 'User not found.' });
+      }
+  
+      const appIndex = existingUser.cloudApps.findIndex(cloudApp => cloudApp.app === app);
+      if (appIndex === -1) {
+        return res.status(409).json({ message: 'App does not exist in cloud apps.' });
+      }
+  
+      existingUser.cloudApps.splice(appIndex, 1);
+      await existingUser.save();
+  
+      return res.status(200).json({ message: 'App removed from cloud apps successfully.' });
+    } catch (error) {
+      console.error('Error removing app from cloud apps:', error);
+      return res.status(500).json({ message: 'Server error.' });
+    }
+  });
+
 });

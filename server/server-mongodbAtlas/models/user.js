@@ -40,7 +40,7 @@ const UserSchema = new Schema({
     unique: false
   }],
   cloudApps: [{
-    type: String,
+    type: JSON,
     unique: false
   }],
   subApps: [{
