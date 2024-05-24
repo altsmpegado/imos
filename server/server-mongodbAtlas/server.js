@@ -17,6 +17,8 @@ const Submit = require("./models/sub");
 mongoose.connect(process.env.MONGODB_URI);
 const db = mongoose.connection;
 
+const { createDockerProcess } = require('./serverDocker');
+
 const app = express();
 
 // Set up session middleware
@@ -388,7 +390,7 @@ db.once('open', () => {
     try {
       const user = req.body.user;
       const app = req.body.app;
-      const command = req.body.command;
+      let command = req.body.command;
 
       const existingUser = await User.findOne({ username: user });
       if (!existingUser) {
@@ -400,9 +402,13 @@ db.once('open', () => {
         return res.status(404).send('App not found');
       }
       
+      command["userappName"] = `${user}-${existingApp.image}`;
+
       if (existingUser.ownedApps.includes(app)) {
         if (!existingUser.cloudApps.some(cloudApp => cloudApp.app === app)) {
-          existingUser.cloudApps.push({ app, state: 'running', image: existingApp.image, p:`${user}-${existingApp.image}`, configs: 'configurations'});
+          console.log(typeof(command));
+          createDockerProcess(JSON.parse(command));
+          existingUser.cloudApps.push({ app, state: 'running', image: existingApp.image, p:`${user}-${existingApp.image}`, configs: command});
           await existingUser.save();
           return res.status(200).send('App added to cloudApps');
         }
@@ -428,7 +434,7 @@ db.once('open', () => {
       if (appIndex === -1) {
         return res.status(409).json({ message: 'App does not exist in cloud apps.' });
       }
-  
+
       existingUser.cloudApps.splice(appIndex, 1);
       await existingUser.save();
   
