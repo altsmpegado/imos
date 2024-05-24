@@ -251,6 +251,7 @@ function createDockerProcess(configData, interface=1) {
     const appName = configData.appName;
     const projectDir = appName.split('-')[1];
     delete configData.appName;
+    delete configData.type;
     const baseDir = process.env.IMOS_APPS_DIR || 'C:\\imos\\Apps';
     const volumeDir = `${baseDir}\\${projectDir}\\Volume`;
 
