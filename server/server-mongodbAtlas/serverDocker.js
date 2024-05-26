@@ -1,6 +1,31 @@
 const { spawnSync } = require('child_process');
 const path = require('path');
 
+
+function isContainerRunning(containerName) {
+    //console.log(containerName);
+    const result = spawnSync('docker', ['inspect', '--format={{.State.Running}}', containerName], { encoding: 'utf-8' });
+    if (result.status === 0) {
+        return result.stdout.trim() === 'true';
+    } else {
+        console.error('Container is not running', containerName);
+        return false;
+    }
+}
+
+function isMultiContainerRunning(projectName) {
+    const result = spawnSync('docker', ['compose', '-p', projectName, 'ps', '-q'], { encoding: 'utf-8', shell: true });
+    //console.log(result);
+    if (result.status === 0) {
+        const containerIds = result.stdout.trim().split('\n');
+        //console.log(containerIds);
+        return containerIds.length > 1; // at least one container is running
+    } else {
+        console.error('Error checking if multi-container environment is running:', result.stderr);
+        return false;
+    }
+}
+
 function createDockerProcess(configData) {
     console.log(configData);
     const appName = configData.appName;
@@ -30,11 +55,11 @@ function createDockerProcess(configData) {
     for (const [key, value] of Object.entries(configData)) {
         dockerArgs.push('-e', `${key}=${value}`);
     }
-    console.log(dockerArgs);
+    //console.log(dockerArgs);
     // Add the image name to the end, which is the same as the container name
     dockerArgs.push(appName);
     
-    console.log('Executing command:', 'docker', dockerArgs.join(' '));
+    //console.log('Executing command:', 'docker', dockerArgs.join(' '));
 
     const dockerProcess = spawnSync('docker', dockerArgs);
 
@@ -47,15 +72,48 @@ function createDockerProcess(configData) {
     }
 }
 
+function startDockerProcess(configData) {
+    //console.log(configData.container_name);
+    if(configData.type == 'image'){
+        if (!isContainerRunning(configData.container_name)) {
+            // start the existing container if not already running
+            const dockerProcess = spawnSync('docker', ['start', configData.container_name]);
+            if (dockerProcess.status !== 0) {
+                console.error('Error starting container:', dockerProcess.stderr);
+                return false;
+            } else {
+                console.log('Container started successfully.');
+                return true;
+            }
+        }
+    }
+
+    else if(configData.type == 'multicontainer'){
+        if (!isMultiContainerRunning(containerName)) {
+            // start the existing container if not already running
+            try {
+                console.log('Docker Compose started');
+                execSync(`docker compose -p ${containerName} start`);
+            } catch (error) {
+                console.error('Error starting Docker Compose:', error.stderr.toString());
+            }
+        }
+
+    }
+}
+
 function stopDockerProcess(configData) {
+    console.log(configData.container_name);
     if (configData.type === 'image') {
-        const dockerProcess = spawnSync('docker', ['stop', configData.container_name]);
-        if (dockerProcess.status !== 0) {
-            console.error('Error stoping existing container:', dockerProcess.stderr);
-            return false;
-        } else {
-            console.log('Container stoped successfully.');
-            return true;
+        if (isContainerRunning(configData.container_name)) {
+            const dockerProcess = spawnSync('docker', ['stop', configData.container_name]);
+            if (dockerProcess.status !== 0) {
+                console.error('Error stoping container:', dockerProcess.stderr);
+                return false;
+            } else {
+                console.log('Container stoped successfully.');
+                return true;
+            }
         }
     } 
     else if(configData.type == 'multicontainer'){
@@ -102,4 +160,4 @@ function deleteDockerProcess(configData) {
     }
 }
 
-module.exports = {createDockerProcess, stopDockerProcess, deleteDockerProcess}
+module.exports = {createDockerProcess, startDockerProcess, stopDockerProcess, deleteDockerProcess}
