@@ -1,6 +1,7 @@
 services:
   gui:
     image: recyclingapp-gui
+    container_name: "${USER}-recyclingapp-gui"
     ports:
       - "${GUI_PORT:-3000:3000}"
     depends_on:
@@ -11,6 +12,7 @@ services:
 
   model-detector:
     image: recyclingapp-model-detector
+    container_name: "${USER}-recyclingapp-model-detector"
     ports:
       - "${MODEL_DETECTOR_PORT:-5001:5001}"
     environment:

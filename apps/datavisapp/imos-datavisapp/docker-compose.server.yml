@@ -2,6 +2,7 @@ services:
   zookeeper:
     #image: confluentinc/cp-zookeeper:6.0.0
     image: datavisapp-zookeeper
+    container_name: "${USER}-datavisapp-zookeeper"
     hostname: zookeeper
     ports:
       - "${ZOOKEEPER_PORT:-2181:2181}"
@@ -14,6 +15,7 @@ services:
   broker:
     #image: confluentinc/cp-enterprise-kafka:6.0.0
     image: datavisapp-broker
+    container_name: "${USER}-datavisapp-broker"
     networks:
      frontend:
        ipv4_address: 172.16.238.4
@@ -48,6 +50,7 @@ services:
   schema-registry:
     #image: confluentinc/cp-schema-registry:6.0.0
     image: datavisapp-schema-registry
+    container_name: "${USER}-datavisapp-schema-registry"
     hostname: schema-registry
     depends_on:
       - broker
@@ -62,6 +65,7 @@ services:
   connect:
     #image: cnfldemos/cp-server-connect-datagen:0.3.2-5.5.0
     image: datavisapp-connect
+    container_name: "${USER}-datavisapp-connect"
     hostname: connect
     depends_on:
       - zookeeper
@@ -99,6 +103,7 @@ services:
   control-center:
     #image: confluentinc/cp-enterprise-control-center:6.0.0
     image: datavisapp-control-center
+    container_name: "${USER}-datavisapp-control-center"
     hostname: control-center
     depends_on:
       - zookeeper
@@ -130,6 +135,7 @@ services:
       default:
     #image: confluentinc/cp-kafka-connect-base:6.0.0
     image: datavisapp-kafka-connect
+    container_name: "${USER}-datavisapp-kafka-connect"
     hostname: kafka-connect
     depends_on:
       - broker
@@ -187,6 +193,7 @@ services:
   ksqldb-server:
     #image: confluentinc/cp-ksqldb-server:6.0.0
     image: datavisapp-ksqldb-server
+    container_name: "${USER}-datavisapp-ksqldb-server"
     hostname: ksqldb-server
     depends_on:
       - broker
@@ -243,6 +250,7 @@ services:
       default:
     #image: confluentinc/cp-ksqldb-cli:6.0.0
     image: datavisapp-ksqldb-cli
+    container_name: "${USER}-datavisapp-ksqldb-cli"
     #confluentinc/cp-ksqldb-cli:6.0.0
     #confluentinc/cp-ksqldb-cli:latest
     volumes:
@@ -270,6 +278,7 @@ services:
   rest-proxy:
     #image: confluentinc/cp-kafka-rest:6.2.0
     image: datavisapp-rest-proxy
+    container_name: "${USER}-datavisapp-rest-proxy"
     depends_on:
       - broker
       - schema-registry
@@ -327,6 +336,7 @@ services:
     # *-----------------------------*
     #image: postgres:latest
     image: datavisapp-postgres
+    container_name: "${USER}-datavisapp-postgres"
     environment:
      POSTGRES_USER: postgres
      POSTGRES_PASSWORD: postgres
@@ -346,6 +356,7 @@ services:
     #image: grafana/grafana:8.3.3
     #image: grafana/grafana:7.3.0
     image: datavisapp-grafana
+    container_name: "${USER}-datavisapp-grafana"
     ports:
       - "${GRAFANA_PORT:-3001:3000}"
     #ports:

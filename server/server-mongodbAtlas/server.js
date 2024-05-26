@@ -17,7 +17,7 @@ const Submit = require("./models/sub");
 mongoose.connect(process.env.MONGODB_URI);
 const db = mongoose.connection;
 
-const { createDockerProcess, startDockerProcess, stopDockerProcess, deleteDockerProcess} = require('./serverDocker');
+const { createDockerProcess, createMultiDockerProcess, startDockerProcess, stopDockerProcess, deleteDockerProcess} = require('./serverDocker');
 
 const app = express();
 
@@ -404,13 +404,21 @@ db.once('open', () => {
       
       configs = JSON.parse(configs);
       const type = configs.type;
+      configs["username"] = user;
       configs["userappName"] = `${user}-${existingApp.image}`;
 
       if (existingUser.ownedApps.includes(app)) {
         if (!existingUser.cloudApps.some(cloudApp => cloudApp.app === app)) {
-          //console.log(typeof(command));
-          if(createDockerProcess(configs))
-            existingUser.cloudApps.push({ app, state: 'running', image: existingApp.image, type: type, container_name: `${user}-${existingApp.image}`, configs: configs});
+          
+          if(type == "image"){
+            if(createDockerProcess(configs))
+              existingUser.cloudApps.push({ app, state: 'running', image: existingApp.image, type: type, container_name: `${user}-${existingApp.image}`, configs: configs});
+          }
+          else if(type == "multicontainer"){
+            if(createMultiDockerProcess(configs))
+              existingUser.cloudApps.push({ app, state: 'running', image: existingApp.image, type: type, container_name: `${user}-${existingApp.image}`, configs: configs});
+          }
+
           await existingUser.save();
           return res.status(200).send('App added to cloudApps');
         }
@@ -501,7 +509,7 @@ db.once('open', () => {
         return res.status(409).json({ message: 'App does not exist in cloud apps.' });
       }
 
-      if(deleteDockerProcess(existingUser.cloudApps[appIndex])) {
+      if(deleteDockerProcess(user, existingUser.cloudApps[appIndex])) {
         existingUser.cloudApps.splice(appIndex, 1);
         await existingUser.save();
         return res.status(200).json({ message: 'App stoped successfully!' });

@@ -1,6 +1,7 @@
 services:
   gui:
     image: ppeapp-gui
+    container_name: "${USER}-ppeapp-gui"
     ports:
       - "${GUI_PORT:-3001:3001}"
     depends_on:
@@ -11,6 +12,7 @@ services:
 
   model-detector:
     image: ppeapp-model-detector
+    container_name: "${USER}-ppeapp-model-detector"
     ports:
       - "${MODEL_DETECTOR_PORT:-5003:5003}"
     environment:
