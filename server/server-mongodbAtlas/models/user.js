@@ -3,6 +3,16 @@ const passportLocalMongoose = require('passport-local-mongoose');
 const { isAlphanumeric, isEmail } = require('validator');
 const Schema = mongoose.Schema;
 
+const cloudAppSchema = new Schema({
+  app: {type: String, required: true},
+  state: {type: String, required: true},
+  image: {type: String, required: true},
+  type: {type: String, required: true},
+  container_name: {type: String, required: true},
+  configs: {type: JSON, required: true}
+});
+
+
 const UserSchema = new Schema({
   type: {
     type: String,
@@ -10,6 +20,7 @@ const UserSchema = new Schema({
     unique: false,
     enum: ['client', 'developer']
   },
+  
   username: {
     type: String,
     required: true,
@@ -23,6 +34,7 @@ const UserSchema = new Schema({
         }
     ]
   },
+
   email: {
     type: String,
     required: true,
@@ -35,14 +47,14 @@ const UserSchema = new Schema({
         }
     ]
   },
+
   ownedApps: [{
     type: String,
     unique: false
   }],
-  cloudApps: [{
-    type: JSON,
-    unique: false
-  }],
+
+  cloudApps: [cloudAppSchema],
+
   subApps: [{
     type: String,
     unique: false

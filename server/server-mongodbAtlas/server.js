@@ -17,7 +17,7 @@ const Submit = require("./models/sub");
 mongoose.connect(process.env.MONGODB_URI);
 const db = mongoose.connection;
 
-const { createDockerProcess } = require('./serverDocker');
+const { createDockerProcess, stopDockerProcess, deleteDockerProcess} = require('./serverDocker');
 
 const app = express();
 
@@ -386,11 +386,11 @@ db.once('open', () => {
     }
   });
 
-  app.put('/startapp', async (req, res) => {
+  app.put('/createapp', async (req, res) => {
     try {
       const user = req.body.user;
       const app = req.body.app;
-      let command = req.body.command;
+      let configs = req.body.configs;
 
       const existingUser = await User.findOne({ username: user });
       if (!existingUser) {
@@ -402,13 +402,15 @@ db.once('open', () => {
         return res.status(404).send('App not found');
       }
       
-      command["userappName"] = `${user}-${existingApp.image}`;
+      configs = JSON.parse(configs);
+      const type = configs.type;
+      configs["userappName"] = `${user}-${existingApp.image}`;
 
       if (existingUser.ownedApps.includes(app)) {
         if (!existingUser.cloudApps.some(cloudApp => cloudApp.app === app)) {
-          console.log(typeof(command));
-          createDockerProcess(JSON.parse(command));
-          existingUser.cloudApps.push({ app, state: 'running', image: existingApp.image, p:`${user}-${existingApp.image}`, configs: command});
+          //console.log(typeof(command));
+          if(createDockerProcess(configs))
+            existingUser.cloudApps.push({ app, state: 'running', image: existingApp.image, type: type, container_name: `${user}-${existingApp.image}`, configs: configs});
           await existingUser.save();
           return res.status(200).send('App added to cloudApps');
         }
@@ -435,9 +437,44 @@ db.once('open', () => {
         return res.status(409).json({ message: 'App does not exist in cloud apps.' });
       }
 
-      existingUser.cloudApps.splice(appIndex, 1);
-      await existingUser.save();
+      if(existingUser.cloudApps[appIndex].state == "running"){
+        if(stopDockerProcess(existingUser.cloudApps[appIndex])) {
+          existingUser.cloudApps[appIndex].state = "stopped";
+          await existingUser.save();
+          return res.status(200).json({ message: 'App stoped successfully!' });
+        }
+      }
+
+      else {
+        return res.status(401).json({ message: 'App is not running' });
+      }
+
+    } catch (error) {
+      console.error('Error stoping app from cloud apps:', error);
+      return res.status(500).json({ message: 'Server error.' });
+    }
+  });
+
+  app.delete('/removeapp', async (req, res) => {
+    try {
+      const { user, app } = req.body;
+      
+      const existingUser = await User.findOne({ username: user });
+      if (!existingUser) {
+        return res.status(404).json({ message: 'User not found.' });
+      }
   
+      const appIndex = existingUser.cloudApps.findIndex(cloudApp => cloudApp.app === app);
+      if (appIndex === -1) {
+        return res.status(409).json({ message: 'App does not exist in cloud apps.' });
+      }
+
+      if(deleteDockerProcess(existingUser.cloudApps[appIndex])) {
+        existingUser.cloudApps.splice(appIndex, 1);
+        await existingUser.save();
+        return res.status(200).json({ message: 'App stoped successfully!' });
+      }
+
       return res.status(200).json({ message: 'App removed from cloud apps successfully.' });
     } catch (error) {
       console.error('Error removing app from cloud apps:', error);
