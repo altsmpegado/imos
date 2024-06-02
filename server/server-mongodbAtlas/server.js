@@ -77,6 +77,7 @@ db.once('open', () => {
               info: req.body.info,
               file: fileId,
               logo: logoFileId,
+              labels: req.body.labels
           });
 
           await new_app.save();
@@ -168,7 +169,7 @@ db.once('open', () => {
   app.get('/apps/:user', async (req, res) => {
     try {
       const username = req.params.user;
-  
+      
       const user = await User.findOne({ username });
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
@@ -294,7 +295,8 @@ db.once('open', () => {
           update : req.body.update,
           info: req.body.info,
           fileId: fileId,
-          state: req.body.state
+          state: req.body.state,
+          labels: req.body.labels
         });
   
         await new_submission.save();

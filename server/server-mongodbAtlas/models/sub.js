@@ -10,6 +10,7 @@ const submissionSchema = new Schema({
   info: { type: String, required: false },
   fileId: { type: String, required: true },
   state: { type: Boolean, required: true },
+  labels: {type: JSON, required: true}
 });
 
 const SubmissionModel = mongoose.model('sub', submissionSchema);
