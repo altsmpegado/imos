@@ -1,3 +1,4 @@
+const { json } = require('express');
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
@@ -10,6 +11,7 @@ const applicationSchema = new Schema({
   info: { type: String, required: true },
   file: { type: String, required: true },
   logo: { type: String, required: true },
+  labels: { type: JSON, required: true },
 });
 
 const AppModel = mongoose.model('app', applicationSchema);
