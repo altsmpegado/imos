@@ -312,7 +312,7 @@ function createMultiDockerProcess(configData, interface=1) {
 
     const baseDir = process.env.IMOS_APPS_DIR || 'C:\\IMOS\\Apps';
 
-    const command = `powershell -Command "{ Set-Location '${baseDir}\\${projectDir}'; ${envArgs} docker compose -p ${appName} up -d}"`;
+    const command = `powershell -Command "{ Set-Location '${baseDir}\\${projectDir}'; ${envArgs} docker compose -f docker-compose.yml -p ${appName} up -d}"`;
 
     console.log('Executing command:', command);
 
