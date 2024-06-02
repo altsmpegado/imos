@@ -125,7 +125,8 @@ function createMultiDockerProcess(configData) {
         console.log('Multicontainer created and started successfully.');
         return true;
     } else {
-        console.error('Error creating or starting multicontainer:', dockerProcess.stderr ? dockerProcess.stderr.toString() : 'Unknown error');
+        console.error('Error creating or starting multicontainer:', dockerProcess.stderr.toString());
+        deleteDockerProcess(username, {type: 'multicontainer', container_name: userappName, image: appName});
         return false;
     }
 }
@@ -203,7 +204,7 @@ function deleteDockerProcess(user, configData) {
     else if (configData.type === 'multicontainer') {
         getAllImagesFromMultiContainer(configData.image)
             .then((containers) => {
-                console.log(containers);
+                //console.log(containers);
                 containers.forEach((container) => {
                     const dockerProcess = spawnSync('docker', ['rm', `${user}-${container}`]);
                     if (dockerProcess.status !== 0) {

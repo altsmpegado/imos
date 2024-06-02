@@ -413,10 +413,17 @@ db.once('open', () => {
           if(type == "image"){
             if(createDockerProcess(configs))
               existingUser.cloudApps.push({ app, state: 'running', image: existingApp.image, type: type, container_name: `${user}-${existingApp.image}`, configs: configs});
+            else{
+              deleteDockerProcess(user, {type:'image', container_name:`${user}-${existingApp.image}`});
+              return res.status(400).send('Error starting cloudApp');
+            }
           }
           else if(type == "multicontainer"){
             if(createMultiDockerProcess(configs))
               existingUser.cloudApps.push({ app, state: 'running', image: existingApp.image, type: type, container_name: `${user}-${existingApp.image}`, configs: configs});
+            else{
+              return res.status(400).send('Error starting cloudApp');
+            }
           }
 
           await existingUser.save();
@@ -512,10 +519,10 @@ db.once('open', () => {
       if(deleteDockerProcess(user, existingUser.cloudApps[appIndex])) {
         existingUser.cloudApps.splice(appIndex, 1);
         await existingUser.save();
-        return res.status(200).json({ message: 'App stoped successfully!' });
+        return res.status(200).json({ message: 'App removed from cloud apps successfully!' });
       }
 
-      return res.status(200).json({ message: 'App removed from cloud apps successfully.' });
+      return res.status(400).json({ message: 'Error removing app from cloudApps, app is still running.' });
     } catch (error) {
       console.error('Error removing app from cloud apps:', error);
       return res.status(500).json({ message: 'Server error.' });
