@@ -4,9 +4,10 @@ const fs = require('fs');
 document.addEventListener('DOMContentLoaded', () => {
     const data = fs.readFileSync('userData/session.json', 'utf8');
     var { type } = JSON.parse(data);
+    const username = JSON.parse(data).username;
     //console.log(JSON.parse(data).username);
     // Fetch app information from the server
-    fetch(`http://${process.env.IMOS_SERVER_CON}/apps/${JSON.parse(data).username}`)
+    fetch(`http://${process.env.IMOS_SERVER_CON}/apps/${username}`)
       .then((response) => response.json())
       .then((data) => {
         //console.log(data);
@@ -42,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
           });
 
           document.getElementById("startCloudApp").addEventListener("click", function() {
-            ipcRenderer.send('createCloudApp', app.name, app.type);
+            ipcRenderer.send('createCloudApp', username, app.name, app.type, app.labels);
           });
 
         });

@@ -9,6 +9,7 @@ app.commandLine.appendSwitch('no-sandbox');
 
 let appWindow;
 let devForm;
+let setWindow;
 let subsWindow;
 let subdocWindow;
 const openApps = {};
@@ -63,7 +64,7 @@ function createAppWindow(appjson) {
     });
 }
 
-function createSetupWindow(appName, labels, type) {
+function createSetupWindow(user, appName, labels, type) {
   return new Promise((resolve, reject) => {
     setWindow = new BrowserWindow({
       width: 400,
@@ -83,7 +84,7 @@ function createSetupWindow(appName, labels, type) {
       setWindow = null;
     });
     console.log(labels);
-    setWindow.loadFile('views/setup.html', { query: { appName, type, labels} });
+    setWindow.loadFile('views/setup.html', { query: { user, appName, type, labels} });
   });
 }
 
@@ -259,16 +260,26 @@ ipcMain.on('openSubmissions', (event) => {
   }
 });
 
-ipcMain.on('createCloudApp', (event, app, type) => {
+ipcMain.on('createCloudApp', (event, user, app, type, labels) => {
   if(type == 'multicontainer'){
     if(!setWindow){
-      
-      createSetupWindow(app, JSON.stringify(labels), type);
+      createSetupWindow(user, app, JSON.stringify(labels), type);
     }
   }
   else if(type == 'image'){
     if(!setWindow){
-      createSetupWindow(app, JSON.stringify(getImageMetadata(app)), type);
+      createSetupWindow(user, app, JSON.stringify(labels), type);
     }
   }
+});
+
+ipcMain.on('set', (event, appConfig) => {
+  console.log(appConfig);
+  setWindow.close();
+  if(appConfig.type == 'image'){
+    
+  }
+    //createDockerProcess(appConfig, 0);
+  //else if(appConfig.type == 'multicontainer')
+    //createMultiDockerProcess(appConfig, 0);
 });

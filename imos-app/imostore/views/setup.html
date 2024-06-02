@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id ="title"></title>
-    <link rel="stylesheet" href="../styles/form.css">
+    <link rel="stylesheet" href="../../styles/form.css">
     <style>
         body{
             background-color: #24292e;
@@ -90,11 +90,11 @@
         const { ipcRenderer } = require('electron');
         const appName = new URLSearchParams(window.location.search).get('appName');
         const type = new URLSearchParams(window.location.search).get('type');
+        const user = new URLSearchParams(window.location.search).get('user');
         const metadata = new URLSearchParams(window.location.search).get('labels');
         console.log(metadata);
-        const requiredConfigs = JSON.parse(metadata);
+        const requiredConfigs = JSON.parse(JSON.parse(metadata));
         console.log(requiredConfigs);
-        
 
         document.addEventListener('DOMContentLoaded', () => {
             const title = document.getElementById('title');
@@ -148,7 +148,7 @@
             inputs.forEach(input => {
                 configData[input.id] = input.value;
             });
-            ipcRenderer.send('set', { appName, type, ...configData });
+            ipcRenderer.send('set', { user, appName, type, ...configData });
         });
         
     </script>
