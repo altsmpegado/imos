@@ -89,6 +89,7 @@
     <script>
         const { ipcRenderer } = require('electron');
         const appName = new URLSearchParams(window.location.search).get('appName');
+        const image = new URLSearchParams(window.location.search).get('image');
         const type = new URLSearchParams(window.location.search).get('type');
         const user = new URLSearchParams(window.location.search).get('user');
         const metadata = new URLSearchParams(window.location.search).get('labels');
@@ -139,7 +140,6 @@
             form.appendChild(submitButton);
         }
 
-
         document.getElementById('configForm').addEventListener('submit', (event) => {
             event.preventDefault();
 
@@ -148,7 +148,7 @@
             inputs.forEach(input => {
                 configData[input.id] = input.value;
             });
-            ipcRenderer.send('set', { user, appName, type, ...configData });
+            ipcRenderer.send('set', user , appName, { image, type, ...configData });
         });
         
     </script>

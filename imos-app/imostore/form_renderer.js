@@ -69,6 +69,19 @@ document.addEventListener('DOMContentLoaded', () => {
     div = document.createElement('div');
     div.setAttribute('class', 'nice-form-group');
     labelElement = document.createElement('label');
+    labelElement.innerText = 'Labels';
+    inputElement = document.createElement('input');
+    inputElement.setAttribute('id', 'labels');
+    inputElement.setAttribute('type', 'text');
+    inputElement.setAttribute('placeholder', 'Insert app labels here');
+    div.appendChild(labelElement);
+    div.appendChild(inputElement);
+    div.appendChild(document.createElement('br'));
+    form.appendChild(div);
+
+    div = document.createElement('div');
+    div.setAttribute('class', 'nice-form-group');
+    labelElement = document.createElement('label');
     labelElement.innerText = 'Update info';
     inputElement = document.createElement('textarea');
     inputElement.setAttribute('id', 'update');
@@ -123,6 +136,7 @@ document.getElementById('configForm').addEventListener('submit', async (event) =
     const company = document.getElementById('company').value;
     const version = document.getElementById('version').value;
     const about = document.getElementById('about').value;
+    const labels = document.getElementById('labels').value;
     const update = document.getElementById('update').value;
     const info = document.getElementById('info').value;
     const fileInput = document.getElementById('exeFile');
@@ -140,6 +154,7 @@ document.getElementById('configForm').addEventListener('submit', async (event) =
                 'company': company,
                 'version': version,
                 'about': about,
+                'labels': labels,
                 'update': update,
                 'info': info,
                 'file': {

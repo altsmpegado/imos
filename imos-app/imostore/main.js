@@ -64,7 +64,7 @@ function createAppWindow(appjson) {
     });
 }
 
-function createSetupWindow(user, appName, labels, type) {
+function createSetupWindow(user, image, appName, labels, type) {
   return new Promise((resolve, reject) => {
     setWindow = new BrowserWindow({
       width: 400,
@@ -84,7 +84,7 @@ function createSetupWindow(user, appName, labels, type) {
       setWindow = null;
     });
     console.log(labels);
-    setWindow.loadFile('views/setup.html', { query: { user, appName, type, labels} });
+    setWindow.loadFile('views/setup.html', { query: { user, image, appName, type, labels} });
   });
 }
 
@@ -260,26 +260,36 @@ ipcMain.on('openSubmissions', (event) => {
   }
 });
 
-ipcMain.on('createCloudApp', (event, user, app, type, labels) => {
+ipcMain.on('createCloudApp', (event, user, app, image, type, labels) => {
   if(type == 'multicontainer'){
     if(!setWindow){
-      createSetupWindow(user, app, JSON.stringify(labels), type);
+      createSetupWindow(user, image, app, JSON.stringify(labels), type);
     }
   }
   else if(type == 'image'){
     if(!setWindow){
-      createSetupWindow(user, app, JSON.stringify(labels), type);
+      createSetupWindow(user, image, app, JSON.stringify(labels), type);
     }
   }
 });
 
-ipcMain.on('set', (event, appConfig) => {
-  console.log(appConfig);
+ipcMain.on('set', (event, user, appName, data) => {
   setWindow.close();
-  if(appConfig.type == 'image'){
-    
-  }
-    //createDockerProcess(appConfig, 0);
-  //else if(appConfig.type == 'multicontainer')
-    //createMultiDockerProcess(appConfig, 0);
+  
+  var options = {
+    'method': 'PUT',
+    'url': `http://${process.env.IMOS_SERVER_CON}/createapp`,
+    form: {
+        'user': user,
+        'app': appName,
+        'configs': data
+    }
+  };
+
+  request(options, function (error, response) {
+      if (error) throw new Error(error);
+      if(response.status == 200){
+        console.log("New App Submited");
+      }
+  });
 });

@@ -107,6 +107,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     for (const app in installedApps) {
       const appData = installedApps[app];
       let isRunning = false;
+      
       if (appData.type == 'image') {
         isRunning = isContainerRunning(app);
       } else if (appData.type == 'multicontainer') {
