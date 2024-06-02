@@ -27,8 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
                         <div class="price-container">
-                          <button id="download" class="download-button"><span class="material-symbols-outlined">cloud_download</span></button>
-                        </div>
+                          <button id="download" title="Download App" class="download-button"><span class="material-symbols-outlined">cloud_download</span></button>
+                          <button id="startCloudApp" title="Start App on Cloud" class="download-button"><span class="material-symbols-outlined">subscriptions</span></button>
+                          </div>
                     </div>
                 </div>
             </a>
@@ -38,6 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
           document.getElementById("download").addEventListener("click", function() {
             ipcRenderer.send('downloadFile', { id: app.file.toString() });
+          });
+
+          document.getElementById("startCloudApp").addEventListener("click", function() {
+            ipcRenderer.send('createCloudApp', app.name, app.type);
           });
 
         });

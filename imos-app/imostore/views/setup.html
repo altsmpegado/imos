@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id ="title"></title>
+    <link rel="stylesheet" href="../styles/form.css">
+    <style>
+        body{
+            background-color: #24292e;
+        }
+
+        ::-webkit-scrollbar {
+            width: 15px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #acacac;
+            border-radius: 15px;
+            border: 6px solid transparent;
+            background-clip: content-box;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #e8ecec;
+        }
+        
+        .title{
+            color: white;
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: normal;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nice-form-group {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        .nice-form-group > label{
+            color:white;
+            font-weight: normal;
+        }
+
+        .nice-form-group > input[type=text] {
+            height:36px;
+        }
+
+        .nice-form-group > input[type=text]:focus {
+            outline: none;
+            border-color: #a35fe4;
+        }
+
+        .button-component {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-family: system-ui, sans-serif, Apple Color Emoji, Segoe UI, Segoe UI Emoji, Segoe UI Symbol;
+            font-size: 13px;
+            padding: 4px 12px;
+            height: var(--button-height);
+            border-radius: 6px;
+            margin-left: 20px;
+            margin-top: 25px;
+        }
+
+        .button-component[type=submit] {
+            background-color: #a35fe4;
+            color: #fff;
+            border: 1px solid #a35fe4;
+        }
+
+        .button-component:hover {
+            background-color: #ca99f8;
+        }
+
+    </style>
+</head>
+<body>
+    <h1 class="title" id ="header"></h1> 
+    <form id="configForm"></form>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+        const appName = new URLSearchParams(window.location.search).get('appName');
+        const type = new URLSearchParams(window.location.search).get('type');
+        const metadata = new URLSearchParams(window.location.search).get('labels');
+        console.log(metadata);
+        const requiredConfigs = JSON.parse(metadata);
+        console.log(requiredConfigs);
+        
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const title = document.getElementById('title');
+            title.innerText = 'App Setup ' + appName;
+
+            const header = document.getElementById('header');
+            header.innerText = 'Configuration of ' + appName;
+
+            createInputFields(requiredConfigs);
+        });
+
+        function createInputFields(labels) {
+            const form = document.getElementById('configForm');
+            
+            for (const [name, required] of Object.entries(labels)) {
+
+                const div = document.createElement('div');
+                div.setAttribute('class', 'nice-form-group');
+
+                const labelElement = document.createElement('label');
+                labelElement.innerText = name + ': ';
+                
+                const inputElement = document.createElement('input');
+                inputElement.setAttribute('type', 'text');
+                inputElement.setAttribute('id', name);
+                inputElement.setAttribute('placeholder', 'insert ' + name.replace(/_/g, ' ').toLowerCase());
+                
+                if (required === true) {
+                    inputElement.setAttribute('required', 'required');
+                }
+
+                div.appendChild(labelElement);
+                div.appendChild(inputElement);
+                div.appendChild(document.createElement('br'));
+                form.appendChild(div);
+            }
+
+            const submitButton = document.createElement('button');
+            submitButton.setAttribute('type', 'submit');
+            submitButton.setAttribute('class', 'button-component');
+            submitButton.innerText = 'Submit';
+            form.appendChild(submitButton);
+        }
+
+
+        document.getElementById('configForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const configData = {};
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                configData[input.id] = input.value;
+            });
+            ipcRenderer.send('set', { appName, type, ...configData });
+        });
+        
+    </script>
+</body>
+</html>

@@ -3,6 +3,8 @@ const { download } = require('electron-dl');
 const request = require('request');
 const fs = require('fs');
 
+const {getImageMetadata, getMultiImageMetadata} = require('../docker/docker');+
+
 app.commandLine.appendSwitch('no-sandbox');
 
 let appWindow;
@@ -59,6 +61,30 @@ function createAppWindow(appjson) {
       var { username } = JSON.parse(data);  
       appWindow.webContents.send('appInfo', appjson, username);
     });
+}
+
+function createSetupWindow(appName, labels, type) {
+  return new Promise((resolve, reject) => {
+    setWindow = new BrowserWindow({
+      width: 400,
+      height: 400,
+      autoHideMenuBar: true,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+        enableRemoteModule: true,
+        worldSafeExecuteJavaScript: true,
+        additionalArguments: [appName]
+      },
+    });
+  
+    // Handle window closed
+    setWindow.on('closed', () => {
+      setWindow = null;
+    });
+    console.log(labels);
+    setWindow.loadFile('views/setup.html', { query: { appName, type, labels} });
+  });
 }
 
 function createDevForm() {
@@ -230,5 +256,19 @@ ipcMain.on('openSubmissions', (event) => {
     openApps['subs'] = {
       closed: false    
     };
+  }
+});
+
+ipcMain.on('createCloudApp', (event, app, type) => {
+  if(type == 'multicontainer'){
+    if(!setWindow){
+      
+      createSetupWindow(app, JSON.stringify(labels), type);
+    }
+  }
+  else if(type == 'image'){
+    if(!setWindow){
+      createSetupWindow(app, JSON.stringify(getImageMetadata(app)), type);
+    }
   }
 });
