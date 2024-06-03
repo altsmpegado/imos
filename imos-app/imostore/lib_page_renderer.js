@@ -28,7 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
                   </div>
                   <div class="price-container">
                     <button id="download-${app.image}" title="Download App" class="download-button"><span class="material-symbols-outlined">cloud_download</span></button>
-                    <button id="startCloudApp-${app.image}" title="Start App on Cloud" class="download-button"><span class="material-symbols-outlined">subscriptions</span></button>
+                    <button id="createCloudApp-${app.image}" title="Create App on Cloud" class="download-button"><span class="material-symbols-outlined">subscriptions</span></button>
+                    <button id="startCloudApp-${app.image}" title="Start App on Cloud" class="download-button"><span class="material-symbols-outlined">play_arrow</span></button>
+                    <button id="stopCloudApp-${app.image}" title="Stop App on Cloud" class="download-button"><span class="material-symbols-outlined">pause</span></button>
+                    <button id="removeCloudApp-${app.image}" title="Remove App from Cloud" class="download-button"><span class="material-symbols-outlined">delete</span></button>
                   </div>
                 </div>
               </div>
@@ -43,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ipcRenderer.send('downloadFile', { id: app.file.toString() });
           });
 
-          document.getElementById(`startCloudApp-${app.image}`).addEventListener("click", function() {
+          document.getElementById(`createCloudApp-${app.image}`).addEventListener("click", function() {
             ipcRenderer.send('createCloudApp', username, app.name, app.image, app.type, app.labels);
           });
 
