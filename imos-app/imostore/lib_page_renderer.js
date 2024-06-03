@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
         data.ownedApps.forEach((app) => {
           //console.log(app);
           const cardHtml = `
-          <div class="product-card">
             <a class="product" data-app="${JSON.stringify(app).replace(/"/g, '&quot;')}">
               <div>
                 <div style="display: flex; align-items: center; gap: 1rem;">
@@ -34,9 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
               </div>
             </a>
-          </div>
           `
-          appListDiv.innerHTML += cardHtml;
+          const productCard = document.createElement('div');
+          productCard.setAttribute('class', 'product-card');
+          productCard.innerHTML = cardHtml;
+          appListDiv.appendChild(productCard);
 
           document.getElementById(`download-${app.image}`).addEventListener("click", function() {
             ipcRenderer.send('downloadFile', { id: app.file.toString() });
