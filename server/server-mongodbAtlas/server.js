@@ -8,20 +8,15 @@ const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
 require('dotenv').config();
 
-// Include schema models
 const User = require("./models/user");
 const App = require("./models/app");
 const Submit = require("./models/sub");
-
-// MongoDB connection
-mongoose.connect(process.env.MONGODB_URI);
-const db = mongoose.connection;
-
 const { createDockerProcess, createMultiDockerProcess, startDockerProcess, stopDockerProcess, deleteDockerProcess} = require('./serverDocker');
 
+mongoose.connect(process.env.MONGODB_URI);
+const db = mongoose.connection;
 const app = express();
 
-// Set up session middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(session({
   secret: process.env.SESSION_SECRET || 'defaultSecret',
@@ -30,7 +25,6 @@ app.use(session({
   store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI })
 }));
 
-// Passport setup
 const strategy = new LocalStrategy(User.authenticate());
 passport.use(strategy);
 passport.serializeUser(User.serializeUser());
@@ -38,7 +32,6 @@ passport.deserializeUser(User.deserializeUser());
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Check for MongoDB connection errors
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
   const bucket = new GridFSBucket(db);
