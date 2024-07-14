@@ -47,18 +47,15 @@ function setupButton(buttonId, appPath, appType) {
         });
 
         document.getElementById('uninstall').addEventListener('click', () => {
-            // Implement uninstall action
             console.log('Uninstall action triggered');
             document.body.removeChild(contextMenu);
         });
 
         document.getElementById('settings').addEventListener('click', () => {
-            // Implement settings action
             console.log('Settings action triggered');
             document.body.removeChild(contextMenu);
         });
 
-        // Hide context menu when clicking outside
         document.addEventListener('click', (event) => {
             if (!event.target.closest('.context-menu')) {
                 document.body.removeChild(contextMenu);

@@ -1,4 +1,3 @@
-// main.js
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { createDockerProcess, createMultiDockerProcess, doesContainerExist, doesMultiContainerExist, 
          startDockerProcess, getImageMetadata, getMultiImageMetadata } = require('../docker/docker');
