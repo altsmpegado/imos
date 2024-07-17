@@ -40,8 +40,14 @@ passport.deserializeUser(User.deserializeUser());
 app.use(passport.initialize());
 app.use(passport.session());
 
+function getTimestamp(){
+  const now = new Date();
+  return now.toISOString();
+}
+
 // MongoDB connection error handling
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
 db.once('open', () => {
   // Initialize GridFSBucket for storing files
   const bucket = new GridFSBucket(db);
@@ -448,6 +454,9 @@ db.once('open', () => {
    * @param {string} req.params.user - The username of the user.
    */
   app.get('/cloudapps/:user', async (req, res) => {
+    console.log(`[${getTimestamp()}] GET cloudapps of user request`)
+    console.log(req.body);
+
     try {
       const username = req.params.user;
 
@@ -471,12 +480,14 @@ db.once('open', () => {
    * @param {string} req.body.configs - Configuration details for the cloud app.
    */
   app.put('/createapp', async (req, res) => {
-    console.log("createapp PUT request")
+    console.log(`[${getTimestamp()}] Received creatapp PUT request`)
+    console.log(req.body);
+
     try {
       const user = req.body.user;
       const app = req.body.app;
       let configs = req.body.configs;
-
+      
       const existingUser = await User.findOne({ username: user });
       if (!existingUser) {
         return res.status(404).send('User not found');
@@ -529,6 +540,9 @@ db.once('open', () => {
    * @param {string} req.body.app - The name of the application to start.
    */
   app.put('/startapp', async (req, res) => {
+    console.log(`[${getTimestamp()}] Received startapp PUT request`)
+    console.log(req.body);
+
     try {
       const { user, app } = req.body;
 
@@ -566,6 +580,9 @@ db.once('open', () => {
    * @param {string} req.body.app - The name of the application to stop.
    */
   app.put('/stopapp', async (req, res) => {
+    console.log(`[${getTimestamp()}] Received stopapp PUT request`)
+    console.log(req.body);
+
     try {
       const { user, app } = req.body;
 
@@ -603,6 +620,9 @@ db.once('open', () => {
    * @param {string} req.body.app - The name of the application to remove.
    */
   app.delete('/removeapp', async (req, res) => {
+    console.log(`[${getTimestamp()}] Received removeapp DELETE request`)
+    console.log(req.body);
+
     try {
       const { user, app } = req.body;
 

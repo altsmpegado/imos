@@ -76,7 +76,7 @@ function createDockerProcess(configData) {
     delete configData.userappName;
     delete configData.type;
 
-    const baseDir = path.resolve(__dirname, '../../apps');
+    const baseDir = path.resolve(__dirname, '../apps');
     const volumeDir = path.resolve(baseDir, projectDir, userappName, 'Volume');
     const dockerArgs = [
         'run',
@@ -121,7 +121,7 @@ function createMultiDockerProcess(configData) {
     delete configData.userappName;
     delete configData.type;
 
-    const baseDir = path.resolve(__dirname, '../../apps');
+    const baseDir = path.resolve(__dirname, '../apps');
     const appDir = path.resolve(baseDir, projectDir, appName);
     let envArgs = '';
 
