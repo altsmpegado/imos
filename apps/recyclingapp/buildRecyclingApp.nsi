@@ -1,5 +1,5 @@
 Outfile "imos-recycling-app-installer.exe"
-InstallDir "C:\imos\Apps\RecyclingApp"
+InstallDir "C:\imos\apps\RecyclingApp"
 Name "Recycling App"
 
 # Specify the icon file

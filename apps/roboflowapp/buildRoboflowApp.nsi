@@ -1,6 +1,5 @@
 Outfile "imos-roboflow-app-installer.exe"
-; InstallDir $PROGRAMFILES\IMOS\Apps\RoboflowApp
-InstallDir "C:\imos\Apps\RoboflowApp"
+InstallDir "C:\imos\apps\RoboflowApp"
 Name "Roboflow App"
 
 # Specify the icon file

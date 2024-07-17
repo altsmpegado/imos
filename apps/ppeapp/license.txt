@@ -2,13 +2,13 @@ End-User License Agreement (EULA)
 
 IMPORTANT: READ CAREFULLY BEFORE INSTALLING THE SOFTWARE.
 
-This End-User License Agreement ("EULA") is a legal agreement between you (either an individual or a single entity) and DockerApp for the software product identified above, which includes computer software and may include associated media, printed materials, and "online" or electronic documentation ("SOFTWARE PRODUCT").
+This End-User License Agreement ("EULA") is a legal agreement between you (either an individual or a single entity) and Safety PPE App for the software product identified above, which includes computer software and may include associated media, printed materials, and "online" or electronic documentation ("SOFTWARE PRODUCT").
 
 By installing, copying, or otherwise using the SOFTWARE PRODUCT, you agree to be bound by the terms of this EULA. If you do not agree to the terms of this EULA, do not install or use the SOFTWARE PRODUCT.
 
 1. GRANT OF LICENSE.
 
-DockerApp grants you the following rights provided that you comply with all terms and conditions of this EULA:
+Safety PPE App grants you the following rights provided that you comply with all terms and conditions of this EULA:
 
 - Installation and Use. You may install and use the SOFTWARE PRODUCT on a single computer.
 
@@ -18,17 +18,17 @@ DockerApp grants you the following rights provided that you comply with all term
 
 3. TERMINATION.
 
-Without prejudice to any other rights, DockerApp may terminate this EULA if you fail to comply with the terms and conditions of this EULA. In such event, you must destroy all copies of the SOFTWARE PRODUCT and all of its component parts.
+Without prejudice to any other rights, Safety PPE App may terminate this EULA if you fail to comply with the terms and conditions of this EULA. In such event, you must destroy all copies of the SOFTWARE PRODUCT and all of its component parts.
 
 4. COPYRIGHT.
 
-All title and copyrights in and to the SOFTWARE PRODUCT (including but not limited to any images, photographs, animations, video, audio, music, text, and "applets" incorporated into the SOFTWARE PRODUCT) are owned by DockerApp.
+All title and copyrights in and to the SOFTWARE PRODUCT (including but not limited to any images, photographs, animations, video, audio, music, text, and "applets" incorporated into the SOFTWARE PRODUCT) are owned by Safety PPE App.
 
 5. NO WARRANTIES.
 
-DockerApp expressly disclaims any warranty for the SOFTWARE PRODUCT. The SOFTWARE PRODUCT is provided 'as is' without any express or implied warranty of any kind, including but not limited to any warranties of merchantability, non-infringement, or fitness of a particular purpose.
+Safety PPE App expressly disclaims any warranty for the SOFTWARE PRODUCT. The SOFTWARE PRODUCT is provided 'as is' without any express or implied warranty of any kind, including but not limited to any warranties of merchantability, non-infringement, or fitness of a particular purpose.
 
 6. LIMITATION OF LIABILITY.
 
-In no event shall DockerApp be liable for any damages (including, without limitation, lost profits, business interruption, or lost information) rising out of 'Authorized Users' use of or inability to use the SOFTWARE PRODUCT, even if DockerApp has been advised of the possibility of such damages.
+In no event shall Safety PPE App be liable for any damages (including, without limitation, lost profits, business interruption, or lost information) rising out of 'Authorized Users' use of or inability to use the SOFTWARE PRODUCT, even if Safety PPE App has been advised of the possibility of such damages.
 

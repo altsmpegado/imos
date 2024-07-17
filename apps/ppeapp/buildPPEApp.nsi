@@ -1,5 +1,5 @@
 Outfile "imos-ppe-app-installer.exe"
-InstallDir "C:\imos\Apps\PPEApp"
+InstallDir "C:\imos\apps\PPEApp"
 Name "Safety PPE App"
 
 # Specify the icon file

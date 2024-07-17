@@ -1,6 +1,5 @@
 Outfile "imos-datavis-app-installer.exe"
-# InstallDir $PROGRAMFILES\IMOS\Apps\DataVisApp
-InstallDir "C:\imos\Apps\DataVisApp"
+InstallDir "C:\imos\apps\DataVisApp"
 Name "Data Vision App"
 
 # Specify the icon file
