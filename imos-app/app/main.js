@@ -201,6 +201,15 @@ app.on('window-all-closed', () => {
 });
 
 // Handle IPC events from renderer process
+
+/**
+ * Event listener for running Docker applications based on type.
+ * If 'multicontainer', checks if a setup window is not open and the container does not exist,
+ * fetches metadata and opens setup window; otherwise starts the Docker process directly.
+ * If 'image', checks similarly for containers and metadata, and handles accordingly.
+ * @param {string} app - The name of the Docker application or environment.
+ * @param {string} type - The type of the Docker application ('image' or 'multicontainer').
+ */
 ipcMain.on('runDockerApp', (event, app, type) => {
   if (type == 'multicontainer') {
     if (!setWindow && !doesMultiContainerExist(app)) {
@@ -224,6 +233,10 @@ ipcMain.on('runDockerApp', (event, app, type) => {
   }
 });
 
+/**
+ * Event listener for opening the login window.
+ * Closes any existing authentication window before creating the login window.
+ */
 ipcMain.on('openLoginWindow', (event) => {
   createLoginWindow();
   if (authWindow) {
@@ -231,6 +244,10 @@ ipcMain.on('openLoginWindow', (event) => {
   }
 });
 
+/**
+ * Event listener for opening the register window.
+ * Closes any existing authentication window before creating the register window.
+ */
 ipcMain.on('openRegisterWindow', (event) => {
   createRegisterWindow();
   if (authWindow) {
@@ -238,6 +255,12 @@ ipcMain.on('openRegisterWindow', (event) => {
   }
 });
 
+/**
+ * Event listener for registering a user.
+ * Posts user registration data to the server and handles success and failure cases.
+ * Closes the registration window and opens the authentication window upon successful registration.
+ * @param {Object} userData - User registration data including username, password, email, and type.
+ */
 ipcMain.on('register', (event, userData) => {
   if (authWindow) {
     authWindow.close();
@@ -268,6 +291,13 @@ ipcMain.on('register', (event, userData) => {
   });
 });
 
+/**
+ * Event listener for user login.
+ * Posts user login credentials to the server and handles successful login by fetching user information.
+ * Saves user session data to 'userData/session.json' and closes the login window.
+ * Opens the main window upon successful login.
+ * @param {Object} userData - User login data including username and password.
+ */
 ipcMain.on('login', (event, userData) => {
   if (authWindow) {
     authWindow.close();
@@ -318,9 +348,12 @@ ipcMain.on('login', (event, userData) => {
       }
     }
   });
-
 });
 
+/**
+ * Event listener for saving session.
+ * Toggles 'remcheck' flag to save or not save user session in 'userData/session.json'.
+ */
 ipcMain.on('saveSession', (event) => {
   if (!remcheck)
     remcheck = true;
@@ -328,12 +361,20 @@ ipcMain.on('saveSession', (event) => {
     remcheck = false;
 });
 
+/**
+ * Event listener for logging out.
+ * Closes the main window, opens the authentication window, and clears session data in 'userData/session.json'.
+ */
 ipcMain.on('logout', (event) => {
   mainWindow.close();
   createAuthWindow();
   fs.writeFileSync('userData/session.json', JSON.stringify({ username: '', type: '', password: '', save: 'false' }));
 });
 
+/**
+ * Event listener for navigating back in authentication windows.
+ * Closes any login or registration window and opens the authentication window.
+ */
 ipcMain.on('back', (event) => {
   if (logWindow)
     logWindow.close();
@@ -342,6 +383,11 @@ ipcMain.on('back', (event) => {
   createAuthWindow();
 });
 
+/**
+ * Event listener for setting up Docker applications.
+ * Closes the setup window and starts Docker processes based on the application configuration.
+ * @param {Object} appConfig - Configuration data for setting up Docker applications.
+ */
 ipcMain.on('set', (event, appConfig) => {
   console.log(appConfig);
   setWindow.close();
