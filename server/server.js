@@ -471,6 +471,7 @@ db.once('open', () => {
    * @param {string} req.body.configs - Configuration details for the cloud app.
    */
   app.put('/createapp', async (req, res) => {
+    console.log("createapp PUT request")
     try {
       const user = req.body.user;
       const app = req.body.app;
