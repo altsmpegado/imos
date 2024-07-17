@@ -1,5 +1,22 @@
 const { ipcRenderer } = require('electron');
 const fs = require('fs');
+const request = require('request');
+
+/**
+ * Function to create a status LED element based on whether the application is running.
+ * @param {boolean} isRunning - Flag indicating if the application is running.
+ * @returns {HTMLElement} - Created status LED element.
+ */
+function createStatusLED(isRunning) {
+  const statusLED = document.createElement('div');
+  statusLED.classList.add('status-led');
+  if (isRunning) {
+    statusLED.classList.add('green');
+  } else {
+    statusLED.classList.add('red');
+  }
+  return statusLED;
+}
 
 /**
  * Event listener when DOM content is fully loaded.
@@ -28,12 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="text-ellipsis">Owned/Download</div>
                   </div>
                 </div>
-                <div class="price-container">
+                <div class="price-container" style="display: flex; align-items: center; gap: 0.5rem;">
+                  <div id="status-led-${app.image}" class="status-led-container"></div>
                   <button id="download-${app.image}" title="Download App" class="download-button"><span class="material-symbols-outlined">cloud_download</span></button>
                   <button id="createCloudApp-${app.image}" title="Create App on Cloud" class="download-button"><span class="material-symbols-outlined">subscriptions</span></button>
                   <button id="startCloudApp-${app.image}" title="Start App on Cloud" class="download-button"><span class="material-symbols-outlined">play_arrow</span></button>
                   <button id="stopCloudApp-${app.image}" title="Stop App on Cloud" class="download-button"><span class="material-symbols-outlined">pause</span></button>
                   <button id="removeCloudApp-${app.image}" title="Remove App from Cloud" class="download-button"><span class="material-symbols-outlined">delete</span></button>
+                  
                 </div>
               </div>
             </div>
@@ -53,6 +72,47 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(`createCloudApp-${app.image}`).addEventListener("click", function () {
           ipcRenderer.send('createCloudApp', username, app.name, app.image, app.type, app.labels);
         });
+
+        document.getElementById(`startCloudApp-${app.image}`).addEventListener("click", function () {
+          ipcRenderer.send('startCloudApp', username, app.name);
+        });
+
+        document.getElementById(`stopCloudApp-${app.image}`).addEventListener("click", function () {
+          ipcRenderer.send('stopCloudApp', username, app.name, app.image, app.type, app.labels);
+        });
+
+        document.getElementById(`removeCloudApp-${app.image}`).addEventListener("click", function () {
+          ipcRenderer.send('removeCloudApp', username, app.name, app.image, app.type, app.labels);
+        });
+      
+      });
+
+      // Fetch the cloud apps state
+      const options = {
+        'method': 'GET',
+        'url': `http://${process.env.IMOS_SERVER_CON}/cloudapps/${username}`
+      };
+      
+      request(options, function (error, response, body) {
+        if (error) {
+          console.error('Error fetching cloud app states:', error);
+          return;
+        }
+        if (response.statusCode === 200) {
+          const cloudApps = JSON.parse(body).cloudApps;
+          console.log('Cloud Apps:', cloudApps);
+
+          // Update the LED status for each app
+          data.ownedApps.forEach((app) => {
+            const statusLedContainer = document.getElementById(`status-led-${app.image}`);
+            const cloudApp = cloudApps.find(cloudApp => cloudApp.app === app.name);
+            const isRunning = cloudApp && cloudApp.state === 'running';
+            const statusLED = createStatusLED(isRunning);
+            statusLedContainer.appendChild(statusLED);
+          });
+        } else {
+          console.error('Failed to retrieve cloud app states, status code:', response.statusCode);
+        }
 
       });
     })

@@ -348,14 +348,82 @@ ipcMain.on('setCloud', (event, user, appName, data) => {
     form: {
       'user': user,
       'app': appName,
-      'configs': data
+      'configs': JSON.stringify(data)
     }
   };
-  console.log(options);
   request(options, function (error, response) {
     if (error) throw new Error(error);
     if (response.status == 200) {
       console.log("New App Submited");
+    }
+  });
+});
+
+/**
+ * Event listener for setting up an app.
+ * @param {object} event - The event object for IPC communication
+ * @param {string} user - The username of the user starting the app
+ * @param {string} appName - The name of the app being started
+ */
+ipcMain.on('startCloudApp', (event, user, appName) => {
+  var options = {
+    'method': 'PUT',
+    'url': `http://${process.env.IMOS_SERVER_CON}/startapp`,
+    form: {
+      'user': user,
+      'app': appName
+    }
+  };
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    if (response.status == 200) {
+      console.log("App Started");
+    }
+  });
+});
+
+/**
+ * Event listener for setting up an app.
+ * @param {object} event - The event object for IPC communication
+ * @param {string} user - The username of the user stoping the app
+ * @param {string} appName - The name of the app being stoped
+ */
+ipcMain.on('stopCloudApp', (event, user, appName) => {
+  var options = {
+    'method': 'PUT',
+    'url': `http://${process.env.IMOS_SERVER_CON}/stopapp`,
+    form: {
+      'user': user,
+      'app': appName
+    }
+  };
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    if (response.status == 200) {
+      console.log("App Stoped");
+    }
+  });
+});
+
+/**
+ * Event listener for setting up an app.
+ * @param {object} event - The event object for IPC communication
+ * @param {string} user - The username of the user removing the app
+ * @param {string} appName - The name of the app being removed
+ */
+ipcMain.on('removeCloudApp', (event, user, appName) => {
+  var options = {
+    'method': 'DELETE',
+    'url': `http://${process.env.IMOS_SERVER_CON}/removeapp`,
+    form: {
+      'user': user,
+      'app': appName
+    }
+  };
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    if (response.status == 200) {
+      console.log("App Removed");
     }
   });
 });
