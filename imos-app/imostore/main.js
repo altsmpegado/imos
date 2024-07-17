@@ -340,7 +340,7 @@ ipcMain.on('createCloudApp', (event, user, app, image, type, labels) => {
  * @param {object} data - The configuration data for setting up the app
  */
 ipcMain.on('set', (event, user, appName, data) => {
-  setWindow.close();
+  //setWindow.close();
 
   var options = {
     'method': 'PUT',
@@ -351,7 +351,7 @@ ipcMain.on('set', (event, user, appName, data) => {
       'configs': data
     }
   };
-
+  console.log(options);
   request(options, function (error, response) {
     if (error) throw new Error(error);
     if (response.status == 200) {

@@ -94,9 +94,9 @@
         const type = new URLSearchParams(window.location.search).get('type');
         const user = new URLSearchParams(window.location.search).get('user');
         const metadata = new URLSearchParams(window.location.search).get('labels');
-        console.log(metadata);
+        //console.log(metadata);
         const requiredConfigs = JSON.parse(JSON.parse(metadata));
-        console.log(requiredConfigs);
+        //console.log(requiredConfigs);
 
         document.addEventListener('DOMContentLoaded', () => {
             const title = document.getElementById('title');
@@ -149,7 +149,8 @@
             inputs.forEach(input => {
                 configData[input.id] = input.value;
             });
-            ipcRenderer.send('set', user, appName, { image, type, ...configData });
+            console.log(user, appName,{ appName:image, type, ...configData });
+            ipcRenderer.send('set', user, appName, { appName:image, type, ...configData });
         });
 
     </script>

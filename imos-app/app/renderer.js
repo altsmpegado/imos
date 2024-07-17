@@ -118,10 +118,9 @@ function circular() {
 
 // Fetch installed applications and setup buttons
 getInstalledApps().then((builtApps) => {
-
-    console.log('Built Apps:', builtApps);
+    //console.log('Built Apps:', builtApps);
     installedApps = Object.assign({}, defaultApps, builtApps);
-    console.log('Installed Apps:', installedApps);
+    //console.log('Installed Apps:', installedApps);
 
     const dynamicButtonsContainer = document.getElementById('dynamicButtonsContainer');
 
