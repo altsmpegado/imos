@@ -163,10 +163,6 @@ app.whenReady().then(() => {
     var options = {
       'method': 'POST',
       'url': `http://${process.env.IMOS_SERVER_CON}/login`,
-      'headers': {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Cookie': 'connect.sid=s%3ANH1jhVRVXwUs5YVuF7s--d4HSGu7vN-v.z3tEKLRjcMQ0pS4fLQKBm9MfCMCcD1y7G%2FOckJk99k4'
-      },
       form: {
         'password': password,
         'username': username

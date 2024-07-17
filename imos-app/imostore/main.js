@@ -339,8 +339,8 @@ ipcMain.on('createCloudApp', (event, user, app, image, type, labels) => {
  * @param {string} appName - The name of the app being set up
  * @param {object} data - The configuration data for setting up the app
  */
-ipcMain.on('set', (event, user, appName, data) => {
-  //setWindow.close();
+ipcMain.on('setCloud', (event, user, appName, data) => {
+  setWindow.close();
 
   var options = {
     'method': 'PUT',

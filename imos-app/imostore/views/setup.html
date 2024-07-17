@@ -150,7 +150,7 @@
                 configData[input.id] = input.value;
             });
             console.log(user, appName,{ appName:image, type, ...configData });
-            ipcRenderer.send('set', user, appName, { appName:image, type, ...configData });
+            ipcRenderer.send('setCloud', user, appName, { appName:image, type, ...configData });
         });
 
     </script>
