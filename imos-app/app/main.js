@@ -140,7 +140,6 @@ function createSetupWindow(appName, labels, type) {
       setWindow = null;
     });
 
-    console.log(labels);
     setWindow.loadFile('views/setup.html', { query: { appName, type, labels } });
   });
 }
@@ -387,7 +386,6 @@ ipcMain.on('back', (event) => {
  * @param {Object} appConfig - Configuration data for setting up Docker applications.
  */
 ipcMain.on('set', (event, appConfig) => {
-  console.log(appConfig);
   setWindow.close();
   if (appConfig.type == 'image')
     createDockerProcess(appConfig);

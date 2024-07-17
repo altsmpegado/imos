@@ -87,7 +87,7 @@ function doesMultiContainerExist(containerName) {
                 }
             }
         }
-        console.error('Multi-container environment does not exist.');
+        //console.log('Multi-container environment does not exist.');
         return false;
     } else {
         console.error('Error checking if multi-container environment exists:', result.stderr);
@@ -327,7 +327,7 @@ function createDockerProcess(configData, interface = 1) {
     }
 
     dockerArgs.push(appName);
-    console.log('Executing command:', 'docker', dockerArgs);
+    //console.log('Executing command:', 'docker', dockerArgs);
     const dockerProcess = spawnSync('docker', dockerArgs);
 
     if (dockerProcess.status === 0) {
@@ -370,7 +370,7 @@ function createMultiDockerProcess(configData, interface = 1) {
 
     const baseDir = process.env.IMOS_APPS_DIR || 'C:\\imos\\apps';
     const command = `powershell -Command "{ Set-Location '${baseDir}\\${projectDir}'; ${envArgs} docker compose -f docker-compose.yml -p ${appName} up -d}"`;
-    console.log('Executing command:', command);
+    //console.log('Executing command:', command);
     const dockerProcess = spawnSync('powershell', ['-Command', command], { shell: true });
 
     if (dockerProcess.status === 0) {
@@ -382,7 +382,7 @@ function createMultiDockerProcess(configData, interface = 1) {
     if (interface == 1) {
         getMultiContainerPorts(appName)
             .then(ports => {
-                console.log('Ports:', ports);
+                //console.log('Ports:', ports);
                 ports.forEach(port => {
                     openBrowser(`http://localhost:${port}`);
                 });

@@ -144,7 +144,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   try {
     const reloadButton = document.getElementById('reloadButton');
-
     reloadButton.addEventListener('click', () => {
       location.reload();
     });

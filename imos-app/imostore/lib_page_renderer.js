@@ -27,6 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
   var { type } = JSON.parse(data);
   const username = JSON.parse(data).username;
 
+  const reloadButton = document.getElementById('reloadButton');
+  reloadButton.addEventListener('click', () => {
+    location.reload();
+  });
+
   // Fetch app information from the server
   fetch(`http://${process.env.IMOS_SERVER_CON}/apps/${username}`)
     .then((response) => response.json())

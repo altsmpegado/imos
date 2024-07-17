@@ -137,6 +137,13 @@
       margin: 0;
     }
 
+    .title-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
     .huge-title {
       font-weight: bold;
       font-size: 4rem;
@@ -189,11 +196,34 @@
       background-color: rgb(180, 10, 10);
     }
 
+    .reload-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .reload-button {
+      border-radius: 50%;
+      height: 40px;
+      width: 40px;
+      background-color: #a35fe46b;
+      margin-top: 20px;
+      margin-right: 55px;
+      border-color: #ffffff00;
+    }
+
+    .reload-button:hover {
+      background-color: #a35fe4;
+    }
+
+    .reload-button:hover .material-symbols-outlined {
+      color: #ffffff;
+    }
+
     .material-symbols-outlined {
       color: #ffffffa8;
       font-variation-settings:
         'FILL' 0,
-        'wght' 400,
+        'wght' 200,
         'GRAD' 0,
         'opsz' 24
     }
@@ -218,9 +248,16 @@
       </div>
     </div>
     <div class="panel">
-      <p class="huge-title">library</p>
+      <div class="title-container">
+        <p class="huge-title">library</p>
+        <div class="reload-container">
+          <button id="reloadButton" class="reload-button" title="Reload">
+            <i class="material-symbols-outlined">refresh</i>
+          </button>
+        </div>
+      </div>
       <div class="products-container direction-column" id="apps-container"></div>
-    </div>
+    </div>    
   </div>
   <script type="text/javascript" src="C:\imos-dev\imos-app\imostore\lib_page_renderer.js"></script>
 </body>
