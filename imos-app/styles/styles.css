@@ -54,20 +54,20 @@ body {
 }
 
 .title-info {
-    font: 2rem helvetica,sans-serif;
+    font: 2rem helvetica, sans-serif;
     color: white;
     background-color: transparent;
 }
 
 .circle-info {
-    font: 0.75rem helvetica,sans-serif;
+    font: 0.75rem helvetica, sans-serif;
     color: white;
     background-color: transparent;
     transform: rotate(90deg);
 }
 
 .input-info {
-    font: 0.75rem helvetica,sans-serif;
+    font: 0.75rem helvetica, sans-serif;
     color: white;
     background-color: transparent;
 }

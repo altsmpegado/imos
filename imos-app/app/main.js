@@ -1,12 +1,12 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
-const { createDockerProcess, createMultiDockerProcess, doesContainerExist, doesMultiContainerExist, 
-         startDockerProcess, getImageMetadata, getMultiImageMetadata } = require('../docker/docker');
+const { createDockerProcess, createMultiDockerProcess, doesContainerExist, doesMultiContainerExist,
+  startDockerProcess, getImageMetadata, getMultiImageMetadata } = require('../docker/docker');
 const request = require('request');
 const fs = require('fs');
 const { log } = require('console');
-
 require('dotenv').config();
 
+// Declare window variables
 let mainWindow;
 let authWindow;
 let regWindow;
@@ -14,27 +14,31 @@ let logWindow;
 let setWindow;
 var remcheck = false;
 
+// Function to create the main application window
 function createWindow() {
-    mainWindow = new BrowserWindow({
-        width: 1200,
-        height: 800,
-        autoHideMenuBar: true,
-        icon: 'assets/imoslogo.ico',
-        webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false,
-            enableRemoteModule: true,
-            worldSafeExecuteJavaScript: true,
-        },
-    });
+  mainWindow = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    autoHideMenuBar: true,
+    icon: 'assets/imoslogo.ico',
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
+      worldSafeExecuteJavaScript: true,
+    },
+  });
 
-    mainWindow.loadFile('views/index.html');
+  mainWindow.loadFile('views/index.html');
 
-    mainWindow.on('closed', () => {
-      mainWindow = null;
-    });
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+  });
 }
 
+/**
+ * Function to create the authentication window.
+ */
 function createAuthWindow() {
   return new Promise((resolve, reject) => {
     authWindow = new BrowserWindow({
@@ -59,6 +63,9 @@ function createAuthWindow() {
   });
 }
 
+/**
+ * Function to create the login window.
+ */
 function createLoginWindow() {
   return new Promise((resolve, reject) => {
     logWindow = new BrowserWindow({
@@ -73,16 +80,18 @@ function createLoginWindow() {
         worldSafeExecuteJavaScript: true,
       },
     });
-  
-    // Handle window closed
+
     logWindow.on('closed', () => {
-        logWindow = null;
+      logWindow = null;
     });
 
     logWindow.loadFile('views/login.html');
   });
 }
 
+/**
+ * Function to create the registration window.
+ */
 function createRegisterWindow() {
   return new Promise((resolve, reject) => {
     regWindow = new BrowserWindow({
@@ -97,16 +106,18 @@ function createRegisterWindow() {
         worldSafeExecuteJavaScript: true,
       },
     });
-  
-    // Handle window closed
+
     regWindow.on('closed', () => {
-        regWindow = null;
+      regWindow = null;
     });
 
     regWindow.loadFile('views/register.html');
   });
 }
 
+/**
+ * Function to create the setup window for applications.
+ */
 function createSetupWindow(appName, labels, type) {
   return new Promise((resolve, reject) => {
     setWindow = new BrowserWindow({
@@ -122,29 +133,31 @@ function createSetupWindow(appName, labels, type) {
         additionalArguments: [appName]
       },
     });
-  
-    // Handle window closed
+
     setWindow.on('closed', () => {
       setWindow = null;
     });
+
     console.log(labels);
-    setWindow.loadFile('views/setup.html', { query: { appName, type, labels} });
+    setWindow.loadFile('views/setup.html', { query: { appName, type, labels } });
   });
 }
 
+// Handle imos booting up when app is ready
 app.whenReady().then(() => {
   const data = fs.readFileSync('userData/session.json', 'utf8');
   var { username, password, save } = JSON.parse(data);
-  if(process.argv[2] == 'local'){
+
+  if (process.argv[2] == 'local') {
     createWindow();
   }
-  else if(save == "false"){
+  else if (save == "false") {
     createAuthWindow()
-    .catch(error => {
-      console.error('Error creating Auth window:', error);
-    });
+      .catch(error => {
+        console.error('Error creating Auth window:', error);
+      });
   }
-  else{
+  else {
     var options = {
       'method': 'POST',
       'url': `http://${process.env.IMOS_SERVER_CON}/login`,
@@ -153,43 +166,44 @@ app.whenReady().then(() => {
         'Cookie': 'connect.sid=s%3ANH1jhVRVXwUs5YVuF7s--d4HSGu7vN-v.z3tEKLRjcMQ0pS4fLQKBm9MfCMCcD1y7G%2FOckJk99k4'
       },
       form: {
-          'password': password,
-          'username': username
+        'password': password,
+        'username': username
       }
     };
-  
+
     request(options, function (error, response) {
       if (error) throw new Error(error);
-      if(response.body.includes("/login-success")){
+      if (response.body.includes("/login-success")) {
         if (!mainWindow) {
           createWindow();
         }
 
         fetch(`http://${process.env.IMOS_SERVER_CON}/user/${username}`)
           .then((response) => response.json())
-          
+
           .then((data) => {
             const type = data.user.type;
-            fs.writeFileSync('userData/session.json', JSON.stringify({ username, type , password, save}));
+            fs.writeFileSync('userData/session.json', JSON.stringify({ username, type, password, save }));
           })
           .catch((error) => {
             console.error('Error fetching app information:', error);
           });
-        }
+      }
     });
   }
 });
 
+// Quit the app when all windows are closed, except on macOS
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
 });
 
+// Handle IPC events from renderer process
 ipcMain.on('runDockerApp', (event, app, type) => {
-  if(type == 'multicontainer'){
-    if(!setWindow && !doesMultiContainerExist(app)){
-      //console.log("nao existe");
+  if (type == 'multicontainer') {
+    if (!setWindow && !doesMultiContainerExist(app)) {
       getMultiImageMetadata(app)
         .then((labels) => {
           createSetupWindow(app, JSON.stringify(labels), type);
@@ -200,8 +214,8 @@ ipcMain.on('runDockerApp', (event, app, type) => {
     else
       startDockerProcess(app, type);
   }
-  else if(type == 'image'){
-    if(!setWindow && !doesContainerExist(app)){
+  else if (type == 'image') {
+    if (!setWindow && !doesContainerExist(app)) {
       const labels = JSON.stringify(getImageMetadata(app));
       createSetupWindow(app, labels, type);
     }
@@ -220,7 +234,7 @@ ipcMain.on('openLoginWindow', (event) => {
 ipcMain.on('openRegisterWindow', (event) => {
   createRegisterWindow();
   if (authWindow) {
-      authWindow.close();
+    authWindow.close();
   }
 });
 
@@ -228,30 +242,29 @@ ipcMain.on('register', (event, userData) => {
   if (authWindow) {
     authWindow.close();
   }
-  
-  var options = {
-      'method': 'POST',
-      'url': `http://${process.env.IMOS_SERVER_CON}/register`,
-      form: {
-          'type': userData.type,
-          'password': userData.password,
-          'username': userData.username,
-          'email': userData.email
-      }
-  };
-  
-  request(options, function (error, response) {
-      if (error) throw new Error(error);
-      //console.log(response.body);
-      if(response.body.includes("Successful")){
-        if (regWindow) {
-          regWindow.close();
-        }
 
-        if (!authWindow) {
-            createAuthWindow();
-        }
+  var options = {
+    'method': 'POST',
+    'url': `http://${process.env.IMOS_SERVER_CON}/register`,
+    form: {
+      'type': userData.type,
+      'password': userData.password,
+      'username': userData.username,
+      'email': userData.email
+    }
+  };
+
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    if (response.body.includes("Successful")) {
+      if (regWindow) {
+        regWindow.close();
       }
+
+      if (!authWindow) {
+        createAuthWindow();
+      }
+    }
   });
 });
 
@@ -259,57 +272,57 @@ ipcMain.on('login', (event, userData) => {
   if (authWindow) {
     authWindow.close();
   }
-  
+
   var options = {
-      'method': 'POST',
-      'url': `http://${process.env.IMOS_SERVER_CON}/login`,
-      form: {
-          'password': userData.password,
-          'username': userData.username
-      }
+    'method': 'POST',
+    'url': `http://${process.env.IMOS_SERVER_CON}/login`,
+    form: {
+      'password': userData.password,
+      'username': userData.username
+    }
   };
-  
+
   var username = userData.username;
   var password = userData.password;
   var type = "";
   var save = "false";
 
   request(options, function (error, response) {
-      if (error) throw new Error(error);
-      if(response.body.includes("/login-success")){
+    if (error) throw new Error(error);
+    if (response.body.includes("/login-success")) {
 
-        fetch(`http://${process.env.IMOS_SERVER_CON}/user/${username}`)
-          .then((response) => response.json())
-          .then((data) => {
-            type = data.user.type;
-            fs.writeFileSync('userData/session.json', JSON.stringify({ username, type , password, save}));
-          })
-          .catch((error) => {
-            console.error('Error fetching app information:', error);
-          });
+      fetch(`http://${process.env.IMOS_SERVER_CON}/user/${username}`)
+        .then((response) => response.json())
+        .then((data) => {
+          type = data.user.type;
+          fs.writeFileSync('userData/session.json', JSON.stringify({ username, type, password, save }));
+        })
+        .catch((error) => {
+          console.error('Error fetching app information:', error);
+        });
 
-        if(remcheck){
-          save = "true";
-          fs.writeFileSync('userData/session.json', JSON.stringify({ username, type, password, save}));
-        }
-        else {
-          save = "false"
-          fs.writeFileSync('userData/session.json', JSON.stringify({ username:'', type:'', password:'', save}));
-        }
-        if (logWindow) {
-          logWindow.close();
-        }
-        
-        if (!mainWindow) {
-          createWindow();
-        }
+      if (remcheck) {
+        save = "true";
+        fs.writeFileSync('userData/session.json', JSON.stringify({ username, type, password, save }));
       }
+      else {
+        save = "false"
+        fs.writeFileSync('userData/session.json', JSON.stringify({ username: '', type: '', password: '', save }));
+      }
+      if (logWindow) {
+        logWindow.close();
+      }
+
+      if (!mainWindow) {
+        createWindow();
+      }
+    }
   });
 
 });
 
 ipcMain.on('saveSession', (event) => {
-  if(!remcheck)
+  if (!remcheck)
     remcheck = true;
   else
     remcheck = false;
@@ -318,13 +331,13 @@ ipcMain.on('saveSession', (event) => {
 ipcMain.on('logout', (event) => {
   mainWindow.close();
   createAuthWindow();
-  fs.writeFileSync('userData/session.json', JSON.stringify({ username:'', type:'', password:'', save:'false' }));
+  fs.writeFileSync('userData/session.json', JSON.stringify({ username: '', type: '', password: '', save: 'false' }));
 });
 
 ipcMain.on('back', (event) => {
-  if(logWindow)
+  if (logWindow)
     logWindow.close();
-  if(regWindow)
+  if (regWindow)
     regWindow.close();
   createAuthWindow();
 });
@@ -332,8 +345,8 @@ ipcMain.on('back', (event) => {
 ipcMain.on('set', (event, appConfig) => {
   console.log(appConfig);
   setWindow.close();
-  if(appConfig.type == 'image')
+  if (appConfig.type == 'image')
     createDockerProcess(appConfig);
-  else if(appConfig.type == 'multicontainer')
+  else if (appConfig.type == 'multicontainer')
     createMultiDockerProcess(appConfig);
 });

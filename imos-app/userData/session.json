@@ -1,1 +1,6 @@
-{"username":"alts","type":"client","password":"1234","save":"true"}
+{
+    "username": "alts",
+    "type": "client",
+    "password": "1234",
+    "save": "true"
+}

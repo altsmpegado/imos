@@ -1,59 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>imos register</title>
     <link rel="stylesheet" href="../styles/styles.css">
 </head>
+
 <body>
     <img style="height: 85px;" src="logo.svg">
     <h1<span class='title-info'></span></h1>
-    <form id="registerForm">
-        <div>
-            <label for="clientOption"><span class="text-box-component">Client</span></label>
-            <input type="radio" name="userType" id="clientOption" value="client" required>
-    
-            <label for="developerOption"><span class="text-box-component">Developer</span></label>
-            <input type="radio" name="userType" id="developerOption" value="developer" required>
-        </div>
+        <form id="registerForm">
+            <div>
+                <label for="clientOption"><span class="text-box-component">Client</span></label>
+                <input type="radio" name="userType" id="clientOption" value="client" required>
 
-        <input class="text-box-component" placeholder="Insert username" id="username" required>
-        <br>
-        <input class="text-box-component" placeholder="Insert email" id="email" required>
-        <br>
-        <input class="text-box-component" type="password" placeholder="Insert password" id="password" required>
-        <br>
-        <button class="button-component"  type="submit">Register</button>
-    </form>
-    <button class="button-component"  type="submit" id="back">Back</button>
-    <script>
-        const { ipcRenderer } = require('electron');
+                <label for="developerOption"><span class="text-box-component">Developer</span></label>
+                <input type="radio" name="userType" id="developerOption" value="developer" required>
+            </div>
 
-        document.getElementById('registerForm').addEventListener('submit', (event) => {
-            event.preventDefault();
+            <input class="text-box-component" placeholder="Insert username" id="username" required>
+            <br>
+            <input class="text-box-component" placeholder="Insert email" id="email" required>
+            <br>
+            <input class="text-box-component" type="password" placeholder="Insert password" id="password" required>
+            <br>
+            <button class="button-component" type="submit">Register</button>
+        </form>
+        <button class="button-component" type="submit" id="back">Back</button>
+        <script>
+            const { ipcRenderer } = require('electron');
 
-            const userTypeOptions = document.getElementsByName('userType');
-            let type = '';
-            for (const option of userTypeOptions) {
-                if (option.checked) {
-                    type = option.value;
-                    break;
+            document.getElementById('registerForm').addEventListener('submit', (event) => {
+                event.preventDefault();
+
+                const userTypeOptions = document.getElementsByName('userType');
+                let type = '';
+                for (const option of userTypeOptions) {
+                    if (option.checked) {
+                        type = option.value;
+                        break;
+                    }
                 }
-            }
 
-            const username = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+                const username = document.getElementById('username').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
 
-            // Send the registration data to the main process
-            ipcRenderer.send('register', { type, username, email, password });
-        });
+                // Send the registration data to the main process
+                ipcRenderer.send('register', { type, username, email, password });
+            });
 
-        document.getElementById('back').addEventListener('click', () => {
-            //const isChecked = document.getElementById('rememberCheckbox').checked;
-            ipcRenderer.send('back');
-        });
-    </script>
+            document.getElementById('back').addEventListener('click', () => {
+                //const isChecked = document.getElementById('rememberCheckbox').checked;
+                ipcRenderer.send('back');
+            });
+        </script>
 </body>
+
 </html>

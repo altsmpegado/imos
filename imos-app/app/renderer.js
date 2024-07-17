@@ -2,11 +2,27 @@ const { ipcRenderer } = require('electron');
 const { spawn } = require('child_process');
 const { getInstalledApps } = require('../docker/docker');
 
+// Dict to keep track of opened apps
 const openApps = {};
+// Object to store installed and default applications
+let installedApps = {};
+let defaultApps = {
+    'imoslink': { type: 'default' },
+    'imostore': { type: 'default' },
+    'imoshub': { type: 'default' },
+    'settings': { type: 'default' }
+};
 
+/**
+ * Sets up a button with click and context menu functionality.
+ * @param {string} buttonId - The ID of the button element.
+ * @param {string} appPath - The path to the application.
+ * @param {string} appType - The type of the application (e.g., 'default', 'docker').
+ */
 function setupButton(buttonId, appPath, appType) {
     const button = document.getElementById(buttonId);
-    
+
+    // Click event to launch app or send IPC message to run Docker app
     button.addEventListener('click', () => {
         if (appType !== 'default') {
             ipcRenderer.send('runDockerApp', appPath, appType);
@@ -17,9 +33,10 @@ function setupButton(buttonId, appPath, appType) {
         }
     });
 
+    // Context menu event to provide additional options
     button.addEventListener('contextmenu', (event) => {
         event.preventDefault();
-        
+
         const contextMenu = document.createElement('div');
         contextMenu.classList.add('context-menu');
         contextMenu.innerHTML = `
@@ -56,6 +73,7 @@ function setupButton(buttonId, appPath, appType) {
             document.body.removeChild(contextMenu);
         });
 
+        // Close context menu if clicked outside
         document.addEventListener('click', (event) => {
             if (!event.target.closest('.context-menu')) {
                 document.body.removeChild(contextMenu);
@@ -64,10 +82,14 @@ function setupButton(buttonId, appPath, appType) {
     });
 }
 
+/**
+ * Launches a specified app using Electron.
+ * @param {string} appPath - The path to the application to be launched.
+ */
 function launchApp(appPath) {
     const electronPath = 'C:/imos-dev/imos-app/node_modules/.bin/electron.cmd';
     const childProcess = spawn(electronPath, [appPath]);
-    
+
     openApps[appPath] = {
         closed: false,
         process: childProcess,
@@ -78,14 +100,9 @@ function launchApp(appPath) {
     });
 }
 
-let installedApps = {};
-let defaultApps = {
-    'imoslink': { type: 'default' },
-    'imostore': { type: 'default' },
-    'imoshub': { type: 'default' },
-    'settings': { type: 'default' }
-};
-
+/**
+ * Arranges app buttons in a circular layout.
+ */
 function circular() {
     const container = document.querySelector('.app-container');
     const circles = document.querySelectorAll('.button-component[type=app]');
@@ -99,6 +116,7 @@ function circular() {
     });
 }
 
+// Fetch installed applications and setup buttons
 getInstalledApps().then((builtApps) => {
 
     console.log('Built Apps:', builtApps);
@@ -111,33 +129,37 @@ getInstalledApps().then((builtApps) => {
     Object.keys(installedApps).forEach((app, index) => {
         const appType = installedApps[app].type;
         let imageUrl = '';
-        if(appType == 'default'){
+        if (appType == 'default') {
             imageUrl = `${process.env.IMOS_ROOT}/${app}/logo.png`;
         }
-        else{
+        else {
             imageUrl = `${process.env.IMOS_APPS_DIR}/${app.split('-')[1]}/logo.png`;
         }
         const buttonId = `button-${app}`;
         const appPath = appType.includes('default') ? `${app}/main.js` : app;
-        
+
         const newApp = document.createElement('button');
         newApp.setAttribute('class', 'button-component');
         newApp.setAttribute('title', app);
         newApp.setAttribute('type', 'app');
-        newApp.setAttribute('id', buttonId);       
+        newApp.setAttribute('id', buttonId);
         newApp.style.backgroundImage = `url('${imageUrl}')`;
         newApp.style.backgroundSize = 'cover';
         newApp.style.backgroundPosition = 'center';
         dynamicButtonsContainer.appendChild(newApp);
-        
+
         setupButton(buttonId, appPath, appType);
     });
 
     circular();
 });
 
+// Logout button event listener
+
 document.getElementById('button_logout').addEventListener('click', () => {
     ipcRenderer.send('logout');
 });
+
+// Ensure circular layout on window load
 
 window.addEventListener('load', circular, false);

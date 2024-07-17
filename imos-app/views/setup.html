@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id ="title"></title>
+    <title id="title"></title>
     <link rel="stylesheet" href="../styles/form.css">
     <style>
-        body{
+        body {
             background-color: #24292e;
         }
 
@@ -28,8 +29,8 @@
         ::-webkit-scrollbar-thumb:hover {
             background-color: #e8ecec;
         }
-        
-        .title{
+
+        .title {
             color: white;
             margin-top: 20px;
             font-size: 22px;
@@ -43,16 +44,16 @@
             margin-right: 20px;
         }
 
-        .nice-form-group > label{
-            color:white;
+        .nice-form-group>label {
+            color: white;
             font-weight: normal;
         }
 
-        .nice-form-group > input[type=text] {
-            height:36px;
+        .nice-form-group>input[type=text] {
+            height: 36px;
         }
 
-        .nice-form-group > input[type=text]:focus {
+        .nice-form-group>input[type=text]:focus {
             outline: none;
             border-color: #a35fe4;
         }
@@ -79,11 +80,11 @@
         .button-component:hover {
             background-color: #ca99f8;
         }
-
     </style>
 </head>
+
 <body>
-    <h1 class="title" id ="header"></h1> 
+    <h1 class="title" id="header"></h1>
     <form id="configForm"></form>
 
     <script>
@@ -94,7 +95,7 @@
         console.log(metadata);
         const requiredConfigs = JSON.parse(metadata);
         console.log(requiredConfigs);
-        
+
 
         document.addEventListener('DOMContentLoaded', () => {
             const title = document.getElementById('title');
@@ -108,7 +109,7 @@
 
         function createInputFields(labels) {
             const form = document.getElementById('configForm');
-            
+
             for (const [name, required] of Object.entries(labels)) {
 
                 const div = document.createElement('div');
@@ -116,12 +117,12 @@
 
                 const labelElement = document.createElement('label');
                 labelElement.innerText = name + ': ';
-                
+
                 const inputElement = document.createElement('input');
                 inputElement.setAttribute('type', 'text');
                 inputElement.setAttribute('id', name);
                 inputElement.setAttribute('placeholder', 'insert ' + name.replace(/_/g, ' ').toLowerCase());
-                
+
                 if (required === true) {
                     inputElement.setAttribute('required', 'required');
                 }
@@ -150,7 +151,8 @@
             });
             ipcRenderer.send('set', { appName, type, ...configData });
         });
-        
+
     </script>
 </body>
+
 </html>

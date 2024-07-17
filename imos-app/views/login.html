@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>imos login</title>
     <link rel="stylesheet" href="../styles/styles.css">
 </head>
+
 <body>
     <img style="height: 85px;" src="logo.svg">
     <form id="loginForm">
@@ -15,10 +17,11 @@
         <input class="text-box-component" type="password" placeholder="Insert password" id="password" required>
         <br>
         <br>
-        <button class="button-component"  type="submit">Login</button> 
-        <input type="checkbox" id="rememberCheckbox"><label for="rememberCheckbox"><span class='input-info'>Remind this user</span></label>
+        <button class="button-component" type="submit">Login</button>
+        <input type="checkbox" id="rememberCheckbox"><label for="rememberCheckbox"><span class='input-info'>Remind this
+                user</span></label>
     </form>
-    <button class="button-component"  type="submit" id="back">Back</button>
+    <button class="button-component" type="submit" id="back">Back</button>
     <script>
         const { ipcRenderer } = require('electron');
 
@@ -41,7 +44,8 @@
             //const isChecked = document.getElementById('rememberCheckbox').checked;
             ipcRenderer.send('back');
         });
-        
+
     </script>
 </body>
+
 </html>

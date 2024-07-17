@@ -1,21 +1,28 @@
-const { execSync , spawnSync } = require('child_process');
+const { execSync, spawnSync } = require('child_process');
 const Docker = require('dockerode');
 
+/**
+ * Opens a web browser with the specified URL.
+ * @param {string} url - The URL to open in the web browser.
+ */
 function openBrowser(url) {
     const { status, error } = spawnSync('start', [url], { shell: true });
+
     if (status !== 0) {
         console.error('Error opening web browser:', error);
     }
     console.error('Opened web browser at:', url);
 }
 
+/**
+ * Fetches the list of installed Docker applications.
+ * @returns {Promise<Object>} A dictionary of installed apps with their types.
+ */
 async function getInstalledApps() {
     const docker = new Docker();
-
     try {
-        // Fetch Docker images - for solo containers
         const dockerImages = await docker.listImages();
-        //console.log(dockerImages);
+
         const imosImages = dockerImages
             .filter(image => image.RepoTags)
             .filter(image => image.RepoTags.some(tag => tag.includes('imos')))
@@ -30,27 +37,29 @@ async function getInstalledApps() {
                 }
                 return acc;
             }, []);
-        //console.log(imosMultiImages);
 
-        const installedApps = [...imosImages,  ...imosMultiImages]
+        const installedApps = [...imosImages, ...imosMultiImages]
 
-        // Create a dictionary to store apps with their types
         const appDictionary = installedApps.reduce((acc, app) => {
             acc[app.name] = { type: app.type };
             return acc;
         }, {});
 
-        //console.log(appDictionary);
         return appDictionary;
-        
     } catch (error) {
         console.error('Error fetching Docker images and Kubernetes deployments:', error);
         return [];
     }
 }
 
+/**
+ * Checks if a Docker container exists.
+ * @param {string} containerName - The name of the Docker container.
+ * @returns {boolean} True if the container exists, false otherwise.
+ */
 function doesContainerExist(containerName) {
     const result = spawnSync('docker', ['ps', '-a', '--format', '{{.Names}}'], { encoding: 'utf-8' });
+
     if (result.status === 0) {
         const containers = result.stdout.trim().split('\n');
         return containers.includes(containerName);
@@ -60,29 +69,40 @@ function doesContainerExist(containerName) {
     }
 }
 
+/**
+ * Checks if a Docker multi-container environment exists.
+ * @param {string} containerName - The name of the multi-container environment.
+ * @returns {boolean} True if the multi-container environment exists, false otherwise.
+ */
 function doesMultiContainerExist(containerName) {
     const result = spawnSync('docker', ['ps', '-a', '--format', '{{.Labels}}'], { encoding: 'utf-8' });
+
     if (result.status === 0) {
         const containers = result.stdout.trim().split('\n');
         for (const container of containers) {
             const labels = container.split(',');
             for (const label of labels) {
                 if (label.includes(`com.docker.compose.project=${containerName}`)) {
-                    return true; // if the project name is found in any container's labels
+                    return true;
                 }
             }
         }
         console.error('Multi-container environment does not exist.');
-        return false; 
+        return false;
     } else {
         console.error('Error checking if multi-container environment exists:', result.stderr);
         return false;
     }
 }
 
+/**
+ * Checks if a Docker container is running.
+ * @param {string} containerName - The name of the Docker container.
+ * @returns {boolean} True if the container is running, false otherwise.
+ */
 function isContainerRunning(containerName) {
-    //console.log(containerName);
     const result = spawnSync('docker', ['inspect', '--format={{.State.Running}}', containerName], { encoding: 'utf-8' });
+
     if (result.status === 0) {
         return result.stdout.trim() === 'true';
     } else {
@@ -91,26 +111,34 @@ function isContainerRunning(containerName) {
     }
 }
 
+/**
+ * Checks if a Docker multi-container environment is running.
+ * @param {string} projectName - The name of the multi-container project.
+ * @returns {boolean} True if the multi-container environment is running, false otherwise.
+ */
 function isMultiContainerRunning(projectName) {
     const result = spawnSync('docker', ['compose', '-p', projectName, 'ps', '-q'], { encoding: 'utf-8', shell: true });
-    //console.log(result);
+
     if (result.status === 0) {
         const containerIds = result.stdout.trim().split('\n');
-        //console.log(containerIds);
-        return containerIds.length > 1; // at least one container is running
+        return containerIds.length > 1;
     } else {
         console.error('Error checking if multi-container environment is running:', result.stderr);
         return false;
     }
 }
 
+/**
+ * Fetches the public ports of a Docker container.
+ * @param {string} containerName - The name of the Docker container.
+ * @returns {Promise<Array<number>>} An array of public ports.
+ */
 async function getContainerPort(containerName) {
     const docker = new Docker();
     const ports = [];
 
     try {
         const dockerContainers = await docker.listContainers({ all: true });
-
         dockerContainers.forEach(container => {
             if (containerName === container.Image) {
                 const labels = container.Labels || {};
@@ -125,7 +153,6 @@ async function getContainerPort(containerName) {
                 }
             }
         });
-        //console.log(ports);
         return ports;
     } catch (error) {
         console.error('Error fetching container ports:', error);
@@ -134,6 +161,11 @@ async function getContainerPort(containerName) {
 
 }
 
+/**
+ * Fetches the public ports of a Docker multi-container environment.
+ * @param {string} projectName - The name of the multi-container project.
+ * @returns {Promise<Array<number>>} An array of public ports.
+ */
 async function getMultiContainerPorts(projectName) {
     const docker = new Docker();
     const ports = [];
@@ -164,9 +196,15 @@ async function getMultiContainerPorts(projectName) {
     }
 }
 
+/**
+ * Fetches metadata for a Docker image.
+ * @param {string} imageName - The name of the Docker image.
+ * @returns {Object|null} An object containing metadata or null if an error occurs.
+ */
 function getImageMetadata(imageName) {
     const metadata = {};
     const result = spawnSync('docker', ['inspect', '--format={{json .Config.Labels}}', imageName], { encoding: 'utf-8' });
+
     if (result.status === 0) {
         const labels = JSON.parse(result.stdout);
         const availableConfigsLabel = labels["com.available.configs"];
@@ -177,7 +215,6 @@ function getImageMetadata(imageName) {
             if (requiredConfigsLabel) {
                 rconfigs = requiredConfigsLabel.split(",").map(config => config.trim());
             }
-            //console.log(rconfigs);
             aconfigs.forEach((aconfig) => {
                 if (rconfigs.includes(aconfig))
                     metadata[aconfig] = true;
@@ -192,24 +229,32 @@ function getImageMetadata(imageName) {
     }
 }
 
+/**
+ * Fetches metadata for a Docker multi-container environment.
+ * @param {string} projectName - The name of the multi-container project.
+ * @returns {Promise<Object|null>} An object containing metadata or null if an error occurs.
+ */
 async function getMultiImageMetadata(projectName) {
     const docker = new Docker();
     const metadata = {};
+
     try {
         const dockerImages = await docker.listImages();
         dockerImages.forEach((image) => {
             const labels = image.Labels || {};
+
             if (labels["com.main.multicontainer"] === projectName) {
                 const availableConfigsLabel = labels["com.available.configs"];
                 const requiredConfigsLabel = labels["com.required.configs"];
-                //console.log(requiredConfigsLabel);
+
                 if (availableConfigsLabel) {
                     const aconfigs = availableConfigsLabel.split(",").map(config => config.trim());
                     var rconfigs = [];
+
                     if (requiredConfigsLabel) {
                         rconfigs = requiredConfigsLabel.split(",").map(config => config.trim());
                     }
-                    //console.log(rconfigs);
+
                     aconfigs.forEach((aconfig) => {
                         if (rconfigs.includes(aconfig))
                             metadata[aconfig] = true;
@@ -219,7 +264,6 @@ async function getMultiImageMetadata(projectName) {
                 }
             }
         });
-        //console.log(Object(metadata));
         return Object(metadata);
     } catch (error) {
         console.error('Error fetching multi-container configs:', error);
@@ -227,6 +271,11 @@ async function getMultiImageMetadata(projectName) {
     }
 }
 
+/**
+ * Fetches all Docker images from a multi-container project.
+ * @param {string} projectName - The name of the multi-container project.
+ * @returns {Promise<Array<string>|null>} An array of image names or null if an error occurs.
+ */
 async function getAllImagesFromMultiContainer(projectName) {
     const docker = new Docker();
     const containers = [];
@@ -247,21 +296,28 @@ async function getAllImagesFromMultiContainer(projectName) {
     }
 }
 
-function createDockerProcess(configData, interface=1) {
+/**
+ * Creates and starts a Docker container based on configuration data.
+ * @param {Object} configData - Configuration data for creating the Docker container.
+ * @param {string} configData.appName - The name of the Docker container/application.
+ * @param {string} configData.PORT - Optional port mapping for the container.
+ * @param {number} [interface=1] - Interface mode (default: 1).
+ */
+function createDockerProcess(configData, interface = 1) {
     const appName = configData.appName;
     const projectDir = appName.split('-')[1];
     delete configData.appName;
     delete configData.type;
-    const baseDir = process.env.IMOS_APPS_DIR || 'C:\\imos\\Apps';
+    const baseDir = process.env.IMOS_APPS_DIR || 'C:\\imos\\apps';
     const volumeDir = `${baseDir}\\${projectDir}\\Volume`;
 
     const dockerArgs = [
         'run',
         '-d',
         '-v', `${volumeDir}:/tmp`,
-        '--name', appName        
+        '--name', appName
     ];
-    
+
     if (configData.PORT) {
         dockerArgs.push('-p', configData.PORT);
     }
@@ -270,11 +326,8 @@ function createDockerProcess(configData, interface=1) {
         dockerArgs.push('-e', `${key}=${value}`);
     }
 
-    // add image name to the end, which is the same as the container name
     dockerArgs.push(appName);
-    
     console.log('Executing command:', 'docker', dockerArgs);
-
     const dockerProcess = spawnSync('docker', dockerArgs);
 
     if (dockerProcess.status === 0) {
@@ -283,7 +336,7 @@ function createDockerProcess(configData, interface=1) {
         console.error('Error creating or starting container:', dockerProcess.stderr);
     }
 
-    if(interface==1){
+    if (interface == 1) {
         getContainerPort(appName)
             .then(ports => {
                 console.log('Ports:', ports);
@@ -297,25 +350,27 @@ function createDockerProcess(configData, interface=1) {
     }
 }
 
-function createMultiDockerProcess(configData, interface=1) {
+/**
+ * Creates and starts a Docker multi-container environment based on configuration data.
+ * @param {Object} configData - Configuration data for creating the multi-container environment.
+ * @param {string} configData.appName - The name of the Docker multi-container environment/application.
+ * @param {number} [interface=1] - Interface mode (default: 1).
+ */
+function createMultiDockerProcess(configData, interface = 1) {
     const appName = configData.appName;
     const projectDir = appName.split('-')[1];
     delete configData.appName;
     delete configData.type;
-
     let envArgs = '';
 
     for (const [key, value] of Object.entries(configData)) {
-        if(value != '')
+        if (value != '')
             envArgs += `$env:${key}='"${value}"'; `;
     }
 
-    const baseDir = process.env.IMOS_APPS_DIR || 'C:\\IMOS\\Apps';
-
+    const baseDir = process.env.IMOS_APPS_DIR || 'C:\\imos\\apps';
     const command = `powershell -Command "{ Set-Location '${baseDir}\\${projectDir}'; ${envArgs} docker compose -f docker-compose.yml -p ${appName} up -d}"`;
-
     console.log('Executing command:', command);
-
     const dockerProcess = spawnSync('powershell', ['-Command', command], { shell: true });
 
     if (dockerProcess.status === 0) {
@@ -324,7 +379,7 @@ function createMultiDockerProcess(configData, interface=1) {
         console.error('Error creating or starting multicontainer:', dockerProcess.stderr ? dockerProcess.stderr.toString() : 'Unknown error');
     }
 
-    if(interface==1){
+    if (interface == 1) {
         getMultiContainerPorts(appName)
             .then(ports => {
                 console.log('Ports:', ports);
@@ -338,11 +393,15 @@ function createMultiDockerProcess(configData, interface=1) {
     }
 }
 
-function startDockerProcess(containerName, type, interface=1) {
-    console.log(containerName);
-    if(type == 'image'){
+/**
+ * Starts a Docker container or multi-container environment based on the specified type.
+ * @param {string} containerName - The name of the Docker container or multi-container environment.
+ * @param {string} type - The type of the container ('image' or 'multicontainer').
+ * @param {number} [interface=1] - Interface mode (default: 1).
+ */
+function startDockerProcess(containerName, type, interface = 1) {
+    if (type == 'image') {
         if (!isContainerRunning(containerName)) {
-            // start the existing container if not already running
             const dockerProcess = spawnSync('docker', ['start', containerName]);
             if (dockerProcess.status !== 0) {
                 console.error('Error starting existing container:', dockerProcess.stderr);
@@ -350,12 +409,12 @@ function startDockerProcess(containerName, type, interface=1) {
                 console.log('Container started successfully.');
             }
         }
-        if(interface==1){
+        if (interface == 1) {
             getContainerPort(containerName)
                 .then(port => {
                     console.log('Port:', port);
                     openBrowser(`http://localhost:${port}`);
-                   
+
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -363,9 +422,8 @@ function startDockerProcess(containerName, type, interface=1) {
         }
     }
 
-    else if(type == 'multicontainer'){
+    else if (type == 'multicontainer') {
         if (!isMultiContainerRunning(containerName)) {
-            // start the existing container if not already running
             try {
                 console.log('Docker Compose started');
                 execSync(`docker compose -p ${containerName} start`);
@@ -374,9 +432,7 @@ function startDockerProcess(containerName, type, interface=1) {
             }
         }
 
-        // need to get ports of multiple containers
-        // label which containers are intend for user interaction
-        if(interface==1){
+        if (interface == 1) {
             getMultiContainerPorts(containerName)
                 .then(ports => {
                     console.log('Ports:', ports);
@@ -391,10 +447,13 @@ function startDockerProcess(containerName, type, interface=1) {
     }
 }
 
+/**
+ * Stops a Docker container or multi-container environment based on the specified type.
+ * @param {string} containerName - The name of the Docker container or multi-container environment.
+ * @param {string} type - The type of the container ('image' or 'multicontainer').
+ */
 function stopDockerProcess(containerName, type) {
-
-    console.log(containerName);
-    if(type == 'image'){
+    if (type == 'image') {
         if (isContainerRunning(containerName)) {
             const dockerProcess = spawnSync('docker', ['stop', containerName]);
             if (dockerProcess.status !== 0) {
@@ -405,7 +464,7 @@ function stopDockerProcess(containerName, type) {
         }
     }
 
-    else if(type == 'multicontainer'){
+    else if (type == 'multicontainer') {
         if (isMultiContainerRunning(containerName)) {
             try {
                 console.log('Docker compose stop started');
@@ -413,10 +472,15 @@ function stopDockerProcess(containerName, type) {
             } catch (error) {
                 console.error('Error exiting docker compose:', error.stderr.toString());
             }
-        }  
+        }
     }
 }
 
+/**
+ * Deletes a Docker container or multi-container environment based on the specified type.
+ * @param {string} containerName - The name of the Docker container or multi-container environment.
+ * @param {string} type - The type of the container ('image' or 'multicontainer').
+ */
 function deleteDockerProcess(containerName, type) {
     if (type === 'image') {
         const dockerProcess = spawnSync('docker', ['rm', containerName]);
@@ -425,7 +489,7 @@ function deleteDockerProcess(containerName, type) {
         } else {
             console.log('Container deleted successfully.');
         }
-    } 
+    }
     else if (type === 'multicontainer') {
         getAllImagesFromMultiContainer(containerName)
             .then((containers) => {
@@ -447,6 +511,11 @@ function deleteDockerProcess(containerName, type) {
     }
 }
 
+/**
+ * Uninstalls a Docker application or multi-container environment based on the specified type.
+ * @param {string} containerName - The name of the Docker application or multi-container environment.
+ * @param {string} type - The type of the container ('image' or 'multicontainer').
+ */
 function deleteDockerApp(containerName, type) {
     if (type === 'image') {
         const dockerProcess = spawnSync('docker', ['rmi', containerName]);
@@ -455,7 +524,7 @@ function deleteDockerApp(containerName, type) {
         } else {
             console.log('App unnistalled successfully.');
         }
-    } 
+    }
     else if (type === 'multicontainer') {
         getAllImagesFromMultiContainer(containerName)
             .then((containers) => {
@@ -477,7 +546,9 @@ function deleteDockerApp(containerName, type) {
     }
 }
 
-module.exports = { createDockerProcess, createMultiDockerProcess, doesContainerExist, doesMultiContainerExist, 
-                   startDockerProcess, stopDockerProcess, getImageMetadata, getMultiImageMetadata, getInstalledApps,
-                   isContainerRunning, isMultiContainerRunning, deleteDockerProcess, getAllImagesFromMultiContainer,
-                   deleteDockerApp};
+module.exports = {
+    createDockerProcess, createMultiDockerProcess, doesContainerExist, doesMultiContainerExist,
+    startDockerProcess, stopDockerProcess, getImageMetadata, getMultiImageMetadata, getInstalledApps,
+    isContainerRunning, isMultiContainerRunning, deleteDockerProcess, getAllImagesFromMultiContainer,
+    deleteDockerApp
+};
