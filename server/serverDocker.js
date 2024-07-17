@@ -2,9 +2,14 @@ const { spawnSync } = require('child_process');
 const path = require('path');
 const Docker = require('dockerode');
 
+/**
+ * Function to check if a Docker container is running.
+ * @param {string} containerName - The name of the Docker container.
+ * @returns {boolean} - True if the container is running, false otherwise.
+ */
 function isContainerRunning(containerName) {
-    //console.log(containerName);
     const result = spawnSync('docker', ['inspect', '--format={{.State.Running}}', containerName], { encoding: 'utf-8' });
+
     if (result.status === 0) {
         return result.stdout.trim() === 'true';
     } else {
@@ -13,9 +18,15 @@ function isContainerRunning(containerName) {
     }
 }
 
+/**
+ * Async function to fetch all Docker images associated with a multi-container project.
+ * @param {string} projectName - The name of the multi-container project.
+ * @returns {Promise<string[] | null>} - Array of Docker image names or null if error.
+ */
 async function getAllImagesFromMultiContainer(projectName) {
     const docker = new Docker();
     const containers = [];
+
     try {
         const dockerImages = await docker.listImages();
         dockerImages.forEach((image) => {
@@ -33,53 +44,56 @@ async function getAllImagesFromMultiContainer(projectName) {
     }
 }
 
+/**
+ * Function to check if a Docker compose multi-container environment is running.
+ * @param {string} projectName - The name of the multi-container project.
+ * @returns {boolean} - True if at least one container is running, false otherwise.
+ */
 function isMultiContainerRunning(projectName) {
     const result = spawnSync('docker', ['compose', '-p', projectName, 'ps', '-q'], { encoding: 'utf-8', shell: true });
-    //console.log(result);
+
     if (result.status === 0) {
         const containerIds = result.stdout.trim().split('\n');
-        //console.log(containerIds);
-        return containerIds.length > 1; // at least one container is running
+        return containerIds.length > 1;
     } else {
         console.error('Error checking if multi-container environment is running:', result.stderr);
         return false;
     }
 }
 
+/**
+ * Function to create and start a Docker container based on provided configuration.
+ * @param {Object} configData - Configuration data for creating the Docker container.
+ * @returns {boolean} - True if container was created and started successfully, false otherwise.
+ */
 function createDockerProcess(configData) {
-    //console.log(configData);
     const appName = configData.appName;
     const userappName = configData.userappName;
     const projectDir = appName.split('-')[1];
-    //console.log(projectDir);
+
     delete configData.appName;
     delete configData.username;
     delete configData.userappName;
     delete configData.type;
-    
+
     const baseDir = path.resolve(__dirname, '../../apps');
     const volumeDir = path.resolve(baseDir, projectDir, userappName, 'Volume');
-    
     const dockerArgs = [
         'run',
         '-d',
         '-v', `${volumeDir}:/tmp`,
-        '--name', userappName        
+        '--name', userappName
     ];
 
     if (configData.PORT) {
         dockerArgs.push('-p', configData.PORT);
     }
-
     for (const [key, value] of Object.entries(configData)) {
         dockerArgs.push('-e', `${key}=${value}`);
     }
-    //console.log(dockerArgs);
-    // Add the image name to the end, which is the same as the container name
-    dockerArgs.push(appName);
-    
-    //console.log('Executing command:', 'docker', dockerArgs.join(' '));
 
+    dockerArgs.push(appName);
+    //console.log('Executing command:', 'docker', dockerArgs.join(' '));
     const dockerProcess = spawnSync('docker', dockerArgs);
 
     if (dockerProcess.status === 0) {
@@ -91,13 +105,17 @@ function createDockerProcess(configData) {
     }
 }
 
+/**
+ * Function to create and start a multi-container Docker environment based on provided configuration.
+ * @param {Object} configData - Configuration data for creating the multi-container Docker environment.
+ * @returns {boolean} - True if multi-container environment was created and started successfully, false otherwise.
+ */
 function createMultiDockerProcess(configData) {
-    //console.log(configData);
     const appName = configData.appName;
     const username = configData.username;
     const userappName = configData.userappName;
     const projectDir = appName.split('-')[1];
-    //console.log(projectDir);
+
     delete configData.appName;
     delete configData.username;
     delete configData.userappName;
@@ -105,20 +123,16 @@ function createMultiDockerProcess(configData) {
 
     const baseDir = path.resolve(__dirname, '../../apps');
     const appDir = path.resolve(baseDir, projectDir, appName);
-
     let envArgs = '';
 
     for (const [key, value] of Object.entries(configData)) {
-        if(value != '')
+        if (value != '')
             envArgs += `${key}="${value}" `;
     }
-
     envArgs += `USER="${username}"`;
 
     const command = `cd ${appDir} && ${envArgs} docker compose -f ${appDir}/docker-compose.server.yml -p ${userappName} up -d`;
-
     //console.log('Executing command:', command);
-
     const dockerProcess = spawnSync('/bin/bash', ['-c', command], { shell: true });
 
     if (dockerProcess.status === 0) {
@@ -126,17 +140,21 @@ function createMultiDockerProcess(configData) {
         return true;
     } else {
         console.error('Error creating or starting multicontainer:', dockerProcess.stderr.toString());
-        deleteDockerProcess(username, {type: 'multicontainer', container_name: userappName, image: appName});
+        deleteDockerProcess(username, { type: 'multicontainer', container_name: userappName, image: appName });
         return false;
     }
 }
 
+/**
+ * Function to start a Docker container or multi-container environment.
+ * @param {Object} configData - Configuration data for starting the Docker process.
+ * @returns {boolean} - True if Docker process was started successfully, false otherwise.
+ */
 function startDockerProcess(configData) {
-    //console.log(configData.container_name);
-    if(configData.type == 'image'){
+    if (configData.type == 'image') {
         if (!isContainerRunning(configData.container_name)) {
-            // start the existing container if not already running
             const dockerProcess = spawnSync('docker', ['start', configData.container_name]);
+
             if (dockerProcess.status !== 0) {
                 console.error('Error starting container:', dockerProcess.stderr);
                 return false;
@@ -147,10 +165,10 @@ function startDockerProcess(configData) {
         }
     }
 
-    else if(configData.type == 'multicontainer'){
+    else if (configData.type == 'multicontainer') {
         if (!isMultiContainerRunning(configData.container_name)) {
-            // start the existing container if not already running
             const dockerProcess = spawnSync('docker', ['compose', '-p', `${configData.container_name}`, 'start'], { shell: true });
+
             if (dockerProcess.status !== 0) {
                 console.error('Error starting multicontainer:', dockerProcess.stderr);
                 return false;
@@ -162,8 +180,12 @@ function startDockerProcess(configData) {
     }
 }
 
+/**
+ * Function to stop a Docker container or multi-container environment.
+ * @param {Object} configData - Configuration data for stopping the Docker process.
+ * @returns {boolean} - True if Docker process was stopped successfully, false otherwise.
+ */
 function stopDockerProcess(configData) {
-    //console.log(configData.container_name);
     if (configData.type === 'image') {
         if (isContainerRunning(configData.container_name)) {
             const dockerProcess = spawnSync('docker', ['stop', configData.container_name]);
@@ -175,8 +197,8 @@ function stopDockerProcess(configData) {
                 return true;
             }
         }
-    } 
-    else if(configData.type == 'multicontainer'){
+    }
+    else if (configData.type == 'multicontainer') {
         if (isMultiContainerRunning(configData.container_name)) {
             const dockerProcess = spawnSync('docker', ['compose', '-p', `${configData.container_name}`, 'stop'], { shell: true });
             if (dockerProcess.status !== 0) {
@@ -186,10 +208,16 @@ function stopDockerProcess(configData) {
                 console.log('Multicontainer stoped successfully.');
                 return true;
             }
-        }  
+        }
     }
 }
 
+/**
+ * Function to delete a Docker container or multi-container environment.
+ * @param {string} user - The username associated with the container(s).
+ * @param {Object} configData - Configuration data for deleting the Docker process.
+ * @returns {boolean} - True if Docker process was deleted successfully, false otherwise.
+ */
 function deleteDockerProcess(user, configData) {
     if (configData.type === 'image') {
         const dockerProcess = spawnSync('docker', ['rm', configData.container_name]);
@@ -200,11 +228,10 @@ function deleteDockerProcess(user, configData) {
             console.log('Container deleted successfully.');
             return true;
         }
-    } 
+    }
     else if (configData.type === 'multicontainer') {
         getAllImagesFromMultiContainer(configData.image)
             .then((containers) => {
-                //console.log(containers);
                 containers.forEach((container) => {
                     const dockerProcess = spawnSync('docker', ['rm', `${user}-${container}`]);
                     if (dockerProcess.status !== 0) {
@@ -225,4 +252,4 @@ function deleteDockerProcess(user, configData) {
     }
 }
 
-module.exports = {createDockerProcess, createMultiDockerProcess, startDockerProcess, stopDockerProcess, deleteDockerProcess}
+module.exports = { createDockerProcess, createMultiDockerProcess, startDockerProcess, stopDockerProcess, deleteDockerProcess }

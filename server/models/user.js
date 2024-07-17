@@ -4,12 +4,12 @@ const { isAlphanumeric, isEmail } = require('validator');
 const Schema = mongoose.Schema;
 
 const cloudAppSchema = new Schema({
-  app: {type: String, required: true},
-  state: {type: String, required: true},
-  image: {type: String, required: true},
-  type: {type: String, required: true},
-  container_name: {type: String, required: true},
-  configs: {type: JSON, required: true}
+  app: { type: String, required: true },
+  state: { type: String, required: true },
+  image: { type: String, required: true },
+  type: { type: String, required: true },
+  container_name: { type: String, required: true },
+  configs: { type: JSON, required: true }
 });
 
 
@@ -20,7 +20,7 @@ const UserSchema = new Schema({
     unique: false,
     enum: ['client', 'developer']
   },
-  
+
   username: {
     type: String,
     required: true,
@@ -28,10 +28,10 @@ const UserSchema = new Schema({
     minlength: [3, 'Username must be at least 4 characters long'],
     maxlength: [20, 'Username must not exceed 20 characters'],
     validate: [
-        {
-            validator: isAlphanumeric, 
-            message: 'Username must contain only letters and numbers'
-        }
+      {
+        validator: isAlphanumeric,
+        message: 'Username must contain only letters and numbers'
+      }
     ]
   },
 
@@ -41,10 +41,10 @@ const UserSchema = new Schema({
     unique: true,
     maxlength: [30, 'Username must not exceed 30 characters'],
     validate: [
-        {
-            validator: isEmail,
-            message: 'Invalid email format'
-        }
+      {
+        validator: isEmail,
+        message: 'Invalid email format'
+      }
     ]
   },
 
