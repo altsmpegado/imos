@@ -1,171 +1,301 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title id="appTitle"></title>
-    <base href="/app">
-    <!--Change meta tags and and description with app-->
-    <meta name="description" content="Get software applications, services and deployments powered by Docker and Kubernetes">
-    <meta name="keywords" content="IMOS,IMOSapp,applications,apps,IMOS apps, Docker, Kubernetes">
-    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #1e1e1e;
-        color: #ffffff;
-        margin: 0;
-        padding: 0;
-      }
 
-      ::-webkit-scrollbar {
-        width: 15px;
-      }
+<head>
+  <meta charset="utf-8">
+  <title id="appTitle"></title>
+  <base href="/app">
+  <meta name="description"
+    content="Get software applications, services and deployments powered by Docker and Kubernetes">
+  <meta name="keywords" content="IMOS,IMOSapp,applications,apps,IMOS apps, Docker, Kubernetes">
+  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e1e1e;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
 
-      ::-webkit-scrollbar-track {
-        background-color: transparent;
-      }
+    ::-webkit-scrollbar {
+      width: 15px;
+    }
 
-      ::-webkit-scrollbar-thumb {
-        background-color: #acacac;
-        border-radius: 15px;
-        border: 6px solid transparent;
-        background-clip: content-box;
-      }
+    ::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
 
-      ::-webkit-scrollbar-thumb:hover {
-        background-color: #e8ecec;
-      }
-      
+    ::-webkit-scrollbar-thumb {
+      background-color: #acacac;
+      border-radius: 15px;
+      border: 6px solid transparent;
+      background-clip: content-box;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #e8ecec;
+    }
+
+    .main-container {
+      display: flex;
+      flex-direction: column;
+      min-width: 400px;
+      min-height: 500px;
+      overflow: hidden;
+    }
+
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: calc(100% - 20px);
+      width: 400px;
+      background-color: #333;
+      text-align: center;
+      align-items: center;
+      border-radius: 10px;
+      margin-top: 10px;
+      margin-left: 10px;
+    }
+
+    .info-container {
+      height: 100%;
+      width: 100%;
+      margin-left: 420px;
+    }
+
+    .sticky-header {
+      display: none;
+      text-align: left;
+      position: sticky;
+      left: 0;
+      top: 0;
+      background-color: #424645eb;
+      color: #ffffff;
+      height: 75px;
+      width: calc(100% - 60px);
+      border-radius: 10px;
+      top: 20px;
+      margin-left: 30px;
+      margin-right: 30px;
+      z-index: 1;
+    }
+
+    .screenshots {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      height: 410px;
+      width: calc(100% - 425px);
+      background-color: #333;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+
+    .description {
+      display: flex;
+      flex-direction: column;
+      height: 310px;
+      width: calc(100% - 425px);
+      background-color: #333;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .reviews {
+      display: flex;
+      flex-direction: column;
+      height: 310px;
+      width: calc(100% - 425px);
+      background-color: #333;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .additional {
+      display: flex;
+      flex-direction: column;
+      height: 410px;
+      width: calc(100% - 425px);
+      background-color: #333;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .app-icon {
+      position: absolute;
+      border-radius: 10px;
+      top: 80px;
+      width: 135px;
+      height: 135px;
+    }
+
+    .sticky-app-icon {
+      position: absolute;
+      border-radius: 5px;
+      top: 10px;
+      left: 10px;
+      width: 55px;
+      height: 55px;
+    }
+
+    .apptitle {
+      position: absolute;
+      font-size: 1.7rem;
+      color: #ffffff;
+      margin: 0;
+      top: 240px;
+    }
+
+    .rating {
+      position: absolute;
+      top: 420px;
+      font-weight: lighter;
+      font-size: 0.9rem;
+    }
+
+    .sticky-apptitle {
+      position: absolute;
+      font-size: 1.2rem;
+      font-weight: lighter;
+      color: #ffffff;
+      margin: 0;
+      top: 20px;
+      left: 75px;
+    }
+
+    .companytitle {
+      position: absolute;
+      font-size: 1.2rem;
+      color: #d8aded;
+      margin: 0;
+      top: 280px;
+    }
+
+    .sticky-companytitle {
+      position: absolute;
+      font-size: 0.9rem;
+      color: #d8aded;
+      margin: 0;
+      top: 43px;
+      left: 75px;
+    }
+
+    .getapp-btn {
+      color: #000000;
+      background-color: #cc92e9;
+      position: absolute;
+      top: 340px;
+      border-radius: 5px;
+      width: 155px;
+      height: 35px;
+      border: none;
+    }
+
+    .getapp-btn:hover {
+      background-color: #dbaef1;
+    }
+
+    .sticky-getapp-btn {
+      color: #000000;
+      background-color: #cc92e9;
+      position: absolute;
+      top: 20px;
+      border-radius: 5px;
+      width: 155px;
+      height: 35px;
+      border: none;
+      left: calc(100% - 170px);
+    }
+
+    .sticky-getapp-btn:hover {
+      background-color: #dbaef1;
+    }
+
+    .tab-title {
+      margin-left: 25px;
+      margin-top: 20px;
+    }
+
+    .text {
+      margin-left: 25px;
+      margin-right: 25px;
+      text-align: justify;
+    }
+
+    .imgs-screenshots {
+      width: fit-content;
+      height: 325px;
+      margin-left: 25px;
+      border-radius: 10px;
+    }
+
+    @media (max-width: 1060px) {
       .main-container {
-        display: flex;
-        flex-direction: column;
-        min-width: 400px;
-        min-height: 500px;
-        overflow: hidden;
+        overflow: visible;
       }
 
       .app-container {
-        display: flex;
-        flex-direction: column;
-        position: fixed;
-        left: 0;
-        top: 0;
-        height: calc(100% - 20px);
-        width: 400px;
-        background-color: #333;
-        text-align: center;
-        align-items: center;
-        border-radius: 10px;
-        margin-top: 10px;
-        margin-left: 10px;
+        position: relative;
+        text-align: left;
+        width: calc(100% - 20px);
+        height: 280px;
       }
 
       .info-container {
-        height: 100%;
-        width: 100%;
-        margin-left: 420px;
+        margin-left: 0px;
+        margin-top: 0px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
 
-      .sticky-header {
+      .app-container.hidden+.sticky-header {
+        display: block;
+      }
+
+      .app-container:not(.hidden)+.sticky-header {
         display: none;
-        text-align: left;
-        position: sticky;
-        left: 0;
-        top: 0;
-        background-color: #424645eb;
-        color: #ffffff;
-        height: 75px;
-        width: calc(100% - 60px);
-        border-radius: 10px;
-        top: 20px;
-        margin-left: 30px;
-        margin-right: 30px;
-        z-index: 1;
       }
 
       .screenshots {
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        height: 410px;
-        width: calc(100% - 425px);
-        background-color: #333;
-        border-radius: 10px;
-        margin-bottom: 10px;
-        margin-top: 10px;
+        width: calc(100% - 20px);
       }
 
       .description {
-        display: flex;
-        flex-direction: column;
-        height: 310px;
-        width: calc(100% - 425px);
-        background-color: #333;
-        border-radius: 10px;
-        margin-bottom: 10px;
+        width: calc(100% - 20px);
       }
 
       .reviews {
-        display: flex;
-        flex-direction: column;
-        height: 310px;
-        width: calc(100% - 425px);
-        background-color: #333;
-        border-radius: 10px;
-        margin-bottom: 10px;
+        width: calc(100% - 20px);
       }
 
       .additional {
-        display: flex;
-        flex-direction: column;
-        height: 410px;
-        width: calc(100% - 425px);
-        background-color: #333;
-        border-radius: 10px;
-        margin-bottom: 10px;
+        width: calc(100% - 20px);
       }
 
       .app-icon {
         position: absolute;
         border-radius: 10px;
-        top: 80px;
-        width: 135px; 
-        height: 135px;
+        top: 25px;
+        width: 180px;
+        height: 180px;
+        left: 25px;
       }
 
-      .sticky-app-icon {
-        position: absolute;
-        border-radius: 5px;
-        top: 10px;
-        left: 10px;
-        width: 55px;
-        height: 55px;
-      }
-      
       .apptitle {
         position: absolute;
         font-size: 1.7rem;
         color: #ffffff;
         margin: 0;
-        top: 240px;
-      }
-
-      .rating {
-        position: absolute;
-        top: 420px;
-        font-weight: lighter;
-        font-size: 0.9rem;
-      }
-
-      .sticky-apptitle {
-        position: absolute;
-        font-size: 1.2rem;
-        font-weight: lighter;
-        color: #ffffff;
-        margin: 0;
-        top: 20px;
-        left: 75px;
+        top: 30px;
+        left: 225px;
       }
 
       .companytitle {
@@ -173,219 +303,93 @@
         font-size: 1.2rem;
         color: #d8aded;
         margin: 0;
-        top: 280px;
+        top: 65px;
+        left: 225px;
       }
 
-      .sticky-companytitle {
+      .rating {
         position: absolute;
+        top: 80px;
+        left: 225px;
+        font-weight: lighter;
         font-size: 0.9rem;
-        color: #d8aded;
-        margin: 0;
-        top: 43px;
-        left: 75px;
       }
 
       .getapp-btn {
-        color: #000000;
-        background-color: #cc92e9;
         position: absolute;
-        top: 340px;
-        border-radius: 5px;
-        width: 155px;
-        height: 35px;
-        border: none;
-      }
-
-      .getapp-btn:hover {
-        background-color: #dbaef1;
-      }
-
-      .sticky-getapp-btn {
-        color: #000000;
-        background-color: #cc92e9;
-        position: absolute;
-        top: 20px;
-        border-radius: 5px;
-        width: 155px;
-        height: 35px;
-        border: none;
-        left: calc(100% - 170px);
-      }
-
-      .sticky-getapp-btn:hover {
-        background-color: #dbaef1;
-      }
-
-      .tab-title {
-        margin-left: 25px;
-        margin-top: 20px;
-      }
-
-      .text {
-        margin-left: 25px;
-        margin-right: 25px;
-        text-align: justify;
-      }
-
-      .imgs-screenshots {
-        width: fit-content;
-        height: 325px;
-        margin-left: 25px;
         border-radius: 10px;
+        top: 25px;
+        left: calc(100% - 180px);
+      }
+    }
+
+    @media (max-width: 660px) {
+      .app-container {
+        text-align: center;
+        position: relative;
+        width: calc(100% - 20px);
+        height: 805px;
       }
 
-      @media (max-width: 1060px) {
-        .main-container {
-          overflow: visible;
-        }
-
-        .app-container {
-          position: relative;
-          text-align: left;
-          width: calc(100% - 20px);
-          height: 280px;
-        }
-
-        .info-container {
-          margin-left: 0px;
-          margin-top: 0px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-
-        .app-container.hidden + .sticky-header {
-          display: block;
-        }
-
-        .app-container:not(.hidden) + .sticky-header {
-          display: none;
-        }
-
-        .screenshots {
-          width: calc(100% - 20px);
-        }
-
-        .description {
-          width: calc(100% - 20px);
-        }
-
-        .reviews {
-          width: calc(100% - 20px);
-        }
-
-        .additional {
-          width: calc(100% - 20px);
-        }
-
-        .app-icon {
-          position: absolute;
-          border-radius: 10px;
-          top: 25px;
-          width: 180px; 
-          height: 180px;
-          left: 25px;
-        }
-
-        .apptitle {
-          position: absolute;
-          font-size: 1.7rem;
-          color: #ffffff;
-          margin: 0;
-          top: 30px;
-          left: 225px;
-        }
-
-        .companytitle {
-          position: absolute;
-          font-size: 1.2rem;
-          color: #d8aded;
-          margin: 0;
-          top: 65px;
-          left: 225px;
-        }
-
-        .rating {
-          position: absolute;
-          top: 80px;
-          left: 225px;
-          font-weight: lighter;
-          font-size: 0.9rem;
-        }
-
-        .getapp-btn {
-          position: absolute;
-          border-radius: 10px;
-          top: 25px;
-          left: calc(100% - 180px);
-        }
+      .app-icon {
+        position: absolute;
+        border-radius: 10px;
+        top: 80px;
+        left: auto;
+        width: 145px;
+        height: 145px;
       }
 
-      @media (max-width: 660px) {
-        .app-container {
-          text-align: center;
-          position: relative;
-          width: calc(100% - 20px);
-          height: 805px;
-        }
-
-        .app-icon {
-          position: absolute;
-          border-radius: 10px;
-          top: 80px;
-          left: auto;
-          width: 145px;
-          height: 145px;
-        }
-
-        .apptitle {
-          position: absolute;
-          font-size: 1.7rem;
-          color: #ffffff;
-          margin: 0;
-          top: 250px;
-          left: auto;
-        }
-
-        .companytitle {
-          position: absolute;
-          font-size: 1.2rem;
-          color: #d8aded;
-          margin: 0;
-          top: 290px;
-          left: auto;
-        }
-
-        .rating {
-          position: absolute;
-          top: 470px;
-          left: auto;
-        }
-
-        .getapp-btn {
-          position: absolute;
-          border-radius: 10px;
-          top: 370px;
-          left: auto;
-        }
+      .apptitle {
+        position: absolute;
+        font-size: 1.7rem;
+        color: #ffffff;
+        margin: 0;
+        top: 250px;
+        left: auto;
       }
-    </style>
-  </head>
-  <body>
-    <div class="main-container" id="main"></div>
-    <script type="text/javascript" src="C:\imos-dev\imos-app\imostore\app_renderer.js"></script>
-    <script>
-      window.addEventListener('scroll', function() {
-        const appContainer = document.querySelector('.app-container');
-        const infoContainer = document.querySelector('.info-container');
-        const scrollPosition = window.scrollY;
 
-        if (infoContainer.getBoundingClientRect().top < 0) {
-          appContainer.classList.add('hidden');
-        } else {
-          appContainer.classList.remove('hidden');
-        }
-      });
-    </script>
-  </body>
+      .companytitle {
+        position: absolute;
+        font-size: 1.2rem;
+        color: #d8aded;
+        margin: 0;
+        top: 290px;
+        left: auto;
+      }
+
+      .rating {
+        position: absolute;
+        top: 470px;
+        left: auto;
+      }
+
+      .getapp-btn {
+        position: absolute;
+        border-radius: 10px;
+        top: 370px;
+        left: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="main-container" id="main"></div>
+  <script type="text/javascript" src="C:\imos-dev\imos-app\imostore\app_renderer.js"></script>
+  <script>
+    window.addEventListener('scroll', function () {
+      const appContainer = document.querySelector('.app-container');
+      const infoContainer = document.querySelector('.info-container');
+      const scrollPosition = window.scrollY;
+
+      if (infoContainer.getBoundingClientRect().top < 0) {
+        appContainer.classList.add('hidden');
+      } else {
+        appContainer.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+
 </html>

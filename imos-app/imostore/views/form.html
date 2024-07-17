@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Software Submission Form</title>
     <link rel="stylesheet" href="../../styles/form.css">
     <style>
-        body{
+        body {
             background-color: #24292e;
         }
 
@@ -29,7 +30,7 @@
             background-color: #e8ecec;
         }
 
-        .title{
+        .title {
             color: white;
             margin-top: 20px;
             font-size: 22px;
@@ -43,16 +44,17 @@
             margin-right: 20px;
         }
 
-        .nice-form-group > label{
-            color:white;
+        .nice-form-group>label {
+            color: white;
             font-weight: normal;
         }
 
-        .nice-form-group > input[type=text] {
-            height:36px;
+        .nice-form-group>input[type=text] {
+            height: 36px;
         }
 
-        .nice-form-group > input[type=text]:focus, .nice-form-group > textarea:focus{
+        .nice-form-group>input[type=text]:focus,
+        .nice-form-group>textarea:focus {
             outline: none;
             border-color: #a35fe4;
         }
@@ -72,23 +74,25 @@
             border: 1px solid #a35fe4;
             margin-left: calc(50% - (115px/2));
             width: 115px;
-            margin-bottom: 10px;;
+            margin-bottom: 10px;
+            ;
         }
 
         .button-component:hover {
             background-color: #ca99f8;
         }
 
-        .nice-form-group > input[type=file]:hover {
+        .nice-form-group>input[type=file]:hover {
             border-color: #a35fe4;
         }
-
     </style>
 </head>
+
 <body>
-    <h1 class="title" id ="header">Software Submission Form</h1> 
-    <br>    
+    <h1 class="title" id="header">Software Submission Form</h1>
+    <br>
     <form id="configForm" enctype="multipart/form-data"></form>
     <script type="text/javascript" src="../form_renderer.js"></script>
 </body>
+
 </html>

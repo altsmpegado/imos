@@ -2,20 +2,30 @@ const { ipcRenderer } = require('electron');
 
 let isAppOwned = false;
 
+/**
+ * Function to handle media query change events.
+ * Updates button visibility based on screen width.
+ * @param {MediaQueryListEvent} e - Media query list event.
+ */
 function myFunction(e) {
     if (e.matches) {
         updateButton(isAppOwned);
     }
 }
 
+// Media query for minimum window width
 var minWidth = window.matchMedia("(min-width: 730px)")
 
+/**
+ * Function to update button visibility based on ownership status.
+ * @param {boolean} owned - Flag indicating if the application is owned by the user.
+ */
 function updateButton(owned) {
     const downloadButton = document.getElementById('downloadButton');
     const acquireButton = document.getElementById('acquireButton');
     const stickydownloadButton = document.getElementById('sticky-downloadButton');
     const stickyacquireButton = document.getElementById('sticky-acquireButton');
-    
+
     if (owned) {
         downloadButton.style.display = 'block';
         stickydownloadButton.style.display = 'block';
@@ -29,27 +39,32 @@ function updateButton(owned) {
     }
 }
 
-minWidth.addEventListener("change", function() {
+// Event listener for media query changes
+minWidth.addEventListener("change", function () {
     myFunction(minWidth);
 });
 
+// Event listener when DOM content is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
 
+    /**
+     * IPC event listener for receiving application information.
+     * Fetches user's owned apps from server and updates button visibility based on ownership.
+     * @param {Event} event - IPC event object.
+     * @param {Object} appjson - Application JSON object containing details like name, logo, etc.
+     * @param {string} user - User identifier.
+     */
     ipcRenderer.on('appInfo', (event, appjson, user) => {
-        //console.log(appjson);
         fetch(`http://${process.env.IMOS_SERVER_CON}/apps/${user}`)
-        .then((response) => response.json())
-        .then(data => {
-        // Handle the data received from the server
-            //console.log(data.ownedApps);
-            isAppOwned = data.ownedApps.some(app => app.name === appjson.name);
-            //console.log(isAppOwned);
-            updateButton(isAppOwned);
-        })
+            .then((response) => response.json())
+            .then(data => {
+                isAppOwned = data.ownedApps.some(app => app.name === appjson.name);
+                updateButton(isAppOwned);
+            })
             .catch(error => {
-            console.error('Error fetching user owned apps:', error);
-        });
-        
+                console.error('Error fetching user owned apps:', error);
+            });
+
         const appInfoDiv = document.getElementById('main');
         appInfoDiv.innerHTML = `
             <div class="app-container">
@@ -88,15 +103,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
         `;
-        
+
         const appTitle = document.getElementById('appTitle');
         appTitle.innerText = appjson.name;
-        
+
         const downloadButton = document.getElementById('downloadButton');
         downloadButton.addEventListener('click', () => {
             ipcRenderer.send('downloadFile', { id: appjson.file.toString() });
         });
-        
+
         const acquireButton = document.getElementById('acquireButton');
         acquireButton.addEventListener('click', () => {
             ipcRenderer.send('acquireApp', user, appjson.name.toString());
@@ -106,20 +121,31 @@ document.addEventListener('DOMContentLoaded', () => {
         stickydownloadButton.addEventListener('click', () => {
             ipcRenderer.send('downloadFile', { id: appjson.file.toString() });
         });
-        
+
         const stickyacquireButton = document.getElementById('sticky-acquireButton');
         stickyacquireButton.addEventListener('click', () => {
             ipcRenderer.send('acquireApp', user, appjson.name.toString());
         });
     });
 
+    /**
+     * IPC event listener for download completion.
+     * Logs the successful download of a file.
+     * @param {Event} event - IPC event object.
+     * @param {string} filePath - File path where the download completed.
+     */
     ipcRenderer.on('downloadCompleted', (event, filePath) => {
         console.log(`File downloaded successfully to ${filePath}`);
     });
 
+    /**
+     * IPC event listener for successful app acquisition.
+     * Reloads the page upon successful app acquisition.
+     * @param {Event} event - IPC event object.
+     */
     ipcRenderer.on('appAcquired', (event) => {
         console.log('App Acquired Successfully');
         location.reload();
     });
-  
+
 });

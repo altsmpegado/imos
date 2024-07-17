@@ -1,237 +1,246 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title> imostore </title>
-    <base href="/">
-    <meta name="description" content="Get software applications, services and deployments powered by Docker and Kubernetes">
-    <meta name="keywords" content="IMOS,IMOSMarket,applications,apps,IMOS apps, Docker, Kubernetes">
-    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #1e1e1e;
-        color: #ffffff;
-        margin: 0;
-        padding: 0;
-      }
 
-      ::-webkit-scrollbar {
-        width: 15px;
-      }
+<head>
+  <meta charset="utf-8">
+  <title> imostore </title>
+  <base href="/">
+  <meta name="description"
+    content="Get software applications, services and deployments powered by Docker and Kubernetes">
+  <meta name="keywords" content="IMOS,IMOSMarket,applications,apps,IMOS apps, Docker, Kubernetes">
+  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e1e1e;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
 
-      ::-webkit-scrollbar-track {
-        background-color: transparent;
-      }
+    ::-webkit-scrollbar {
+      width: 15px;
+    }
 
-      ::-webkit-scrollbar-thumb {
-        background-color: #acacac;
-        border-radius: 15px;
-        border: 6px solid transparent;
-        background-clip: content-box;
-      }
+    ::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
 
-      ::-webkit-scrollbar-thumb:hover {
-        background-color: #e8ecec;
-      }
-      
-      .main-container{
-        display: flex;
-        flex-direction: row;
-      }
+    ::-webkit-scrollbar-thumb {
+      background-color: #acacac;
+      border-radius: 15px;
+      border: 6px solid transparent;
+      background-clip: content-box;
+    }
 
-      .title {
-        font-weight: 5;
-        font-size: 0.875rem;
-        color: #ffffff;
-        margin: 0;
-      }
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #e8ecec;
+    }
 
-      .huge-title {
-        font-weight: bold;
-        font-size: 4rem;
-        font-family: verdana;
-        color: #a35fe4;
-        margin-top: auto;
-        margin-left: 40px;
-        margin-bottom: auto;
-      }
+    .main-container {
+      display: flex;
+      flex-direction: row;
+    }
 
-      .sidebar{
-        display: flex;
-        flex-direction: column;
-        position: sticky;
-        left: 0;
-        top: 0;
-        height: 100vh;
-        width: 70px;
-        background-color: #333;
-        text-align: center;
-        align-items: center;
-        gap: 5px;
-      }
+    .title {
+      font-weight: 5;
+      font-size: 0.875rem;
+      color: #ffffff;
+      margin: 0;
+    }
 
-      .sidebtn {
-        width: 60px;
-        height: 60px;
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 5px;
-        margin-bottom: 10px;
-        margin-top: 10px;
-      }
+    .huge-title {
+      font-weight: bold;
+      font-size: 4rem;
+      font-family: verdana;
+      color: #a35fe4;
+      margin-top: auto;
+      margin-left: 40px;
+      margin-bottom: auto;
+    }
 
-      .sidebtn:hover:not(.selected) {
-        background-color: #444;
-      }
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      width: 70px;
+      background-color: #333;
+      text-align: center;
+      align-items: center;
+      gap: 5px;
+    }
 
-      .selected {
-        background-color: #555;
-      }
+    .sidebtn {
+      width: 60px;
+      height: 60px;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
 
-      .selected .material-symbols-outlined {
-        color: #a35fe4; /* Change this to the desired color */
-        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-      }
+    .sidebtn:hover:not(.selected) {
+      background-color: #444;
+    }
 
-      .btn-bot{
-        margin-top: auto;
-      }
+    .selected {
+      background-color: #555;
+    }
 
-      .panel{
-        width: 100%;
-        overflow: hidden;
-      }
+    .selected .material-symbols-outlined {
+      color: #a35fe4;
+      /* Change this to the desired color */
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
 
+    .btn-bot {
+      margin-top: auto;
+    }
+
+    .panel {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .products-container {
+      display: grid;
+      gap: 12px;
+      overflow-y: auto;
+      padding-left: 40px;
+      padding-right: 40px;
+      overflow: hidden;
+    }
+
+    .product {
+      box-shadow: 0 1px 2px rgb(0 0 0 / 24%);
+      transition: background-color 0.3s ease;
+      height: 200px;
+      user-select: none;
+      border: 1px solid hsl(240, 5.9%, 11%);
+      border-radius: 0.5rem;
+      border-color: transparent;
+      background-color: #444;
+      display: flex;
+      text-decoration: none;
+      padding: 20px;
+    }
+
+    .product:hover {
+      background-color: #666;
+    }
+
+    .product-card {
+      width: var(--card-width);
+      height: 241px;
+      margin-top: 10px;
+    }
+
+    @media (min-width: 730px) {
       .products-container {
-        display: grid;
-        gap: 12px;
-        overflow-y: auto;
-        padding-left: 40px;
-        padding-right: 40px; 
-        overflow: hidden;
+        grid-template-columns: repeat(2, 1fr);
+        /* 2 columns for medium screens */
       }
+    }
 
-      .product {
-        box-shadow: 0 1px 2px rgb(0 0 0 / 24%);
-        transition: background-color 0.3s ease;
-        height: 200px;
-        user-select: none;
-        border: 1px solid hsl(240, 5.9%, 11%);
-        border-radius: 0.5rem;
-        border-color: transparent;
-        background-color: #444;       
-        display: flex;
-        text-decoration: none;
-        padding: 20px;
+    @media (min-width: 1000px) {
+      .products-container {
+        grid-template-columns: repeat(3, 1fr);
+        /* 3 columns for large screens */
       }
+    }
 
-      .product:hover {
-        background-color: #666;
-      }
+    .product .subtitle {
+      font-size: 0.75rem;
+      color: #D1D1D1;
+      display: flex;
+      align-items: center;
+    }
 
-      .product-card {
-        width: var(--card-width);
-        height: 241px;
-        margin-top: 10px;
-      }
+    .product .rating-element {
+      color: #D1D1D1;
+      font-size: 0.75rem;
+    }
 
-      @media (min-width: 730px) {
-        .products-container {
-          grid-template-columns: repeat(2, 1fr); /* 2 columns for medium screens */
-        }
-      }
+    .info-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
 
-      @media (min-width: 1000px) {
-        .products-container {
-          grid-template-columns: repeat(3, 1fr); /* 3 columns for large screens */
-        }
-      }
+    .price-container {
+      display: flex;
+      align-items: flex-end;
+      border-radius: 4px;
+      padding: 2px 8px 3px 8px;
+      font-size: 12px;
+      position: relative;
+    }
 
-      .product .subtitle {
-        font-size: 0.75rem;
-        color: #D1D1D1;
-        display: flex;
-        align-items: center;
-      }
+    .more-button {
+      background-color: #5d5d5d;
+      color: #fff;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
 
-      .product .rating-element {
-        color: #D1D1D1;
-        font-size: 0.75rem;
-      }
+    .app-icon {
+      border-radius: 5px;
+      height: 75px;
+      width: 75px;
+    }
 
-      .info-container {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-      }
+    .text {
+      color: white;
+      font-size: 14px;
+    }
 
-      .price-container {
-        display: flex;
-        align-items: flex-end;
-        border-radius: 4px;
-        padding: 2px 8px 3px 8px;
-        font-size: 12px;
-        position: relative;
-      }
-
-      .more-button {
-        background-color: #5d5d5d;
-        color: #fff;
-        border: none;
-        padding: 4px 8px;
-        border-radius: 4px;
-      }
-
-      .app-icon {
-        border-radius: 5px;
-        height: 75px;
-        width: 75px;
-      }
-
-      .text {
-        color: white;
-        font-size: 14px;
-      }
-
-      .material-symbols-outlined {
-        color: #ffffffa8;
-        font-variation-settings:
+    .material-symbols-outlined {
+      color: #ffffffa8;
+      font-variation-settings:
         'FILL' 0,
         'wght' 400,
         'GRAD' 0,
         'opsz' 24
-      }
-    </style>
+    }
+  </style>
 
-  </head>
-  <body>
-    <div class="main-container">
-      <div class="sidebar">
-        <div class="btn-top" id="btn-top">
-          <button class="sidebtn" id="loadHomePage" title="Home"><i class="material-symbols-outlined">home</i></button>
-          <button class="sidebtn selected" id="loadAppsPage" title="Applications"><i class="material-symbols-outlined">apps</i></button>
-          <button class="sidebtn" id="loadLibPage" title="Library"><i class="material-symbols-outlined">bookmarks</i></button>
-        </div>
-        <div class="btn-bot">
-          <a href="https://github.com/altsmpegado/imos" target="_blank" style="text-decoration: none;">
-            <button class="sidebtn" ><i class="material-symbols-outlined">help</i></button>
-          </a>
-        </div>
-      </div>      
-      <div class="panel">
-        <p class="huge-title">imos apps</p>
-        <div class="products-container direction-column" id="apps-container">
-        </div>
+</head>
+
+<body>
+  <div class="main-container">
+    <div class="sidebar">
+      <div class="btn-top" id="btn-top">
+        <button class="sidebtn" id="loadHomePage" title="Home"><i class="material-symbols-outlined">home</i></button>
+        <button class="sidebtn selected" id="loadAppsPage" title="Applications"><i
+            class="material-symbols-outlined">apps</i></button>
+        <button class="sidebtn" id="loadLibPage" title="Library"><i
+            class="material-symbols-outlined">bookmarks</i></button>
+      </div>
+      <div class="btn-bot">
+        <a href="https://github.com/altsmpegado/imos" target="_blank" style="text-decoration: none;">
+          <button class="sidebtn"><i class="material-symbols-outlined">help</i></button>
+        </a>
       </div>
     </div>
-    <!--====== Renderer JS ======-->
-    <script type="text/javascript" src="C:\imos-dev\imos-app\imostore\apps_page_renderer.js"></script>
-  </body>
+    <div class="panel">
+      <p class="huge-title">imos apps</p>
+      <div class="products-container direction-column" id="apps-container">
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="C:\imos-dev\imos-app\imostore\apps_page_renderer.js"></script>
+</body>
+
 </html>
