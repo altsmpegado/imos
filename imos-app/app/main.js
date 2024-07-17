@@ -14,7 +14,9 @@ let logWindow;
 let setWindow;
 var remcheck = false;
 
-// Function to create the main application window
+/**
+ * Function to create the main application window.
+ */
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
