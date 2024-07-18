@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
         const appInfoDiv = document.getElementById('main');
+        const appImage = `${appjson.name.replace(/\s+/g, '').toLowerCase()}_page.png`;
         appInfoDiv.innerHTML = `
             <div class="app-container">
                 <img class="app-icon" src="data:image/png;base64,${appjson.logo}"></img>
@@ -85,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="info-container">
                 <div class="screenshots">
                     <h4 class="tab-title">Screenshots</h4>
-                    <img class="imgs-screenshots" src="wtsapp.jpeg"></img>
+                    <img class="imgs-screenshots" src="${appImage}"></img>
                 </div>
                 <div class="description">
                     <h4 class="tab-title">About</h4>
