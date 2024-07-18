@@ -32,6 +32,7 @@
         <script>
             const { ipcRenderer } = require('electron');
 
+            // Add an event listener to the register form for the 'submit' event.
             document.getElementById('registerForm').addEventListener('submit', (event) => {
                 event.preventDefault();
 
@@ -48,12 +49,12 @@
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
 
-                // Send the registration data to the main process
+                // Send a registration request with the user type, username, email, and password to the main process via ipcRenderer.
                 ipcRenderer.send('register', { type, username, email, password });
             });
 
             document.getElementById('back').addEventListener('click', () => {
-                //const isChecked = document.getElementById('rememberCheckbox').checked;
+                // Send a message to go back to the previous page to the main process via ipcRenderer.
                 ipcRenderer.send('back');
             });
         </script>

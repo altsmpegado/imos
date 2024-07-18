@@ -25,23 +25,24 @@
     <script>
         const { ipcRenderer } = require('electron');
 
+        // Add an event listener to the login form for the 'submit' event.
         document.getElementById('loginForm').addEventListener('submit', (event) => {
             event.preventDefault();
 
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            // Send the registration data to the main process
+            // Send a login request with the username and password to the main process via ipcRenderer.
             ipcRenderer.send('login', { username, password });
         });
 
         document.getElementById('rememberCheckbox').addEventListener('change', () => {
-            //const isChecked = document.getElementById('rememberCheckbox').checked;
+            // Send a message to save the session state to the main process via ipcRenderer.
             ipcRenderer.send('saveSession');
         });
 
         document.getElementById('back').addEventListener('click', () => {
-            //const isChecked = document.getElementById('rememberCheckbox').checked;
+            // Send a message to go back to the previous page to the main process via ipcRenderer.
             ipcRenderer.send('back');
         });
 

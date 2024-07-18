@@ -89,16 +89,18 @@
     <form id="configForm"></form>
 
     <script>
+        // Import ipcRenderer from Electron to communicate asynchronously from the renderer process to the main process.
         const { ipcRenderer } = require('electron');
+
+        // Extract query parameters from the URL.
         const appName = new URLSearchParams(window.location.search).get('appName');
         const image = new URLSearchParams(window.location.search).get('image');
         const type = new URLSearchParams(window.location.search).get('type');
         const user = new URLSearchParams(window.location.search).get('user');
         const metadata = new URLSearchParams(window.location.search).get('labels');
-        //console.log(metadata);
         const requiredConfigs = JSON.parse(JSON.parse(metadata));
-        //console.log(requiredConfigs);
 
+        // Wait for the DOM content to be fully loaded.
         document.addEventListener('DOMContentLoaded', () => {
             const title = document.getElementById('title');
             title.innerText = 'App Setup ' + appName;
@@ -109,9 +111,14 @@
             createInputFields(requiredConfigs);
         });
 
+        /**
+         * Function to create input fields based on the provided labels.
+         * @param {Object} labels - An object where the keys are the input field names and the values are booleans indicating whether the field is required.
+         */
         function createInputFields(labels) {
             const form = document.getElementById('configForm');
 
+            // Iterate over each label to create corresponding input fields.
             for (const [name, required] of Object.entries(labels)) {
 
                 const div = document.createElement('div');
@@ -125,6 +132,7 @@
                 inputElement.setAttribute('id', name);
                 inputElement.setAttribute('placeholder', 'insert ' + name.replace(/_/g, ' ').toLowerCase());
 
+                // If the field is required, set the required attribute.
                 if (required === true) {
                     inputElement.setAttribute('required', 'required');
                 }
@@ -142,6 +150,7 @@
             form.appendChild(submitButton);
         }
 
+        // Add an event listener to handle the form submission.
         document.getElementById('configForm').addEventListener('submit', (event) => {
             event.preventDefault();
 
@@ -150,7 +159,8 @@
             inputs.forEach(input => {
                 configData[input.id] = input.value;
             });
-            console.log(user, appName,{ appName:image, type, ...configData });
+
+            // Send the collected data to the main process via ipcRenderer.
             ipcRenderer.send('setCloud', user, appName, { appName:image, type, ...configData });
         });
 
