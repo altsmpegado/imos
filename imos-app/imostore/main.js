@@ -108,13 +108,13 @@ function createDevForm() {
     width: 500,
     height: 700,
     icon: 'imoslink/logo.ico',
+    autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
       worldSafeExecuteJavaScript: true,
     },
-    autoHideMenuBar: true,
   });
 
   devForm.on('closed', () => {

@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="info-container">
                 <div class="screenshots">
                     <h4 class="tab-title">Screenshots</h4>
-                    <img class="imgs-screenshots" src="C:\\imos-dev\\imos-app\\imostore\\views\\wtsapp.jpeg"></img>
+                    <img class="imgs-screenshots" src="wtsapp.jpeg"></img>
                 </div>
                 <div class="description">
                     <h4 class="tab-title">About</h4>

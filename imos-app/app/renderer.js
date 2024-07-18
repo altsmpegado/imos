@@ -1,6 +1,7 @@
 const { ipcRenderer } = require('electron');
 const { spawn } = require('child_process');
 const { getInstalledApps } = require('../docker/docker');
+const path = require('path');
 
 // Dict to keep track of opened apps
 const openApps = {};
@@ -39,7 +40,7 @@ function setupButton(buttonId, appPath, appType) {
  * @param {string} appPath - The path to the application to be launched.
  */
 function launchApp(appPath) {
-    const electronPath = 'C:/imos-dev/imos-app/node_modules/.bin/electron.cmd';
+    const electronPath = path.resolve(__dirname, '../node_modules/.bin/electron.cmd');
     const childProcess = spawn(electronPath, [appPath]);
 
     openApps[appPath] = {

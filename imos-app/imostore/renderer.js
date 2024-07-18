@@ -1,5 +1,6 @@
 const { ipcRenderer } = require('electron');
 const fs = require('fs');
+const path = require('path');
 
 /**
  * Function to handle click events on app cards.
@@ -95,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
  * Redirects to the Apps page when the corresponding button is clicked.
  */
 document.getElementById("loadAppsPage").addEventListener("click", function () {
-  var newPageUrl = "C:\\imos-dev\\imos-app\\imostore\\views\\apps_page.html";
+  var newPageUrl = path.resolve(__dirname, './apps_page.html');
   window.location.href = newPageUrl;
 });
 
@@ -104,6 +105,6 @@ document.getElementById("loadAppsPage").addEventListener("click", function () {
  * Redirects to the Library page when the corresponding button is clicked.
  */
 document.getElementById("loadLibPage").addEventListener("click", function () {
-  var newPageUrl = "C:\\imos-dev\\imos-app\\imostore\\views\\lib_page.html";
+  var newPageUrl = path.resolve(__dirname, './lib_page.html');
   window.location.href = newPageUrl;
 });

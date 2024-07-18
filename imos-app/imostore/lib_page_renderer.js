@@ -1,6 +1,7 @@
 const { ipcRenderer } = require('electron');
 const fs = require('fs');
 const request = require('request');
+const path = require('path');
 
 /**
  * Function to create a status LED element based on whether the application is running.
@@ -160,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
  * Redirects to the Apps page when the corresponding button is clicked.
  */
 document.getElementById("loadAppsPage").addEventListener("click", function () {
-  var newPageUrl = "C:\\imos-dev\\imos-app\\imostore\\views\\apps_page.html";
+  var newPageUrl = path.resolve(__dirname, './apps_page.html');
   window.location.href = newPageUrl;
 });
 
@@ -169,6 +170,6 @@ document.getElementById("loadAppsPage").addEventListener("click", function () {
  * Redirects to the Home page when the corresponding button is clicked.
  */
 document.getElementById("loadHomePage").addEventListener("click", function () {
-  var newPageUrl = "C:\\imos-dev\\imos-app\\imostore\\views\\index.html";
+  var newPageUrl = path.resolve(__dirname, './index.html');
   window.location.href = newPageUrl;
 });
