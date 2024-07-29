@@ -158,7 +158,7 @@ function createSubsWindow() {
 }
 
 /**
- * Create a window for handling submission documents.
+ * Create a window for handling submission documentation.
  */
 function createSubDocWindow() {
   subdocWindow = new BrowserWindow({
