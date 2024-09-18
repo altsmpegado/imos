@@ -2,7 +2,7 @@
     <a href="https://github.com/altsmpegado/imos"><img src="utils/images/imos_banner.svg" style="width:100%;"></a>
 </div>
 <br>
-<p align="center">Welcome to the Industry Modular Operating System repository, built on top of <a href="https://www.docker.com/" target="_blank">Docker</a> and powered by <a href="http://electron.atom.io" target="_blank">Electron</a>. Offering integration and deploymenty tools (IMOSlink), an industry-oriented marketplace (IMOStore) and a collaborative hub (IMOShub). This is a work in a progress a not a final product. <b>To collaborate on this project feel free to contact me, lets buid IMOS together, a platform built by the industry for the industry</b>.</p>
+<p align="center">Welcome to the Industry Modular Operating System repository, built on top of <a href="https://www.docker.com/" target="_blank">Docker</a> and powered by <a href="http://electron.atom.io" target="_blank">Electron</a>. Offering integration and deploymenty tools (IMOSlink), an industry-oriented marketplace (IMOStore) and a collaborative hub (IMOShub). This is a work in a progress a not a final product. <b>To collaborate on this project feel free to contact me, let's buid IMOS together, a platform built by the industry for the industry</b>.</p>
 
 <p align="center">
   <a href="#how-to-use">Overview</a> •
