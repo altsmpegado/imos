@@ -1,0 +1,46 @@
+name: 💡 Idea
+description: Share a new idea or concept for the project
+title: "[Idea]: "
+labels: ["idea"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for sharing your idea. Please provide the following details to help us understand your concept.
+
+  - type: textarea
+    id: idea_description
+    attributes:
+      label: Idea Description
+      description: Describe your idea in detail.
+      placeholder: e.g., Introduce a gamification system to encourage user engagement.
+    validations:
+      required: true
+
+  - type: textarea
+    id: potential_impact
+    attributes:
+      label: Potential Impact
+      description: Explain how this idea could benefit the project or its users.
+      placeholder: e.g., Increased user retention and motivation through rewards.
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation_suggestions
+    attributes:
+      label: Implementation Suggestions
+      description: Provide any suggestions on how this idea could be implemented.
+      placeholder: e.g., Use a points-based system with badges for achievements.
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Add any other context or references related to your idea.
+      placeholder: e.g., Links to similar systems in other platforms.
+    validations:
+      required: false

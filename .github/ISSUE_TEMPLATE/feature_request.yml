@@ -1,0 +1,46 @@
+name: 🚀 Feature Request
+description: Suggest a new feature for the project
+title: "[Feature]: "
+labels: ["new feature"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a new feature. Please provide the following details to help us understand your request.
+
+  - type: textarea
+    id: feature_description
+    attributes:
+      label: Feature Description
+      description: Describe the feature you would like to see implemented.
+      placeholder: e.g., I would like a dark mode option for better night-time usability.
+    validations:
+      required: true
+
+  - type: textarea
+    id: use_case
+    attributes:
+      label: Use Case
+      description: Explain how this feature would be useful to you or others.
+      placeholder: e.g., This feature would help users who prefer working in low-light environments.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered any alternative solutions or features?
+      placeholder: e.g., Adjusting screen brightness, using browser extensions.
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Add any other context or screenshots about the feature request here.
+      placeholder: e.g., Screenshots of similar features in other applications.
+    validations:
+      required: false

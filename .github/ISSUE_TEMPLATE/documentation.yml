@@ -1,0 +1,46 @@
+name: 📚 Documentation
+description: Suggest improvements or report issues related to the documentation
+title: "[Docs]: "
+labels: ["documentation"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to improve our documentation. Please provide the following details to help us address your suggestion effectively.
+
+  - type: input
+    id: doc_section
+    attributes:
+      label: Affected Documentation Section
+      description: Specify the section or page of the documentation that needs improvement.
+      placeholder: e.g., Installation Guide, API Reference - Authentication
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue_description
+    attributes:
+      label: Description of the Issue
+      description: Clearly describe the problem or the improvement you are suggesting.
+      placeholder: e.g., The installation steps are outdated and refer to deprecated commands.
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggested_changes
+    attributes:
+      label: Suggested Changes
+      description: Provide your proposed changes or additions to the documentation.
+      placeholder: e.g., Update the installation steps to use the new setup script introduced in version 2.0.
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Add any other context, references, or screenshots that might help us understand the issue better.
+      placeholder: e.g., Links to related issues, screenshots of the current documentation.
+    validations:
+      required: false

@@ -51,13 +51,6 @@ body:
       required: true
 
   - type: textarea
-    id: screenshots
-    attributes:
-      label: Screenshots
-      description: If applicable, add screenshots to help explain your problem.
-      placeholder: Drag and drop images or paste them here.
-
-  - type: textarea
     id: additional
     attributes:
       label: Additional Context
